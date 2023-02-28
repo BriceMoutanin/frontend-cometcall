@@ -12,9 +12,11 @@ import {
 } from "@react-navigation/drawer";
 import LoginScreen from "./screens/LoginScreen";
 import ProfilParentScreen from "./screens/ProfilParentScreen";
+import ProfilEnfantScreen from "./screens/ProfilEnfantScreen";
 import DemandeScreen from "./screens/DemandeScreen";
 import FAQScreen from "./screens/FAQScreen";
 import HistoriqueScreen from "./screens/HistoriqueScreen";
+import ProblematiqueScreen from "./screens/ProblematiqueScreen";
 import { Entypo } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
@@ -72,6 +74,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
+        <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
         <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

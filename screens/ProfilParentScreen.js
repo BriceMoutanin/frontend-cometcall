@@ -73,7 +73,6 @@ export default function ProfilParentScreen({ navigation }) {
         <View style={styles.enfant}>
           <Text style={styles.title}>Enfants</Text>
           <View style={styles.enfantView}>
-            {/* <ScrollView style={styles.scroll}> */}
             <View style={styles.enfantContainer}>
               <View>
                 <TouchableOpacity
@@ -154,7 +153,6 @@ export default function ProfilParentScreen({ navigation }) {
                 </TouchableOpacity>
               </View>
             </View>
-            {/* </ScrollView> */}
 
             <View style={styles.registerInput}>
               <TouchableOpacity style={styles.addButton} activeOpacity={0.8}>

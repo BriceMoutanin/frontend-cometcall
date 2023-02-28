@@ -30,7 +30,11 @@ export default function DemandeScreen({ navigation }) {
       <ScrollView style={styles.scroll}>
         <View style={styles.childContainer}>
           <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.childButton}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate("Problematique")}
+            >
               <Image
                 style={styles.childImage}
                 source={require("../assets/avatar.png")}
