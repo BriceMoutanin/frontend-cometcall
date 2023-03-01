@@ -1,8 +1,11 @@
+//import react-native
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
+
+//import react navigation
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { getHeaderTitle } from "@react-navigation/elements";
 import {
   createDrawerNavigator,
   DrawerItem,
@@ -10,6 +13,8 @@ import {
   DrawerContent,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
+
+//import des pages
 import LoginScreen from "./screens/LoginScreen";
 import ProfilParentScreen from "./screens/ProfilParentScreen";
 import ProfilEnfantScreen from "./screens/ProfilEnfantScreen";
@@ -17,8 +22,31 @@ import DemandeScreen from "./screens/DemandeScreen";
 import FAQScreen from "./screens/FAQScreen";
 import HistoriqueScreen from "./screens/HistoriqueScreen";
 import ProblematiqueScreen from "./screens/ProblematiqueScreen";
+
+//import expo
 import { Entypo } from "@expo/vector-icons";
-import { getHeaderTitle } from "@react-navigation/elements";
+import { StatusBar } from "expo-status-bar";
+
+//import Redux
+import { Provider } from "react-redux";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import user from "./reducers/user";
+
+// redux-persist imports
+import { persistStore, persistReducer } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const reducers = combineReducers({ user });
+const persistConfig = { key: "com-et-call", storage: AsyncStorage };
+
+const store = configureStore({
+  reducer: persistReducer(persistConfig, reducers),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
+});
+
+const persistor = persistStore(store);
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -95,15 +123,19 @@ const DrawerNavigator = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+          <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={LoginScreen} />
 
-        {/* <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
+            {/* <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
         <Stack.Screen name="Problematique" component={ProblematiqueScreen} /> */}
-        <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
+            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 
