@@ -21,7 +21,7 @@ export default function ProfilEnfantScreen({ navigation }) {
     return null;
   }
   const handleValide = () => {
-    navigation.navigate("DrawerNavigator");
+    navigation.navigate("ProfilParent");
   };
 
   return (

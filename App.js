@@ -18,6 +18,7 @@ import FAQScreen from "./screens/FAQScreen";
 import HistoriqueScreen from "./screens/HistoriqueScreen";
 import ProblematiqueScreen from "./screens/ProblematiqueScreen";
 import { Entypo } from "@expo/vector-icons";
+import { getHeaderTitle } from "@react-navigation/elements";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -33,12 +34,27 @@ function CustomDrawerContent(props) {
         icon={({ focused, color, size }) => (
           <Entypo color={color} size={size} name={"plus"} />
         )}
-        onPress={() => props.navigation.navigate("Profil")}
+        onPress={() => props.navigation.navigate("ProfilParent")}
       />
     </DrawerContentScrollView>
   );
 }
-
+//enfant stack Navigator
+const StackNavigator = ({ route }) => {
+  const title = getHeaderTitle(route.name);
+  return (
+    <Stack.Navigator
+      name="ProfilStack"
+      screenOptions={{ headerShown: false }}
+      title={title}
+    >
+      <Stack.Screen name="ProfilParent" component={ProfilParentScreen} />
+      <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
+      <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
+    </Stack.Navigator>
+  );
+};
+//enfant drawer Navigation qui contient l'enfant Stack
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
@@ -61,9 +77,17 @@ const DrawerNavigator = () => {
         },
       }}
     >
-      <Drawer.Screen name="Profil" component={ProfilParentScreen} />
+      <Drawer.Screen
+        name="Profil"
+        component={StackNavigator}
+        options={{
+          tabBarLabel: "Profil",
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
       <Drawer.Screen name="F.A.Q." component={FAQScreen} />
+
       <Drawer.Screen name="Demande" component={DemandeScreen} />
     </Drawer.Navigator>
   );
@@ -74,8 +98,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
-        <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
+
+        {/* <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
+        <Stack.Screen name="Problematique" component={ProblematiqueScreen} /> */}
         <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

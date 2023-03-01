@@ -33,7 +33,10 @@ export default function DemandeScreen({ navigation }) {
             <TouchableOpacity
               style={styles.childButton}
               activeOpacity={0.8}
-              onPress={() => navigation.navigate("Problematique")}
+              onPress={() =>
+                navigation.navigate("Problematique" /*{ navigation, enfant }*/)
+              }
+              // navigation.navigate("DrawerNavigator", { problematique })
             >
               <Image
                 style={styles.childImage}
