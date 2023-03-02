@@ -1,19 +1,58 @@
-import {
-  StyleSheet,
-  View,
-  Image,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { update } from "../reducers/user";
+import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity, ScrollView } from "react-native";
+import { TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { TextInput } from "react-native-paper";
 
+
+
+  
 export default function ProfilParentScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  const [updateNom, setupdateNom] = useState(user.nom);
+  const [updatePrenom, setupdatePrenom] = useState(user.prenom);
+  const [updateTel, setupdateTel] = useState(user.tel);
+  
+  const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+  
+
+  const parentUpdate = async () => {
+    try {
+      const response = await fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nom: updateNom,
+          prenom: updatePrenom,
+          tel:updateTel,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.result) {
+        dispatch(
+          update({
+            nom:updateNom,
+            prenom:updatePrenom,
+            tel: updateTel,
+          }
+          )
+        );
+  
+        navigation.navigate("DrawerNavigator");
+        }
+      }
+     catch (err) {
+      console.log("Erreur lors de la modification des informations du parent: ", err);
+    }
+  };
+
+
+
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
@@ -50,6 +89,8 @@ export default function ProfilParentScreen({ navigation }) {
                 selectionColor="#1A7B93"
                 outlineColor="#1A7B93"
                 activeOutlineColor="#1A7B93"
+                onChangeText={(value)=>setupdateNom(value)}
+                value={updateNom}
               />
               <TextInput
                 style={styles.input}
@@ -58,6 +99,8 @@ export default function ProfilParentScreen({ navigation }) {
                 selectionColor="#1A7B93"
                 outlineColor="#1A7B93"
                 activeOutlineColor="#1A7B93"
+                onChangeText={(value)=>setupdatePrenom(value)}
+                value={updatePrenom}
               />
               <TextInput
                 style={styles.input}
@@ -66,6 +109,8 @@ export default function ProfilParentScreen({ navigation }) {
                 selectionColor="#1A7B93"
                 outlineColor="#1A7B93"
                 activeOutlineColor="#1A7B93"
+                onChangeText={(value)=>setupdateTel(value)}
+                value={updateTel}
               />
             </View>
           </View>
@@ -167,7 +212,7 @@ export default function ProfilParentScreen({ navigation }) {
               >
                 <Text
                   style={styles.textButton}
-                  onPress={() => handleRegister()}
+                  onPress={() => parentUpdate()}
                 >
                   Enregistrer
                 </Text>
