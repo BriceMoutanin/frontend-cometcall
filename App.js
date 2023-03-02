@@ -40,8 +40,6 @@ import { StatusBar } from "expo-status-bar";
 import { Provider } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
-import { useDispatch } from "react-redux";
-import { logout } from "./reducers/user";
 
 // redux-persist imports
 import { persistStore, persistReducer } from "redux-persist";
@@ -63,11 +61,6 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-  const dispatch = useDispatch();
-  const logout = () => {
-    props.navigation.navigate("Login");
-    dispatch(logout);
-  };
   return (
     <DrawerContentScrollView
       {...props}
@@ -108,7 +101,10 @@ function CustomDrawerContent(props) {
           justifyContent: "flex-end",
         }}
       >
-        <TouchableOpacity style={styles.demandeButton} onPress={() => logout()}>
+        <TouchableOpacity
+          style={styles.demandeButton}
+          onPress={() => props.navigation.navigate("DemandeStack")}
+        >
           <Text>Nouvelle demande</Text>
         </TouchableOpacity>
       </View>
