@@ -31,7 +31,8 @@ export default function LoginScreen({ navigation }) {
   const [signInPassword, setSignInPassword] = useState("");
   const [signInMail, setSignInMail] = useState("");
 
-  const [emailError, setEmailError] = useState(false);
+  const [emailErrorIn, setEmailErrorIn] = useState(false);
+  const [emailErrorUp, setEmailErrorUp] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -44,7 +45,7 @@ export default function LoginScreen({ navigation }) {
   // s'inscrire
   const handleSignUp = () => {
     if (EMAIL_REGEX.test(signUpMail)) {
-      setEmailError(false);
+      setEmailErrorUp(false);
       fetch(`${BACKEND_ADDRESS}/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -72,38 +73,43 @@ export default function LoginScreen({ navigation }) {
           }
         });
     } else {
-      setEmailError(true);
+      setEmailErrorUp(true);
     }
   };
   //s'identifier
   const handleSignIn = () => {
-    fetch(`${BACKEND_ADDRESS}/users/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: signInPassword,
-        email: signInMail,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(
-            login({
-              nom: data.user.nom,
-              prenom: data.user.prenom,
-              password: signInPassword,
-              email: signInMail,
-              token: data.user.token,
-            })
-          );
-          setSignInMail("");
-          setSignInPassword("");
-          setModalVisible(false);
+    if (EMAIL_REGEX.test(signInMail)) {
+      setEmailErrorIn(false);
+      fetch(`${BACKEND_ADDRESS}/users/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: signInPassword,
+          email: signInMail,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(
+              login({
+                nom: data.user.nom,
+                prenom: data.user.prenom,
+                password: signInPassword,
+                email: signInMail,
+                token: data.user.token,
+              })
+            );
+            setSignInMail("");
+            setSignInPassword("");
+            setModalVisible(false);
 
-          navigation.navigate("DrawerNavigator");
-        }
-      });
+            navigation.navigate("DrawerNavigator");
+          }
+        });
+    } else {
+      setEmailErrorIn(true);
+    }
   };
 
   const [loaded] = useFonts({
@@ -135,7 +141,7 @@ export default function LoginScreen({ navigation }) {
               mode="outlined"
               label="Email"
               selectionColor="#144272"
-              outlineColor="#144272"
+              outlineColor={emailErrorIn ? "red" : "#144272"}
               activeOutlineColor="#144272"
               keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
               autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
@@ -144,7 +150,7 @@ export default function LoginScreen({ navigation }) {
               onChangeText={(value) => setSignInMail(value)}
               value={signInMail}
             />
-            {emailError && (
+            {emailErrorIn && (
               <Text style={styles.error}>Adresse mail invalide</Text>
             )}
             {!pwdVisible ? (
@@ -216,13 +222,18 @@ export default function LoginScreen({ navigation }) {
           mode="outlined"
           label="Email"
           selectionColor="#144272"
-          outlineColor={emailError ? "red" : "#144272"}
+          outlineColor={emailErrorUp ? "red" : "#144272"}
           activeOutlineColor="#144272"
-          autoCapitalize="none"
+          keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+          autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+          autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+          autoCorrect={false}
           onChangeText={(value) => setSignUpMail(value)}
           value={signUpMail}
         />
-        {emailError && <Text style={styles.error}>Invalid email address</Text>}
+        {emailErrorUp && (
+          <Text style={styles.error}>Adresse mail invalide</Text>
+        )}
         {!pwdVisible ? (
           <TextInput
             style={styles.input}
