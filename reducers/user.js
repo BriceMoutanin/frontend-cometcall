@@ -23,8 +23,7 @@ export const userSlice = createSlice({
     },
 
     update: (state, action) => {
-      state.value.token = action.payload.token;
-      state.value.email = action.payload.email;
+      
       state.value.prenom = action.payload.prenom;
       state.value.nom = action.payload.nom;
       state.value.tel = action.payload.tel;

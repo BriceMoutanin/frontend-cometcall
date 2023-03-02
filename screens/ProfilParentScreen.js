@@ -1,32 +1,34 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { update } from "../reducers/user";
-import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity, ScrollView } from "react-native";
+import { TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 
-const Corrected = () => {
+
+  
+export default function ProfilParentScreen({ navigation }) {
   const dispatch = useDispatch();
-  const [updateNom, setupdateNom] = useState("");
-  const [updatePrenom, setupdatePrenom] = useState("");
-  const [updateEmail, setupdateEmail] = useState("");
-  const [updateTel, setupdateTel] = useState("");
+  const user = useSelector((state) => state.user.value);
+  const [updateNom, setupdateNom] = useState(user.nom);
+  const [updatePrenom, setupdatePrenom] = useState(user.prenom);
+  const [updateTel, setupdateTel] = useState(user.tel);
   
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
-  const parentId = useSelector((state) => state.user.id);
+  
 
   const parentUpdate = async () => {
     try {
-      const response = await fetch(`${BACKEND_ADDRESS}/users/${parentId}`, {
+      const response = await fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nom: updateNom,
           prenom: updatePrenom,
-          email: updateEmail,
-          telephone:updateTel,
+          tel:updateTel,
         }),
       });
 
@@ -34,11 +36,9 @@ const Corrected = () => {
       if (data.result) {
         dispatch(
           update({
-            nom:data.newUser.nom,
-            prenom:data.newUser.prenom,
-            tel: data.newUser.telephone,
-            email: data.newUser.email,
-            token: data.newUser.token,
+            nom:updateNom,
+            prenom:updatePrenom,
+            tel: updateTel,
           }
           )
         );
@@ -50,10 +50,9 @@ const Corrected = () => {
       console.log("Erreur lors de la modification des informations du parent: ", err);
     }
   };
-}
 
 
-export default function ProfilParentScreen({ navigation }) {
+
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
@@ -90,6 +89,8 @@ export default function ProfilParentScreen({ navigation }) {
                 selectionColor="#1A7B93"
                 outlineColor="#1A7B93"
                 activeOutlineColor="#1A7B93"
+                onChangeText={(value)=>setupdateNom(value)}
+                value={updateNom}
               />
               <TextInput
                 style={styles.input}
@@ -98,6 +99,8 @@ export default function ProfilParentScreen({ navigation }) {
                 selectionColor="#1A7B93"
                 outlineColor="#1A7B93"
                 activeOutlineColor="#1A7B93"
+                onChangeText={(value)=>setupdatePrenom(value)}
+                value={updatePrenom}
               />
               <TextInput
                 style={styles.input}
@@ -106,6 +109,8 @@ export default function ProfilParentScreen({ navigation }) {
                 selectionColor="#1A7B93"
                 outlineColor="#1A7B93"
                 activeOutlineColor="#1A7B93"
+                onChangeText={(value)=>setupdateTel(value)}
+                value={updateTel}
               />
             </View>
           </View>
@@ -207,7 +212,7 @@ export default function ProfilParentScreen({ navigation }) {
               >
                 <Text
                   style={styles.textButton}
-                  onPress={() => handleRegister()}
+                  onPress={() => parentUpdate()}
                 >
                   Enregistrer
                 </Text>
