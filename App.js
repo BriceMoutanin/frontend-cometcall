@@ -29,6 +29,8 @@ import DemandeScreen from "./screens/DemandeScreen";
 import FAQScreen from "./screens/FAQScreen";
 import HistoriqueScreen from "./screens/HistoriqueScreen";
 import ProblematiqueScreen from "./screens/ProblematiqueScreen";
+import ReponseScreen from "./screens/ReponseScreen";
+import MessageScreen from "./screens/MessageScreen";
 
 //import expo
 import { Entypo } from "@expo/vector-icons";
@@ -101,7 +103,7 @@ function CustomDrawerContent(props) {
       >
         <TouchableOpacity
           style={styles.demandeButton}
-          onPress={() => props.navigation.navigate("Demande")}
+          onPress={() => props.navigation.navigate("DemandeStack")}
         >
           <Text>Nouvelle demande</Text>
         </TouchableOpacity>
@@ -109,22 +111,24 @@ function CustomDrawerContent(props) {
     </DrawerContentScrollView>
   );
 }
+//deuxieme stack enfants a partir de Demande
+const StackNavigatorDemande = ({ route }) => {
+  const title = getHeaderTitle(route.name);
+  return (
+    <Stack.Navigator
+      name="DemandeStack"
+      screenOptions={{ headerShown: false }}
+      title={title}
+    >
+      <Stack.Screen name="Demande" component={DemandeScreen} />
+      <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
+      <Stack.Screen name="Reponse" component={ReponseScreen} />
+      <Stack.Screen name="Message" component={MessageScreen} />
+    </Stack.Navigator>
+  );
+};
 
-/*const CustomDrawerContentComponent = (props) => (
-  <ScrollView>
-    <SafeAreaView style={styles.container} forceInset={{ left: 'always', horizontal: 'never' }}>
-      <DrawerItems {...props} />
-    </SafeAreaView>
-  </ScrollView>
-);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});*/
-
-//enfant stack Navigator
+//enfant stack des profils
 const StackNavigator = ({ route }) => {
   const title = getHeaderTitle(route.name);
   return (
@@ -135,7 +139,6 @@ const StackNavigator = ({ route }) => {
     >
       <Stack.Screen name="ProfilParent" component={ProfilParentScreen} />
       <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
-      <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
     </Stack.Navigator>
   );
 };
@@ -172,10 +175,17 @@ const DrawerNavigator = () => {
           unmountOnBlur: true,
         }}
       />
+      <Drawer.Screen
+        name="DemandeStack"
+        component={StackNavigatorDemande}
+        options={{
+          tabBarLabel: "Profil",
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
       <Drawer.Screen name="F.A.Q." component={FAQScreen} />
-
-      <Drawer.Screen name="Demande" component={DemandeScreen} />
+      {/* <Drawer.Screen name="Demande" component={DemandeScreen} /> */}
     </Drawer.Navigator>
   );
 };
@@ -187,9 +197,6 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={LoginScreen} />
-
-            {/* <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
-        <Stack.Screen name="Problematique" component={ProblematiqueScreen} /> */}
             <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
