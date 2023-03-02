@@ -1,17 +1,57 @@
-import {
-  StyleSheet,
-  View,
-  Image,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { update } from "../reducers/user";
+import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { TextInput } from "react-native-paper";
+
+
+const Corrected = () => {
+  const dispatch = useDispatch();
+  const [updateNom, setupdateNom] = useState("");
+  const [updatePrenom, setupdatePrenom] = useState("");
+  const [updateEmail, setupdateEmail] = useState("");
+  const [updateTel, setupdateTel] = useState("");
+  
+  const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+  const parentId = useSelector((state) => state.user.id);
+
+  const parentUpdate = async () => {
+    try {
+      const response = await fetch(`${BACKEND_ADDRESS}/users/${parentId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nom: updateNom,
+          prenom: updatePrenom,
+          email: updateEmail,
+          telephone:updateTel,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.result) {
+        dispatch(
+          update({
+            nom:data.newUser.nom,
+            prenom:data.newUser.prenom,
+            tel: data.newUser.telephone,
+            email: data.newUser.email,
+            token: data.newUser.token,
+          }
+          )
+        );
+  
+        navigation.navigate("DrawerNavigator");
+        }
+      }
+     catch (err) {
+      console.log("Erreur lors de la modification des informations du parent: ", err);
+    }
+  };
+}
+
 
 export default function ProfilParentScreen({ navigation }) {
   const [loaded] = useFonts({

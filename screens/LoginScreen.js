@@ -56,8 +56,6 @@ export default function LoginScreen({ navigation }) {
               token: data.newUser.token,
             })
           );
-          setSignUpMail("");
-          setSignUpPassword("");
 
           navigation.navigate("DrawerNavigator");
         }
