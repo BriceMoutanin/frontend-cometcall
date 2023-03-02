@@ -1,6 +1,13 @@
 //import react-native
 import "react-native-gesture-handler";
-import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Button,
+  SafeAreaView,
+} from "react-native";
 
 //import react navigation
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -53,20 +60,70 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView
+      {...props}
+      contentContainerStyle={{
+        flex: 1,
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#144272",
+          flexDirection: "column",
+          justifyContent: "flex-srtart",
+        }}
+      >
+        <TouchableOpacity
+          style={styles.demandeButton}
+          onPress={() => props.navigation.navigate("Login")}
+        >
+          <Text>Deconnexion</Text>
+        </TouchableOpacity>
+      </View>
       <DrawerItemList {...props} />
-      <DrawerItem
-        style={styles.demandeButton}
+      {/* <DrawerItem
+        itemStyle={styles.demandeButton}
         label="Nouvelle demande"
-        labelStyle={(color = "#144272")}
-        icon={({ focused, color, size }) => (
-          <Entypo color={color} size={size} name={"plus"} />
+        labelStyle={(activeTintColor = "#144272")}
+        iconContainerStyle={({ focused, activeTintcolor, size }) => (
+          <Entypo color={activeTintcolor} size={size} name={"plus"} />
         )}
-        onPress={() => props.navigation.navigate("ProfilParent")}
-      />
+        onItemPress={() => props.navigation.navigate("Demande")}
+      /> */}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#144272",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+        }}
+      >
+        <TouchableOpacity
+          style={styles.demandeButton}
+          onPress={() => props.navigation.navigate("Demande")}
+        >
+          <Text>Nouvelle demande</Text>
+        </TouchableOpacity>
+      </View>
     </DrawerContentScrollView>
   );
 }
+
+/*const CustomDrawerContentComponent = (props) => (
+  <ScrollView>
+    <SafeAreaView style={styles.container} forceInset={{ left: 'always', horizontal: 'never' }}>
+      <DrawerItems {...props} />
+    </SafeAreaView>
+  </ScrollView>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});*/
+
 //enfant stack Navigator
 const StackNavigator = ({ route }) => {
   const title = getHeaderTitle(route.name);
@@ -87,7 +144,9 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => (
-        <CustomDrawerContent {...props}></CustomDrawerContent>
+        <>
+          <CustomDrawerContent {...props}></CustomDrawerContent>
+        </>
       )}
       initialRouteName="Home"
       style={styles.header}
@@ -155,6 +214,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
+    marginBottom: 80,
     alignSelf: "center",
     width: "90%",
     fontFamily: "OpenSans",
@@ -177,9 +237,15 @@ const styles = StyleSheet.create({
     paddingTop: 100,
     paddingBottom: 100,
   },
+
+  DrawerItemList: {
+    backgroundColor: "#144272",
+  },
+
   itemDrawer: {
     backgroundColor: "#144272",
   },
+
   txtItemDrawer: {
     color: "white",
     fontSize: 24,
