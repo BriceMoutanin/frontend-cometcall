@@ -26,7 +26,7 @@ export default function ProfilParentScreen({ navigation }) {
     navigation.navigate("ProfilEnfant");
   };
   const handleRegister = () => {
-    navigation.navigate("Demande");
+    navigation.navigate("DemandeStack");
   };
 
   return (

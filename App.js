@@ -132,7 +132,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Demande"
+        name="DemandeStack"
         component={StackNavigatorDemande}
         options={{
           tabBarLabel: "Profil",
@@ -141,7 +141,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
       <Drawer.Screen name="F.A.Q." component={FAQScreen} />
-      <Drawer.Screen name="Demande" component={DemandeScreen} />
+      {/* <Drawer.Screen name="Demande" component={DemandeScreen} /> */}
     </Drawer.Navigator>
   );
 };

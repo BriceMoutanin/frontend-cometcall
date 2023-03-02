@@ -31,39 +31,51 @@ export default function LoginScreen({ navigation }) {
   const [signInPassword, setSignInPassword] = useState("");
   const [signInMail, setSignInMail] = useState("");
 
+  const [emailError, setEmailError] = useState(false);
+
   const dispatch = useDispatch();
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
+  // Grabbed from emailregex.com
+  const EMAIL_REGEX =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  // s'inscrire
   const handleSignUp = () => {
-    fetch(`${BACKEND_ADDRESS}/users/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: signUpPassword,
-        email: signUpMail,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(
-            login({
-              nom: data.newUser.nom,
-              prenom: data.newUser.prenom,
-              password: signUpPassword,
-              email: signUpMail,
-              token: data.newUser.token,
-            })
-          );
-          setSignUpMail("");
-          setSignUpPassword("");
+    if (EMAIL_REGEX.test(signUpMail)) {
+      setEmailError(false);
+      fetch(`${BACKEND_ADDRESS}/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: signUpPassword,
+          email: signUpMail,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(
+              login({
+                nom: data.newUser.nom,
+                prenom: data.newUser.prenom,
+                password: signUpPassword,
+                email: signUpMail,
+                token: data.newUser.token,
+              })
+            );
+            setSignUpMail("");
+            setSignUpPassword("");
 
-          navigation.navigate("DrawerNavigator");
-        }
-      });
+            navigation.navigate("DrawerNavigator");
+          }
+        });
+    } else {
+      setEmailError(true);
+    }
   };
-
+  //s'identifier
   const handleSignIn = () => {
     fetch(`${BACKEND_ADDRESS}/users/signin`, {
       method: "POST",
@@ -119,18 +131,25 @@ export default function LoginScreen({ navigation }) {
         >
           <View style={styles.modalView}>
             <TextInput
-              style={styles.input}
+              style={styles.inputModal}
               mode="outlined"
               label="Email"
               selectionColor="#144272"
               outlineColor="#144272"
               activeOutlineColor="#144272"
+              keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+              autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+              autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+              autoCorrect={false}
               onChangeText={(value) => setSignInMail(value)}
               value={signInMail}
             />
+            {emailError && (
+              <Text style={styles.error}>Adresse mail invalide</Text>
+            )}
             {!pwdVisible ? (
               <TextInput
-                style={styles.input}
+                style={styles.inputModal}
                 mode="outlined"
                 label="Password"
                 secureTextEntry={true}
@@ -143,12 +162,13 @@ export default function LoginScreen({ navigation }) {
                 selectionColor="#144272"
                 activeUnderlineColor="#144272"
                 activeOutlineColor="#144272"
+                autoCapitalize="none"
                 onChangeText={(value) => setSignInPassword(value)}
                 value={signInPassword}
               />
             ) : (
               <TextInput
-                style={styles.input}
+                style={styles.inputModal}
                 mode="outlined"
                 label="Password"
                 inputMode="text"
@@ -162,12 +182,13 @@ export default function LoginScreen({ navigation }) {
                 selectionColor="#144272"
                 activeUnderlineColor="#144272"
                 activeOutlineColor="#144272"
+                autoCapitalize="none"
                 onChangeText={(value) => setSignInPassword(value)}
                 value={signInPassword}
               />
             )}
             <TouchableOpacity
-              style={styles.signInButton}
+              style={styles.signInButtonModal}
               onPress={() => handleSignIn()}
             >
               <Text style={styles.cntText}>Connexion</Text>
@@ -195,11 +216,13 @@ export default function LoginScreen({ navigation }) {
           mode="outlined"
           label="Email"
           selectionColor="#144272"
-          outlineColor="#144272"
+          outlineColor={emailError ? "red" : "#144272"}
           activeOutlineColor="#144272"
+          autoCapitalize="none"
           onChangeText={(value) => setSignUpMail(value)}
           value={signUpMail}
         />
+        {emailError && <Text style={styles.error}>Invalid email address</Text>}
         {!pwdVisible ? (
           <TextInput
             style={styles.input}
@@ -215,6 +238,7 @@ export default function LoginScreen({ navigation }) {
             selectionColor="#144272"
             activeUnderlineColor="#144272"
             activeOutlineColor="#144272"
+            autoCapitalize="none"
             onChangeText={(value) => setSignUpPassword(value)}
             value={signUpPassword}
           />
@@ -234,6 +258,7 @@ export default function LoginScreen({ navigation }) {
             selectionColor="#144272"
             activeUnderlineColor="#144272"
             activeOutlineColor="#144272"
+            autoCapitalize="none"
             onChangeText={(value) => setSignUpPassword(value)}
             value={signUpPassword}
           />
@@ -318,6 +343,7 @@ const styles = StyleSheet.create({
   signInButton: {
     width: "50%",
     padding: 10,
+    margin: 20,
     borderRadius: 8,
     backgroundColor: "white",
     shadowColor: "gray",
@@ -370,7 +396,6 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    height: 300,
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -384,5 +409,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+
+  signInButtonModal: {
+    width: "50%",
+    padding: 10,
+    marginTop: 30,
+    borderRadius: 8,
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+  },
+
+  inputModal: {
+    width: "90%",
+    margin: 5,
   },
 });
