@@ -23,7 +23,6 @@ export const userSlice = createSlice({
     },
 
     update: (state, action) => {
-      
       state.value.prenom = action.payload.prenom;
       state.value.nom = action.payload.nom;
       state.value.tel = action.payload.tel;
@@ -31,5 +30,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout,update } = userSlice.actions;
+export const { login, logout, update } = userSlice.actions;
 export default userSlice.reducer;

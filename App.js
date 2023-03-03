@@ -40,6 +40,7 @@ import { StatusBar } from "expo-status-bar";
 import { Provider } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
+import { useSelector } from "react-redux";
 
 // redux-persist imports
 import { persistStore, persistReducer } from "redux-persist";
@@ -61,6 +62,8 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
+  const userReducer = useSelector((state) => state.user.value);
+  console.log(userReducer);
   return (
     <DrawerContentScrollView
       {...props}

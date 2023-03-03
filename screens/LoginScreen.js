@@ -1,5 +1,5 @@
 //import react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //import react vative
 import {
@@ -34,6 +34,14 @@ export default function LoginScreen({ navigation }) {
   const [emailErrorIn, setEmailErrorIn] = useState(false);
   const [emailErrorUp, setEmailErrorUp] = useState(false);
 
+  const userReducer = useSelector((state) => state.user.value);
+
+  useEffect(() => {
+    if (userReducer.token) {
+      navigation.navigate("DrawerNavigator");
+    }
+  }, []);
+
   const dispatch = useDispatch();
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
@@ -46,28 +54,28 @@ export default function LoginScreen({ navigation }) {
   const handleSignUp = () => {
     if (EMAIL_REGEX.test(signUpMail)) {
       setEmailErrorUp(false);
-    fetch(`${BACKEND_ADDRESS}/users/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: signUpPassword,
-        email: signUpMail,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(
-            login({
-              nom: data.newUser.nom,
-              prenom: data.newUser.prenom,
-              password: signUpPassword,
-              email: signUpMail,
-              token: data.newUser.token,
-            })
-          );
-          setSignUpMail("");
-          setSignUpPassword("");
+      fetch(`${BACKEND_ADDRESS}/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: signUpPassword,
+          email: signUpMail,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(
+              login({
+                nom: data.newUser.nom,
+                prenom: data.newUser.prenom,
+                password: signUpPassword,
+                email: signUpMail,
+                token: data.newUser.token,
+              })
+            );
+            setSignUpMail("");
+            setSignUpPassword("");
 
             navigation.navigate("DrawerNavigator");
           }
