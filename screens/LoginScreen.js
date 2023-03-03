@@ -1,5 +1,5 @@
 //import react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //import react vative
 import {
@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
-//import expo
+//import expo police
 import { useFonts } from "expo-font";
 //import logo
 import Logo from "../assets/logoComEtCall";
@@ -34,9 +34,27 @@ export default function LoginScreen({ navigation }) {
   const [emailErrorIn, setEmailErrorIn] = useState(false);
   const [emailErrorUp, setEmailErrorUp] = useState(false);
 
+  const userReducer = useSelector((state) => state.user.value);
+
+  // ne pas devoir se reconnecter => reduxPersist
+  useEffect(() => {
+    if (userReducer.token) {
+      navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
+    }
+  }, []);
+
   const dispatch = useDispatch();
 
+  //lien avec le Backend
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+
+  // import de la police Open-sans
+  const [loaded] = useFonts({
+    OpenSans: require("../assets/fonts/Open-Sans.ttf"),
+  });
+  if (!loaded) {
+    return null;
+  }
 
   // Grabbed from emailregex.com
   const EMAIL_REGEX =
@@ -113,14 +131,6 @@ export default function LoginScreen({ navigation }) {
       setEmailErrorIn(true);
     }
   };
-
-  const [loaded] = useFonts({
-    OpenSans: require("../assets/fonts/Open-Sans.ttf"),
-  });
-
-  if (!loaded) {
-    return null;
-  }
 
   return (
     <View style={styles.centeredView}>
