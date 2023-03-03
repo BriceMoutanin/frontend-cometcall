@@ -12,8 +12,8 @@ import { useFonts } from "expo-font";
 import { useSelector } from "react-redux";
 
 export default function DemandeScreen({ navigation }) {
-  const enfants = useSelector((state) => state.user.value.enfants);
-  console.log(enfants);
+  const user = useSelector((state) => state.user.value);
+  console.log(user);
 
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
@@ -21,7 +21,7 @@ export default function DemandeScreen({ navigation }) {
 
   if (!loaded) {
     return null;
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,14 +33,14 @@ export default function DemandeScreen({ navigation }) {
 
       <ScrollView style={styles.scroll}>
         <View>
-          {enfants.map((enfant, index) => (
+          {user.enfants.map((enfant, index) => (
             <TouchableOpacity
               key={index}
               style={styles.childButton}
               activeOpacity={0.8}
-            /*  onPress={() =>
+              onPress={() =>
                 navigation.navigate("Problematique", { navigation, enfant })
-              }*/
+              }
             >
               <Image
                 style={styles.childImage}
@@ -55,7 +55,6 @@ export default function DemandeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -124,4 +123,4 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
     fontFamily: "OpenSans",
   },
-}); 
+});

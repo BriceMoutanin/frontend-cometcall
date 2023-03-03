@@ -124,7 +124,7 @@ export default function LoginScreen({ navigation }) {
             setSignInPassword("");
             setModalVisible(false);
 
-            navigation.navigate("DrawerNavigator");
+            navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
           }
         });
     } else {
