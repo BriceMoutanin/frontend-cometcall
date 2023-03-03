@@ -9,15 +9,19 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+import { useSelector } from "react-redux";
 
 export default function DemandeScreen({ navigation }) {
+  const enfants = useSelector((state) => state.user.value.enfants);
+  console.log(enfants);
+
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
 
   if (!loaded) {
     return null;
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,89 +32,30 @@ export default function DemandeScreen({ navigation }) {
       </View>
 
       <ScrollView style={styles.scroll}>
-        <View style={styles.childContainer}>
-          <View>
+        <View>
+          {enfants.map((enfant, index) => (
             <TouchableOpacity
+              key={index}
               style={styles.childButton}
               activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate("Problematique" /*{ navigation, enfant }*/)
-              }
-              // navigation.navigate("DrawerNavigator", { problematique })
+            /*  onPress={() =>
+                navigation.navigate("Problematique", { navigation, enfant })
+              }*/
             >
               <Image
                 style={styles.childImage}
                 source={require("../assets/avatar.png")}
               />
-              <Text style={styles.textButton}>childName</Text>
+              <Text style={styles.textButton}>{enfant.prenom}</Text>
               <Feather name="more-vertical" size={24} color="black" />
             </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>childName</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>childName</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>childName</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>childName</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>childName</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>childName</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -179,4 +124,4 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
     fontFamily: "OpenSans",
   },
-});
+}); 

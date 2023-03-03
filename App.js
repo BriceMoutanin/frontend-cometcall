@@ -39,6 +39,8 @@ import { StatusBar } from "expo-status-bar";
 //import Redux
 import { Provider } from "react-redux";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+
+// Reducers
 import user from "./reducers/user";
 
 // redux-persist imports
