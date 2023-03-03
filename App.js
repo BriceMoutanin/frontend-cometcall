@@ -62,8 +62,8 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-  const userReducer = useSelector((state) => state.user.value);
-  console.log(userReducer);
+  // const userReducer = useSelector((state) => state.user.value);
+  // console.log(userReducer);
   return (
     <DrawerContentScrollView
       {...props}
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     alignSelf: "center",
     width: "90%",
-    fontFamily: "OpenSans",
+    // fontFamily: "OpenSans",
     borderRadius: 10,
     backgroundColor: "white",
     shadowColor: "gray",

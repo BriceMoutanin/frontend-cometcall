@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
-//import expo
+//import expo police
 import { useFonts } from "expo-font";
 //import logo
 import Logo from "../assets/logoComEtCall";
@@ -36,15 +36,25 @@ export default function LoginScreen({ navigation }) {
 
   const userReducer = useSelector((state) => state.user.value);
 
+  // ne pas devoir se reconnecter => reduxPersist
   useEffect(() => {
     if (userReducer.token) {
-      navigation.navigate("DrawerNavigator");
+      navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
     }
   }, []);
 
   const dispatch = useDispatch();
 
+  //lien avec le Backend
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+
+  // import de la police Open-sans
+  const [loaded] = useFonts({
+    OpenSans: require("../assets/fonts/Open-Sans.ttf"),
+  });
+  if (!loaded) {
+    return null;
+  }
 
   // Grabbed from emailregex.com
   const EMAIL_REGEX =
@@ -119,14 +129,6 @@ export default function LoginScreen({ navigation }) {
       setEmailErrorIn(true);
     }
   };
-
-  const [loaded] = useFonts({
-    OpenSans: require("../assets/fonts/Open-Sans.ttf"),
-  });
-
-  if (!loaded) {
-    return null;
-  }
 
   return (
     <View style={styles.centeredView}>
