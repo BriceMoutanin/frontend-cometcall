@@ -6,13 +6,76 @@ import {
   Text,
   Button,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { useFonts } from "expo-font";
 import { AntDesign } from "@expo/vector-icons";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import { useState, useRef, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function ProfilEnfantScreen({ navigation }) {
+  const [loading, setLoading] = useState(false);
+  const [suggestionsList, setSuggestionsList] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [etablissements, setEtablissements] = useState([]);
+  const [updatePrenom, setUpdatePrenom] = useState("");
+  const [updateEtablissement, setUpdateEtablissement] = useState(null);
+  const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+
+  const dropdownController = useRef(null);
+
+  const searchRef = useRef(null);
+
+  const getSuggestions = useCallback(async (q) => {
+    const filterToken = q.toLowerCase();
+    console.log("getSuggestions", q);
+    if (typeof q !== "string" || q.length < 3) {
+      setSuggestionsList(null);
+      return;
+    }
+    setLoading(true);
+    const response = await fetch(
+      `https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-annuaire-education&q=${q}`
+    );
+    const data = await response.json();
+    const items = data.records;
+    if (
+      data !== null &&
+      data !== undefined &&
+      items !== null &&
+      items !== undefined &&
+      items.length !== 0
+    ) {
+      const suggestions = items
+        .filter((item) =>
+          item.fields.nom_etablissement.toLowerCase().includes(q.toLowerCase())
+        )
+        .map((item, i) => ({
+          id: item.recordid,
+          title:
+            item.fields.nom_etablissement +
+            " (" +
+            item.fields.nom_commune +
+            ")",
+          etablissement: {
+            type: item.fields.type_etablissement,
+            nom: item.fields.nom_etablissement,
+          },
+        }));
+      setSuggestionsList(suggestions);
+    }
+    setLoading(false);
+  }, []);
+  ``;
+  const onClearPress = useCallback(() => {
+    setSuggestionsList(null);
+  }, []);
+
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
@@ -20,7 +83,22 @@ export default function ProfilEnfantScreen({ navigation }) {
   if (!loaded) {
     return null;
   }
-  const handleValide = () => {
+  const handleValide = async () => {
+    const response = await fetch(
+      `${BACKEND_ADDRESS}/users/addEnfant/${user.token}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prenom: updatePrenom,
+          etablissement: updateEtablissement,
+        }),
+      }
+    );
+    const data = await response.json();
+    if (data.result) {
+      // handle result
+    }
     navigation.navigate("ProfilParent");
   };
 
@@ -38,32 +116,61 @@ export default function ProfilEnfantScreen({ navigation }) {
           style={styles.input}
           mode="outlined"
           label="Prénom de l'enfant"
-          selectionColor="#1A7B93"
-          outlineColor="#1A7B93"
-          activeOutlineColor="#1A7B93"
+          selectionColor="#144172"
+          outlineColor="#144172"
+          activeOutlineColor="#144172"
+          onChangeText={(value) => setUpdatePrenom(value)}
+          value={updatePrenom}
         />
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Ecole de l'enfant"
-          selectionColor="#1A7B93"
-          outlineColor="#1A7B93"
-          activeOutlineColor="#1A7B93"
-        />
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Classe de l'enfant"
-          selectionColor="#1A7B93"
-          outlineColor="#1A7B93"
-          activeOutlineColor="#1A7B93"
+        <AutocompleteDropdown
+          direction={Platform.select({ ios: "up", android: "up" })}
+          ref={searchRef}
+          controller={(controller) => {
+            dropdownController.current = controller;
+          }}
+          clearOnFocus={false}
+          closeOnBlur={false}
+          closeOnSubmit={false}
+          useFilter={false}
+          loading={loading}
+          showClear={true}
+          debounce={600}
+          onClear={onClearPress}
+          onChangeText={getSuggestions}
+          onSelectItem={(item) => {
+            if (item) {
+              setSelectedItem(item.id);
+              setUpdateEtablissement(item.etablissement);
+            }
+          }}
+          suggestionsListMaxHeight={Dimensions.get("window").height * 0.4}
+          dataSet={suggestionsList}
+          emptyResultText="Aucun résultat"
+          textInputProps={{
+            placeholder: "Rechercher un nom d'établissement",
+            autoCorrect: false,
+            autoCapitalize: "none",
+            height: "fit",
+          }}
+          inputContainerStyle={{
+            borderWidth: 2,
+            borderColor: "#144172",
+            backgroundColor: "white",
+            width: "90%",
+          }}
+          suggestionsListContainerStyle={{
+            backgroundColor: "white",
+            width: "90%",
+          }}
         />
       </View>
       <View style={styles.button}>
-        <TouchableOpacity style={styles.valideButton} activeOpacity={0.8}>
-          <Text style={styles.textButton} onPress={() => handleValide()}>
-            Valider
-          </Text>
+        <TouchableOpacity
+          style={styles.valideButton}
+          activeOpacity={0.8}
+          onPress={() => handleValide()}
+        >
+          <Text style={styles.textButton}>Valider</Text>
           <AntDesign name="arrowright" size={24} color="black" />
         </TouchableOpacity>
       </View>
