@@ -46,28 +46,29 @@ export default function LoginScreen({ navigation }) {
   const handleSignUp = () => {
     if (EMAIL_REGEX.test(signUpMail)) {
       setEmailErrorUp(false);
-    fetch(`${BACKEND_ADDRESS}/users/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: signUpPassword,
-        email: signUpMail,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          dispatch(
-            login({
-              nom: data.newUser.nom,
-              prenom: data.newUser.prenom,
-              password: signUpPassword,
-              email: signUpMail,
-              token: data.newUser.token,
-            })
-          );
-          setSignUpMail("");
-          setSignUpPassword("");
+      fetch(`${BACKEND_ADDRESS}/users/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: signUpPassword,
+          email: signUpMail,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            dispatch(
+              login({
+                nom: data.newUser.nom,
+                prenom: data.newUser.prenom,
+                password: signUpPassword,
+                email: signUpMail,
+                token: data.newUser.token,
+                enfants: data.newUser.enfants,
+              })
+            );
+            setSignUpMail("");
+            setSignUpPassword("");
 
             navigation.navigate("DrawerNavigator");
           }
@@ -98,6 +99,7 @@ export default function LoginScreen({ navigation }) {
                 password: signInPassword,
                 email: signInMail,
                 token: data.user.token,
+                enfants: data.user.enfants,
               })
             );
             setSignInMail("");

@@ -15,6 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { addEnfant } from "../reducers/user";
 
 export default function ProfilEnfantScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export default function ProfilEnfantScreen({ navigation }) {
     }
     setLoading(true);
     const response = await fetch(
-      `https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-annuaire-education&q=${q}`
+      `https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-annuaire-education&q=${q}&sort=code_postal`
     );
     const data = await response.json();
     const items = data.records;
@@ -51,22 +52,15 @@ export default function ProfilEnfantScreen({ navigation }) {
       items !== undefined &&
       items.length !== 0
     ) {
-      const suggestions = items
-        .filter((item) =>
-          item.fields.nom_etablissement.toLowerCase().includes(q.toLowerCase())
-        )
-        .map((item, i) => ({
-          id: item.recordid,
-          title:
-            item.fields.nom_etablissement +
-            " (" +
-            item.fields.nom_commune +
-            ")",
-          etablissement: {
-            type: item.fields.type_etablissement,
-            nom: item.fields.nom_etablissement,
-          },
-        }));
+      const suggestions = items.map((item, i) => ({
+        id: item.recordid,
+        title:
+          item.fields.nom_etablissement + " (" + item.fields.nom_commune + ")",
+        etablissement: {
+          type: item.fields.type_etablissement,
+          nom: item.fields.nom_etablissement,
+        },
+      }));
       setSuggestionsList(suggestions);
     }
     setLoading(false);
@@ -80,27 +74,27 @@ export default function ProfilEnfantScreen({ navigation }) {
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
 
+  const handleValide = async () => {
+    fetch(`${BACKEND_ADDRESS}/users/addEnfant/${user.token}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prenom: updatePrenom,
+        etablissement: updateEtablissement,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(addEnfant(data.newEnfant));
+          navigation.navigate("ProfilParent");
+        }
+      });
+  };
+
   if (!loaded) {
     return null;
   }
-  const handleValide = async () => {
-    const response = await fetch(
-      `${BACKEND_ADDRESS}/users/addEnfant/${user.token}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prenom: updatePrenom,
-          etablissement: updateEtablissement,
-        }),
-      }
-    );
-    const data = await response.json();
-    if (data.result) {
-      // handle result
-    }
-    navigation.navigate("ProfilParent");
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -139,6 +133,7 @@ export default function ProfilEnfantScreen({ navigation }) {
           onChangeText={getSuggestions}
           onSelectItem={(item) => {
             if (item) {
+              console.log(item);
               setSelectedItem(item.id);
               setUpdateEtablissement(item.etablissement);
             }
@@ -156,15 +151,39 @@ export default function ProfilEnfantScreen({ navigation }) {
             borderWidth: 2,
             borderColor: "#144172",
             backgroundColor: "white",
-            width: "90%",
+            selectionColor: "#144172",
+            outlineColor: "#144172",
+            activeOutlineColor: "#144172",
+            width: "80%",
+            marginTop: 15,
           }}
           suggestionsListContainerStyle={{
-            backgroundColor: "white",
-            width: "90%",
+            backgroundColor: "#144172",
+            width: "80%",
+          }}
+          suggestionsListTextStyle={{
+            color: "white",
           }}
         />
+        <View style={styles.card}>
+          <Text style={styles.h6}>
+            Remarque : Pour plus de précision, renseignez également le code
+            postal dans votre recherche.
+          </Text>
+          <Text style={styles.h6}>
+            Exemple de recherche : "70001 Lycée Jean Moulin"
+          </Text>
+        </View>
       </View>
       <View style={styles.button}>
+        <TouchableOpacity
+          style={styles.valideButton}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("ProfilParent")}
+        >
+          <AntDesign name="arrowleft" size={24} color="black" />
+          <Text style={styles.textButton}>Annuler</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.valideButton}
           activeOpacity={0.8}
@@ -217,7 +236,8 @@ const styles = StyleSheet.create({
 
   button: {
     alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
     position: "relative",
     backgroundColor: "white",
     width: "100%",
@@ -236,7 +256,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 200,
+    width: "80%",
     margin: 12,
     margin: 7,
     fontFamily: "OpenSans",
@@ -246,7 +266,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    width: 350,
+    width: "40%",
     borderRadius: 10,
     backgroundColor: "white",
     shadowColor: "gray",
@@ -259,9 +279,21 @@ const styles = StyleSheet.create({
   },
   textButton: {
     fontSize: 20,
-    paddingLeft: 40,
     fontFamily: "OpenSans",
-    paddingRight: 100,
-    paddingLeft: 120,
+  },
+  card: {
+    backgroundColor: "#144272",
+    borderRadius: 12,
+    width: "70%",
+    padding: 15,
+    marginTop: 10,
+  },
+  h6: {
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
   },
 });
