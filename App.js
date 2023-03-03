@@ -20,6 +20,7 @@ import {
   DrawerContent,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 //import des pages
 import LoginScreen from "./screens/LoginScreen";
@@ -45,6 +46,7 @@ import user from "./reducers/user";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
 
 const reducers = combineReducers({ user });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
@@ -113,6 +115,23 @@ function CustomDrawerContent(props) {
 }
 //deuxieme stack enfants a partir de Demande
 const StackNavigatorDemande = ({ route }) => {
+  function getHeaderTitle(route) {
+    // If the focused route is not found, we need to assume it's the initial screen
+    // This can happen during if there hasn't been any navigation inside the screen
+    // In our case, it's "Feed" as that's the first screen inside the navigator
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
+
+    switch (routeName) {
+      case "Demande":
+        return "Demandes";
+      case "Problematique":
+        return "Problematique";
+      case "Reponse":
+        return "reponse";
+      case "Message":
+        return "Message";
+    }
+  }
   const title = getHeaderTitle(route.name);
   return (
     <Stack.Navigator
@@ -120,10 +139,34 @@ const StackNavigatorDemande = ({ route }) => {
       screenOptions={{ headerShown: false }}
       title={title}
     >
-      <Stack.Screen name="Demande" component={DemandeScreen} />
-      <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
-      <Stack.Screen name="Reponse" component={ReponseScreen} />
-      <Stack.Screen name="Message" component={MessageScreen} />
+      <Stack.Screen
+        name="Demande"
+        component={DemandeScreen}
+        options={({ route }) => ({
+          headerTitle: getHeaderTitle(route),
+        })}
+      />
+      <Stack.Screen
+        name="Problematique"
+        component={ProblematiqueScreen}
+        options={({ route }) => ({
+          headerTitle: getHeaderTitle(route),
+        })}
+      />
+      <Stack.Screen
+        name="Reponse"
+        component={ReponseScreen}
+        options={({ route }) => ({
+          headerTitle: getHeaderTitle(route),
+        })}
+      />
+      <Stack.Screen
+        name="Message"
+        component={MessageScreen}
+        options={({ route }) => ({
+          headerTitle: getHeaderTitle(route),
+        })}
+      />
     </Stack.Navigator>
   );
 };
@@ -144,6 +187,12 @@ const StackNavigator = ({ route }) => {
 };
 //enfant drawer Navigation qui contient l'enfant Stack
 const DrawerNavigator = () => {
+  const [activeScreen, setActiveScreen] = useState("Profil Parent"); //creation etat nom de screen
+
+  const handleActiveScreen = (screenName) => {
+    /// fonction quiset mon etat
+    setActiveScreen(screenName);
+  };
   return (
     <Drawer.Navigator
       drawerContent={(props) => (
@@ -152,10 +201,12 @@ const DrawerNavigator = () => {
         </>
       )}
       initialRouteName="Home"
+      // headerTitle={activeScreen}
       style={styles.header}
       screenOptions={{
         headerStyle: { backgroundColor: "#144272" },
         headerTintColor: "white",
+        headerTitle: activeScreen, //////ici etat
         headerTitleStyle: {
           color: "white",
         },
@@ -171,7 +222,7 @@ const DrawerNavigator = () => {
         name="Profil"
         component={StackNavigator}
         options={{
-          tabBarLabel: "Profil",
+          tabBarLabel: "Profil ",
           unmountOnBlur: true,
         }}
       />
