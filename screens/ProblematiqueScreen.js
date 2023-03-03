@@ -1,11 +1,5 @@
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  Text,
-  FlatList,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, SafeAreaView, Text, ScrollView } from "react-native";
+import { TextInput } from "react-native-paper";
 
 import { useFonts } from "expo-font";
 import React, { useState, useEffect } from "react";
@@ -52,19 +46,6 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
       );
     });
 
-  // Style séparateur d'éléments de liste plate
-  const ItemSeparatorView = () => {
-    return (
-      <View
-        style={{
-          height: 0.5,
-          width: "100%",
-          backgroundColor: "#C8C8C8",
-        }}
-      />
-    );
-  };
-
   // Function pour clicker sur une problematique
   const handleProblematique = (item) => {
     navigation.navigate("Reponse");
@@ -85,16 +66,21 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
           Quel est l'objet de votre demande pour childName ?
         </Text>
       </View>
-      <View style={styles.probleme}>
-        <TextInput
-          style={styles.textInputStyle}
-          onChangeText={(value) => setSearch(value)}
-          value={search}
-          underlineColorAndroid="transparent"
-          placeholder="Search Here"
-        />
-        {problematiqueView}
-      </View>
+
+      <TextInput
+        style={styles.textInputStyle}
+        mode="outlined"
+        label="Barre de recherche"
+        selectionColor="#1A7B93"
+        outlineColor="#1A7B93"
+        onChangeText={(value) => setSearch(value)}
+        value={search}
+        underlineColorAndroid="transparent"
+        placeholder="Barre de recherche"
+      />
+      <ScrollView style={styles.scroll}>
+        <View style={styles.probleme}>{problematiqueView}</View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -121,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "column",
-    // position: "relative",
+    position: "center",
     width: "100%",
     backgroundColor: "white",
     height: "80%",
@@ -169,14 +155,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   itemStyle: {
-    // padding: 10,
+    fontFamily: "OpenSans",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+    backgroundColor: "#144272",
+    width: " 70%",
+    margin: 3,
+    padding: 10,
+    textAlign: "center",
   },
   textInputStyle: {
-    height: 40,
-    borderWidth: 1,
-    paddingLeft: 20,
+    height: 50,
+    paddingLeft: 10,
+    width: "70%",
     margin: 5,
-    borderColor: "#009688",
     backgroundColor: "#FFFFFF",
+    color: "#1A7B93",
+  },
+  scroll: {
+    width: "100%",
   },
 });
