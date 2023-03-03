@@ -78,6 +78,7 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
         underlineColorAndroid="transparent"
         placeholder="Barre de recherche"
       />
+
       <ScrollView style={styles.scroll}>
         <View style={styles.probleme}>{problematiqueView}</View>
       </ScrollView>
@@ -175,5 +176,9 @@ const styles = StyleSheet.create({
   },
   scroll: {
     width: "100%",
+  },
+  descrition: {
+    width: "100%",
+    color: "black",
   },
 });
