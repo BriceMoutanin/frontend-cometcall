@@ -7,6 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Stack,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useState } from "react";
@@ -51,7 +53,10 @@ export default function ChatGPTScreen({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.scrollContainer}>
         <ScrollView
           style={{ height: "100%", width: "100%" }}
@@ -88,6 +93,15 @@ export default function ChatGPTScreen({ route, navigation }) {
               multiline={true}
               onChangeText={(value) => setQuestion(value)}
               value={question}
+              onBlur={() => Keyboard.dismiss()}
+              keyboardType="default"
+              returnKeyType="done"
+              onKeyPress={(keyPress) => {
+                if (keyPress.nativeEvent.key === "Enter") {
+                  Keyboard.dismiss();
+                  handleQuestion();
+                }
+              }}
             ></TextInput>
             <TouchableOpacity
               style={styles.askButton}
@@ -158,7 +172,7 @@ export default function ChatGPTScreen({ route, navigation }) {
           )}
         </ScrollView>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

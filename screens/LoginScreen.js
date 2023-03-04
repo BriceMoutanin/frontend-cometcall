@@ -13,6 +13,7 @@ import {
   Modal,
   Pressable,
   ActivityIndicator,
+  Keyboard,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
@@ -65,6 +66,7 @@ export default function LoginScreen({ navigation }) {
 
   // s'inscrire
   const handleSignUp = () => {
+    Keyboard.dismiss();
     if (EMAIL_REGEX.test(signUpMail)) {
       setLoadingUp(true);
       setEmailErrorUp(false);
@@ -101,6 +103,7 @@ export default function LoginScreen({ navigation }) {
   };
   //s'identifier
   const handleSignIn = () => {
+    Keyboard.dismiss();
     if (EMAIL_REGEX.test(signInMail)) {
       setLoadingIn(true);
       setEmailErrorIn(false);
