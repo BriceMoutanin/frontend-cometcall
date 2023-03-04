@@ -1,3 +1,4 @@
+import { registerRootComponent } from "expo";
 //import react-native
 import "react-native-gesture-handler";
 import {
@@ -48,6 +49,7 @@ import { useSelector } from "react-redux";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ChatGPTScreen from "./screens/ChatGPTScreen";
 
 const reducers = combineReducers({ user });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
@@ -128,6 +130,7 @@ const StackNavigatorDemande = ({ route }) => {
       <Stack.Screen name="Demande" component={DemandeScreen} />
       <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
       <Stack.Screen name="Reponse" component={ReponseScreen} />
+      <Stack.Screen name="Autre" component={ChatGPTScreen} />
       <Stack.Screen name="Message" component={MessageScreen} />
     </Stack.Navigator>
   );
@@ -209,6 +212,8 @@ export default function App() {
     </Provider>
   );
 }
+
+registerRootComponent(App);
 
 const styles = StyleSheet.create({
   container: {

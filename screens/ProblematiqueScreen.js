@@ -4,21 +4,25 @@ import { TextInput } from "react-native-paper";
 import { useFonts } from "expo-font";
 import React, { useState, useEffect } from "react";
 
-export default function ProblematiqueScreen({ navigation, enfant }) {
+export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
   const [search, setSearch] = useState("");
+  const { enfant } = route.params;
 
-  const [titresProblematiques, setTitresProblematiques] = useState([]);
+  const [problematiques, setProblematiques] = useState([]);
 
   //Connection avec le BackEnd
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   useEffect(() => {
+    console.log(enfant);
     fetch(`${BACKEND_ADDRESS}/problematiques`)
       .then((response) => response.json())
       .then((data) => {
-        setTitresProblematiques(
-          data.problematiques.map((problem) => problem.titre)
+        setProblematiques(
+          data.problematiques.filter(
+            (problem) => problem.typeEtablissement === enfant.etablissement.type
+          )
         );
       })
 
@@ -28,28 +32,44 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
   }, []);
 
   //Composant problematique
-  const problematiqueView = titresProblematiques
-    .filter((titre) =>
+  const problematiqueView = problematiques
+    .filter((problematique) =>
       search === null
         ? null
-        : titre.toLowerCase().includes(search.toLowerCase())
+        : problematique.titre.toLowerCase().includes(search.toLowerCase())
     )
-    .map((data, i) => {
+    .map((problematique, i) => {
       return (
         <Text
           style={styles.itemStyle}
-          onPress={() => handleProblematique()}
+          onPress={() =>
+            navigation.navigate("Reponse", {
+              navigation,
+              enfant,
+              problematique,
+            })
+          }
           key={i}
         >
-          {data}
+          {problematique.titre}
         </Text>
       );
     });
 
-  // Function pour clicker sur une problematique
-  const handleProblematique = (item) => {
-    navigation.navigate("Reponse");
-  };
+  problematiqueView.push(
+    <Text
+      style={styles.itemStyle}
+      onPress={() =>
+        navigation.navigate("Autre", {
+          navigation,
+          enfant,
+        })
+      }
+      key={-1}
+    >
+      Autre
+    </Text>
+  );
 
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
@@ -63,7 +83,7 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.question}>
         <Text style={styles.text}>
-          Quel est l'objet de votre demande pour childName ?
+          Quel est l'objet de votre demande pour {enfant.prenom} ?
         </Text>
       </View>
 
