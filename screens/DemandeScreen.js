@@ -38,9 +38,13 @@ export default function DemandeScreen({ navigation }) {
               key={index}
               style={styles.childButton}
               activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate("Problematique", { navigation, enfant })
-              }
+              onPress={() => {
+                const selectedEnfant = enfant;
+                navigation.navigate("Problematique", {
+                  navigation,
+                  selectedEnfant,
+                });
+              }}
             >
               <Image
                 style={styles.childImage}

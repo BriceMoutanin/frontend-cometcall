@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
   const [search, setSearch] = useState("");
-  const { enfant } = route.params;
+  const { selectedEnfant } = route.params;
 
   const [problematiques, setProblematiques] = useState([]);
 
@@ -15,13 +15,14 @@ export default function ProblematiqueScreen({ route, navigation }) {
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   useEffect(() => {
-    console.log(enfant);
+    console.log(selectedEnfant);
     fetch(`${BACKEND_ADDRESS}/problematiques`)
       .then((response) => response.json())
       .then((data) => {
         setProblematiques(
           data.problematiques.filter(
-            (problem) => problem.typeEtablissement === enfant.etablissement.type
+            (problem) =>
+              problem.typeEtablissement === selectedEnfant.etablissement.type
           )
         );
       })
@@ -45,7 +46,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
           onPress={() =>
             navigation.navigate("Reponse", {
               navigation,
-              enfant,
+              selectedEnfant,
               problematique,
             })
           }
@@ -62,7 +63,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
       onPress={() =>
         navigation.navigate("Autre", {
           navigation,
-          enfant,
+          selectedEnfant,
         })
       }
       key={-1}
@@ -83,7 +84,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.question}>
         <Text style={styles.text}>
-          Quel est l'objet de votre demande pour {enfant.prenom} ?
+          Quel est l'objet de votre demande pour {selectedEnfant.prenom} ?
         </Text>
       </View>
 
