@@ -8,7 +8,7 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
-
+import { ToastProvider } from "react-native-toast-notifications";
 //import react navigation
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -42,7 +42,8 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 // Reducers
 import user from "./reducers/user";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "./reducers/user";
 
 // redux-persist imports
 import { persistStore, persistReducer } from "redux-persist";
@@ -66,6 +67,7 @@ const Drawer = createDrawerNavigator();
 function CustomDrawerContent(props) {
   // const userReducer = useSelector((state) => state.user.value);
   // console.log(userReducer);
+  const dispatch = useDispatch();
   return (
     <DrawerContentScrollView
       {...props}
@@ -83,21 +85,15 @@ function CustomDrawerContent(props) {
       >
         <TouchableOpacity
           style={styles.demandeButton}
-          onPress={() => props.navigation.navigate("Login")}
+          onPress={() => {
+            dispatch(logout());
+            props.navigation.navigate("Login");
+          }}
         >
           <Text>Deconnexion</Text>
         </TouchableOpacity>
       </View>
       <DrawerItemList {...props} />
-      {/* <DrawerItem
-        itemStyle={styles.demandeButton}
-        label="Nouvelle demande"
-        labelStyle={(activeTintColor = "#144272")}
-        iconContainerStyle={({ focused, activeTintcolor, size }) => (
-          <Entypo color={activeTintcolor} size={size} name={"plus"} />
-        )}
-        onItemPress={() => props.navigation.navigate("Demande")}
-      /> */}
       <View
         style={{
           flex: 1,
@@ -111,6 +107,12 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate("DemandeStack")}
         >
           <Text>Nouvelle demande</Text>
+          <Entypo
+            style={{ marginLeft: 15 }}
+            color={"#144272"}
+            size={20}
+            name={"plus"}
+          />
         </TouchableOpacity>
       </View>
     </DrawerContentScrollView>
@@ -197,16 +199,24 @@ const DrawerNavigator = () => {
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <NavigationContainer>
-          <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <ToastProvider>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <NavigationContainer>
+            <Stack.Navigator
+              name="Stack"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen
+                name="DrawerNavigator"
+                component={DrawerNavigator}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </ToastProvider>
   );
 }
 

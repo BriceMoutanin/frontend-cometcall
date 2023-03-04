@@ -14,9 +14,11 @@ import { TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+import { useToast } from "react-native-toast-notifications";
 
 export default function ProfilParentScreen({ navigation }) {
   const dispatch = useDispatch();
+  const toast = useToast();
   const user = useSelector((state) => state.user.value);
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
@@ -26,6 +28,10 @@ export default function ProfilParentScreen({ navigation }) {
 
   const parentUpdate = async () => {
     try {
+      let id = toast.show("Enregistrement...", {
+        placement: "bottom",
+        offsetTop: 100,
+      });
       const response = await fetch(
         `${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`,
         {
@@ -41,6 +47,12 @@ export default function ProfilParentScreen({ navigation }) {
 
       const data = await response.json();
       if (data.result) {
+        toast.update(id, "Informations enregistrées", {
+          placement: "bottom",
+          offsetTop: 100,
+          type: "success",
+          duration: 1000,
+        });
         dispatch(
           update({
             nom: updateNom,

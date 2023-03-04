@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
@@ -30,6 +31,8 @@ export default function LoginScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [signInPassword, setSignInPassword] = useState("");
   const [signInMail, setSignInMail] = useState("");
+  const [loadingUp, setLoadingUp] = useState(false);
+  const [loadingIn, setLoadingIn] = useState(false);
 
   const [emailErrorIn, setEmailErrorIn] = useState(false);
   const [emailErrorUp, setEmailErrorUp] = useState(false);
@@ -63,6 +66,7 @@ export default function LoginScreen({ navigation }) {
   // s'inscrire
   const handleSignUp = () => {
     if (EMAIL_REGEX.test(signUpMail)) {
+      setLoadingUp(true);
       setEmailErrorUp(false);
       fetch(`${BACKEND_ADDRESS}/users/signup`, {
         method: "POST",
@@ -87,7 +91,7 @@ export default function LoginScreen({ navigation }) {
             );
             setSignUpMail("");
             setSignUpPassword("");
-
+            setLoadingUp(false);
             navigation.navigate("DrawerNavigator");
           }
         });
@@ -98,6 +102,7 @@ export default function LoginScreen({ navigation }) {
   //s'identifier
   const handleSignIn = () => {
     if (EMAIL_REGEX.test(signInMail)) {
+      setLoadingIn(true);
       setEmailErrorIn(false);
       fetch(`${BACKEND_ADDRESS}/users/signin`, {
         method: "POST",
@@ -109,6 +114,7 @@ export default function LoginScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
+          setLoadingIn(false);
           if (data.result) {
             dispatch(
               login({
@@ -123,7 +129,6 @@ export default function LoginScreen({ navigation }) {
             setSignInMail("");
             setSignInPassword("");
             setModalVisible(false);
-
             navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
           }
         });
@@ -205,12 +210,28 @@ export default function LoginScreen({ navigation }) {
                 value={signInPassword}
               />
             )}
-            <TouchableOpacity
-              style={styles.signInButtonModal}
-              onPress={() => handleSignIn()}
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <Text style={styles.cntText}>Connexion</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.signInButtonModal}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.cntText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.signInButtonModal}
+                onPress={() => handleSignIn()}
+              >
+                <Text style={styles.cntText}>Connexion</Text>
+              </TouchableOpacity>
+            </View>
+            <ActivityIndicator
+              style={{ marginTop: 15 }}
+              size="small"
+              color="#0000ff"
+              animating={loadingIn}
+            />
           </View>
         </View>
       </Modal>
@@ -246,52 +267,37 @@ export default function LoginScreen({ navigation }) {
         {emailErrorUp && (
           <Text style={styles.error}>Adresse mail invalide</Text>
         )}
-        {!pwdVisible ? (
-          <TextInput
-            style={styles.input}
-            mode="outlined"
-            label="Password"
-            secureTextEntry={true}
-            right={
-              <TextInput.Icon
-                icon="eye"
-                onPress={() => setPwdVisible(!pwdVisible)}
-              />
-            }
-            selectionColor="#144272"
-            activeUnderlineColor="#144272"
-            activeOutlineColor="#144272"
-            autoCapitalize="none"
-            onChangeText={(value) => setSignUpPassword(value)}
-            value={signUpPassword}
-          />
-        ) : (
-          <TextInput
-            style={styles.input}
-            mode="outlined"
-            label="Password"
-            inputMode="text"
-            secureTextEntry={false}
-            right={
-              <TextInput.Icon
-                icon="eye-off-outline"
-                onPress={() => setPwdVisible(!pwdVisible)}
-              />
-            }
-            selectionColor="#144272"
-            activeUnderlineColor="#144272"
-            activeOutlineColor="#144272"
-            autoCapitalize="none"
-            onChangeText={(value) => setSignUpPassword(value)}
-            value={signUpPassword}
-          />
-        )}
+        <TextInput
+          style={styles.input}
+          mode="outlined"
+          label="Password"
+          inputMode="text"
+          secureTextEntry={!pwdVisible}
+          right={
+            <TextInput.Icon
+              icon={pwdVisible ? "eye-off-outline" : "eye"}
+              onPress={() => setPwdVisible(!pwdVisible)}
+            />
+          }
+          selectionColor="#144272"
+          activeUnderlineColor="#144272"
+          activeOutlineColor="#144272"
+          autoCapitalize="none"
+          onChangeText={(value) => setSignUpPassword(value)}
+          value={signUpPassword}
+        />
         <TouchableOpacity
           style={styles.cntButton}
           onPress={() => handleSignUp()}
         >
           <Text style={styles.cntText}>S'inscrire</Text>
         </TouchableOpacity>
+        <ActivityIndicator
+          style={{ marginTop: 15 }}
+          size="small"
+          color="#0000ff"
+          animating={loadingUp}
+        />
         <View style={styles.footer}>
           <Text style={styles.h5Black}>Déjà inscrit ?</Text>
           <TouchableOpacity
@@ -319,6 +325,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: "80%",
     padding: 15,
+    marginBottom: 20,
   },
   h5: {
     fontFamily: "OpenSans",
@@ -344,13 +351,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "black",
     textAlign: "center",
+    marginLeft: 0,
   },
   input: {
     width: "70%",
     marginTop: 15,
   },
   cntButton: {
-    width: "90%",
+    width: "70%",
     padding: 10,
     borderRadius: 8,
     backgroundColor: "white",
@@ -367,6 +375,7 @@ const styles = StyleSheet.create({
     width: "50%",
     padding: 10,
     margin: 20,
+    marginRight: 0,
     borderRadius: 8,
     backgroundColor: "white",
     shadowColor: "gray",
@@ -402,7 +411,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
     width: "90%",
-    marginTop: 50,
+    marginTop: 10,
   },
   centeredView: {
     flex: 1,
