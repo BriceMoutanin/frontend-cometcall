@@ -67,7 +67,7 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-  // const userReducer = useSelector((state) => state.user.value);
+  const userReducer = useSelector((state) => state.user.value);
   // console.log(userReducer);
   const dispatch = useDispatch();
   return (
@@ -80,11 +80,21 @@ function CustomDrawerContent(props) {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#144272",
           flexDirection: "column",
-          justifyContent: "flex-srtart",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 20,
+            marginBottom: 10,
+            marginTop: 30,
+          }}
+        >
+          {userReducer.prenom} {userReducer.nom}
+        </Text>
         <TouchableOpacity
           style={styles.demandeButton}
           onPress={() => {
@@ -95,10 +105,10 @@ function CustomDrawerContent(props) {
           <Text>Deconnexion</Text>
         </TouchableOpacity>
       </View>
-      <DrawerItemList {...props} />
+      <DrawerItemList style={{ flex: 4 }} {...props} />
       <View
         style={{
-          flex: 1,
+          flex: 2,
           backgroundColor: "#144272",
           flexDirection: "column",
           justifyContent: "flex-end",
@@ -106,7 +116,9 @@ function CustomDrawerContent(props) {
       >
         <TouchableOpacity
           style={styles.demandeButton}
-          onPress={() => props.navigation.navigate("DemandeStack")}
+          onPress={() =>
+            props.navigation.navigate("DemandeStack", { screen: "Demande" })
+          }
         >
           <Text>Nouvelle demande</Text>
           <Entypo
@@ -175,6 +187,7 @@ const DrawerNavigator = () => {
         drawerLabelStyle: {
           color: "white",
         },
+        drawerActiveTintColor: "white",
       }}
     >
       <Drawer.Screen
@@ -191,6 +204,7 @@ const DrawerNavigator = () => {
         options={{
           tabBarLabel: "Profil",
           unmountOnBlur: true,
+          drawerItemStyle: { height: 0 },
         }}
       />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
@@ -214,6 +228,7 @@ export default function App() {
               <Stack.Screen
                 name="DrawerNavigator"
                 component={DrawerNavigator}
+                options={{ gestureEnabled: false }}
               />
             </Stack.Navigator>
           </NavigationContainer>
