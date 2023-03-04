@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
   const [search, setSearch] = useState("");
-  const { selectedEnfant } = route.params;
+  const { enfant } = route.params;
 
   const [problematiques, setProblematiques] = useState([]);
 
@@ -15,14 +15,13 @@ export default function ProblematiqueScreen({ route, navigation }) {
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   useEffect(() => {
-    console.log(selectedEnfant);
+    console.log(enfant);
     fetch(`${BACKEND_ADDRESS}/problematiques`)
       .then((response) => response.json())
       .then((data) => {
         setProblematiques(
           data.problematiques.filter(
-            (problem) =>
-              problem.typeEtablissement === selectedEnfant.etablissement.type
+            (problem) => problem.typeEtablissement === enfant.etablissement.type
           )
         );
       })
@@ -33,40 +32,45 @@ export default function ProblematiqueScreen({ route, navigation }) {
   }, []);
 
   //Composant problematique
-  const problematiqueView = problematiques
-    .filter((problematique) =>
+  const problematiqueView =
+    problematiques.filter((problematique) =>
       search === null
         ? null
         : problematique.titre.toLowerCase().includes(search.toLowerCase())
-    )
-    .map((problematique, i) => {
-      return (
-        <Text
-          style={styles.itemStyle}
-          onPress={() =>
-            navigation.navigate("Reponse", {
-              navigation,
-              selectedEnfant,
-              problematique,
-            })
-          }
-          key={i}
-        >
-          {problematique.titre}
-        </Text>
-      );
-    });
+    ).length !== 0
+      ? problematiques
+          .filter((problematique) =>
+            search === null
+              ? null
+              : problematique.titre.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((problematique, i) => {
+            return (
+              <Text
+                style={styles.itemStyle}
+                onPress={() =>
+                  navigation.navigate("Reponse", {
+                    enfant,
+                    problematique,
+                  })
+                }
+                key={i}
+              >
+                {problematique.titre}
+              </Text>
+            );
+          })
+      : [<Text key={-1}>Aucun résultat</Text>];
 
   problematiqueView.push(
     <Text
       style={styles.itemStyle}
       onPress={() =>
         navigation.navigate("Autre", {
-          navigation,
-          selectedEnfant,
+          enfant,
         })
       }
-      key={-1}
+      key={-2}
     >
       Autre
     </Text>
@@ -84,7 +88,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.question}>
         <Text style={styles.text}>
-          Quel est l'objet de votre demande pour {selectedEnfant.prenom} ?
+          Quel est l'objet de votre demande pour {enfant.prenom} ?
         </Text>
       </View>
 
