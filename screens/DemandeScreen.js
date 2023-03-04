@@ -25,37 +25,42 @@ export default function DemandeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.question}>
-        <Text style={styles.title}>
-          Pour qui souhaitez-vous prendre contact?
-        </Text>
+      <View style={styles.card}>
+        <Text style={styles.h5}>Pour qui souhaitez-vous prendre contact ?</Text>
       </View>
-
-      <ScrollView style={styles.scroll}>
-        <View>
-          {user.enfants.map((enfant, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.childButton}
-              activeOpacity={0.8}
-              onPress={() => {
-                const selectedEnfant = enfant;
-                navigation.navigate("Problematique", {
-                  navigation,
-                  selectedEnfant,
-                });
-              }}
-            >
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>{enfant.prenom}</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      <View style={styles.enfantsContainer}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View>
+            {user.enfants.map((enfant, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.childButton}
+                activeOpacity={0.8}
+                onPress={() => {
+                  const selectedEnfant = enfant;
+                  navigation.navigate("Problematique", {
+                    navigation,
+                    selectedEnfant,
+                  });
+                }}
+              >
+                <Image
+                  style={styles.childImage}
+                  source={require("../assets/avatar.png")}
+                />
+                <Text style={styles.textButton}>{enfant.prenom}</Text>
+                <Feather name="more-vertical" size={24} color="black" />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -105,7 +110,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "80%",
     borderRadius: 10,
-    margin: 20,
+    marginBottom: 20,
   },
 
   childImage: {
@@ -122,9 +127,35 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  enfantsContainer: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   textButton: {
     fontSize: 20,
     paddingLeft: 40,
     fontFamily: "OpenSans",
+  },
+  card: {
+    backgroundColor: "#144272",
+    borderRadius: 12,
+    width: "90%",
+    padding: 15,
+    paddingBottom: 0,
+    paddingTop: 5,
+    marginBottom: 50,
+    marginTop: 50,
+  },
+  h5: {
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: "100",
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
+    marginBottom: 10,
   },
 });
