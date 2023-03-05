@@ -43,11 +43,11 @@ export default function DemandeScreen({ navigation }) {
           <View>
             {user.enfants.map((enfant, index) => (
               <AnimatedViewPager
+                key={index}
                 entering={SlideInLeft.delay(250 * index).duration(800)}
-                style={{ width: "80%" }}
+                style={{ width: "100%" }}
               >
                 <TouchableOpacity
-                  key={index}
                   style={styles.childButton}
                   activeOpacity={0.8}
                   onPress={() => {

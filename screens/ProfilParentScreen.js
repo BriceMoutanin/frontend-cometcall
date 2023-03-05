@@ -23,6 +23,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { useToast } from "react-native-toast-notifications";
+import Animated from "react-native-reanimated";
+import {
+  SlideInLeft,
+  FlipInYRight,
+  SlideOutLeft,
+} from "react-native-reanimated";
 
 export default function ProfilParentScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -139,9 +145,18 @@ export default function ProfilParentScreen({ navigation }) {
     );
   };
 
-  const enfantsDisplay = user.enfants.map((enfant) => {
+  const enfantsDisplay = user.enfants.map((enfant, index) => {
     return (
-      <View key={enfant._id}>
+      <Animated.View
+        key={index}
+        contentContainerStyle={{ flex: 1 }}
+        entering={SlideInLeft.delay(250 * index).duration(800)}
+        style={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
           <Image
             style={styles.childImage}
@@ -187,7 +202,7 @@ export default function ProfilParentScreen({ navigation }) {
             </MenuOptions>
           </Menu>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     );
   });
 

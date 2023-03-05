@@ -154,6 +154,11 @@ export default function ProfilEnfantScreen({ route, navigation }) {
   };
 
   const handleValide = async () => {
+    let id = toast.show("Ajout de l'enfant...", {
+      placement: "bottom",
+      offsetTop: 100,
+      duration: 1000,
+    });
     fetch(`${BACKEND_ADDRESS}/users/addEnfant/${user.token}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -165,7 +170,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          toast.show("Enfant ajouté", {
+          toast.update(id, "Enfant ajouté", {
             placement: "bottom",
             offsetTop: 100,
             type: "success",
