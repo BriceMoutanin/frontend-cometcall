@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { update } from "../reducers/user";
+import { update, removeEnfant } from "../reducers/user";
 import {
   StyleSheet,
   View,
@@ -9,7 +9,15 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 import { TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -71,6 +79,66 @@ export default function ProfilParentScreen({ navigation }) {
     }
   };
 
+  const deleteEnfant = async (enfant) => {
+    try {
+      let id = toast.show("Suppression...", {
+        placement: "bottom",
+        offsetTop: 100,
+      });
+      const response = await fetch(
+        `${BACKEND_ADDRESS}/users/removeEnfant/${user.token}/${enfant._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await response.json();
+      if (data.result) {
+        toast.update(id, "Enfant supprimé", {
+          placement: "bottom",
+          offsetTop: 100,
+          type: "error",
+          duration: 1000,
+        });
+        dispatch(removeEnfant(enfant._id));
+
+        navigation.navigate("DrawerNavigator");
+      }
+    } catch (err) {
+      console.log("Erreur lors de la suppression de l'enfant: ", err);
+    }
+  };
+
+  const modifyEnfant = (enfant) => {
+    navigation.navigate("ProfilEnfant", { enfant });
+  };
+
+  const data = [
+    {
+      id: 1,
+      name: "Modifier",
+      icon: <Feather name="edit" size={24} color="black" />,
+      action: modifyEnfant,
+    },
+    {
+      id: 2,
+      name: "Supprimer",
+      icon: <Feather name="trash-2" size={24} color="red" />,
+      action: deleteEnfant,
+    },
+  ];
+
+  const ItemDivider = () => {
+    return (
+      <View
+        style={{
+          height: 0.5,
+          width: "100%",
+          backgroundColor: "gray",
+        }}
+      />
+    );
+  };
+
   const enfantsDisplay = user.enfants.map((enfant) => {
     return (
       <View key={enfant._id}>
@@ -80,7 +148,44 @@ export default function ProfilParentScreen({ navigation }) {
             source={require("../assets/avatar.png")}
           />
           <Text style={styles.textButton}>{enfant.prenom}</Text>
-          <Feather name="more-vertical" size={24} color="black" />
+          <Menu
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <MenuTrigger
+              customStyles={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Feather name="more-vertical" size={24} color="black" />
+            </MenuTrigger>
+            <MenuOptions style={{ padding: 10 }}>
+              <FlatList
+                data={data}
+                keyExtractor={(item) => item.id}
+                style={{}}
+                ItemSeparatorComponent={ItemDivider}
+                renderItem={({ item }) => (
+                  <MenuOption
+                    onSelect={() => item.action(enfant)}
+                    customStyles={{
+                      optionWrapper: {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      },
+                    }}
+                  >
+                    <Text style={{ fontSize: 18 }}>{item.name}</Text>
+                    <Text>{item.icon}</Text>
+                  </MenuOption>
+                )}
+              />
+            </MenuOptions>
+          </Menu>
         </TouchableOpacity>
       </View>
     );
@@ -163,7 +268,9 @@ export default function ProfilParentScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.addButton}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate("ProfilEnfant")}
+                onPress={() =>
+                  navigation.navigate("ProfilEnfant", { enfant: null })
+                }
               >
                 <Ionicons
                   name="add-circle"

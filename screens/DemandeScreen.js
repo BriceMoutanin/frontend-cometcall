@@ -10,6 +10,10 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { useSelector } from "react-redux";
+import Animated from "react-native-reanimated";
+import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+
+const AnimatedViewPager = Animated.createAnimatedComponent(View);
 
 export default function DemandeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
@@ -38,23 +42,27 @@ export default function DemandeScreen({ navigation }) {
         >
           <View>
             {user.enfants.map((enfant, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.childButton}
-                activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate("Problematique", {
-                    enfant,
-                  });
-                }}
+              <AnimatedViewPager
+                entering={SlideInLeft.delay(250 * index).duration(800)}
+                style={{ width: "80%" }}
               >
-                <Image
-                  style={styles.childImage}
-                  source={require("../assets/avatar.png")}
-                />
-                <Text style={styles.textButton}>{enfant.prenom}</Text>
-                <Feather name="more-vertical" size={24} color="black" />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.childButton}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate("Problematique", {
+                      enfant,
+                    });
+                  }}
+                >
+                  <Image
+                    style={styles.childImage}
+                    source={require("../assets/avatar.png")}
+                  />
+                  <Text style={styles.textButton}>{enfant.prenom}</Text>
+                </TouchableOpacity>
+              </AnimatedViewPager>
             ))}
           </View>
         </ScrollView>

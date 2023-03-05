@@ -21,6 +21,7 @@ import {
   DrawerContent,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
+import { MenuProvider } from "react-native-popup-menu";
 
 //import des pages
 import LoginScreen from "./screens/LoginScreen";
@@ -216,25 +217,27 @@ const DrawerNavigator = () => {
 
 export default function App() {
   return (
-    <ToastProvider>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <NavigationContainer>
-            <Stack.Navigator
-              name="Stack"
-              screenOptions={{ headerShown: false }}
-            >
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen
-                name="DrawerNavigator"
-                component={DrawerNavigator}
-                options={{ gestureEnabled: false }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </PersistGate>
-      </Provider>
-    </ToastProvider>
+    <MenuProvider>
+      <ToastProvider>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <NavigationContainer>
+              <Stack.Navigator
+                name="Stack"
+                screenOptions={{ headerShown: false }}
+              >
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen
+                  name="DrawerNavigator"
+                  component={DrawerNavigator}
+                  options={{ gestureEnabled: false }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </PersistGate>
+        </Provider>
+      </ToastProvider>
+    </MenuProvider>
   );
 }
 

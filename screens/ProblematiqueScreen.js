@@ -1,4 +1,11 @@
-import { StyleSheet, View, SafeAreaView, Text, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { TextInput } from "react-native-paper";
 
 import { useFonts } from "expo-font";
@@ -8,6 +15,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
   const [search, setSearch] = useState("");
   const { enfant } = route.params;
+  const [isLoading, setIsLoading] = useState(false);
 
   const [problematiques, setProblematiques] = useState([]);
 
@@ -15,10 +23,11 @@ export default function ProblematiqueScreen({ route, navigation }) {
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   useEffect(() => {
-    console.log(enfant);
+    setIsLoading(true);
     fetch(`${BACKEND_ADDRESS}/problematiques`)
       .then((response) => response.json())
       .then((data) => {
+        setIsLoading(false);
         setProblematiques(
           data.problematiques.filter(
             (problem) => problem.typeEtablissement === enfant.etablissement.type
@@ -60,7 +69,19 @@ export default function ProblematiqueScreen({ route, navigation }) {
               </Text>
             );
           })
-      : [<Text key={-1}>Aucun résultat</Text>];
+      : [
+          isLoading ? (
+            <ActivityIndicator
+              key={-1}
+              style={{ marginTop: 15 }}
+              size="small"
+              color="#0000ff"
+              animating={isLoading}
+            />
+          ) : (
+            <Text key={-1}>Aucun résultat</Text>
+          ),
+        ];
 
   problematiqueView.push(
     <Text
