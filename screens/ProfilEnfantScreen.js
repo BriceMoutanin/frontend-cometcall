@@ -59,6 +59,7 @@ export default function ProfilEnfantScreen({ navigation }) {
         etablissement: {
           type: item.fields.type_etablissement,
           nom: item.fields.nom_etablissement,
+          IDAPI: item.fields.identifiant_de_l_etablissement,
         },
       }));
       setSuggestionsList(suggestions);
