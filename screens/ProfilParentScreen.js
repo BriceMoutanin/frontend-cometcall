@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { update } from "../reducers/user";
+import { update, removeEnfant } from "../reducers/user";
 import {
   StyleSheet,
   View,
@@ -9,14 +9,30 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 import { TextInput } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
+import { useToast } from "react-native-toast-notifications";
+import Animated from "react-native-reanimated";
+import {
+  SlideInLeft,
+  FlipInYRight,
+  SlideOutRight,
+} from "react-native-reanimated";
 
 export default function ProfilParentScreen({ navigation }) {
   const dispatch = useDispatch();
+  const toast = useToast();
   const user = useSelector((state) => state.user.value);
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
@@ -26,6 +42,10 @@ export default function ProfilParentScreen({ navigation }) {
 
   const parentUpdate = async () => {
     try {
+      let id = toast.show("Enregistrement...", {
+        placement: "bottom",
+        offsetTop: 100,
+      });
       const response = await fetch(
         `${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`,
         {
@@ -41,6 +61,12 @@ export default function ProfilParentScreen({ navigation }) {
 
       const data = await response.json();
       if (data.result) {
+        toast.update(id, "Informations enregistrées", {
+          placement: "bottom",
+          offsetTop: 100,
+          type: "success",
+          duration: 1000,
+        });
         dispatch(
           update({
             nom: updateNom,
@@ -48,8 +74,6 @@ export default function ProfilParentScreen({ navigation }) {
             tel: updateTel,
           })
         );
-
-        navigation.navigate("DrawerNavigator");
       }
     } catch (err) {
       console.log(
@@ -59,18 +83,123 @@ export default function ProfilParentScreen({ navigation }) {
     }
   };
 
-  const enfantsDisplay = user.enfants.map((enfant) => {
+  const deleteEnfant = async (enfant) => {
+    try {
+      let id = toast.show("Suppression...", {
+        placement: "bottom",
+        offsetTop: 100,
+      });
+      const response = await fetch(
+        `${BACKEND_ADDRESS}/users/removeEnfant/${user.token}/${enfant._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await response.json();
+      if (data.result) {
+        toast.update(id, "Enfant supprimé", {
+          placement: "bottom",
+          offsetTop: 100,
+          type: "error",
+          duration: 1000,
+        });
+        dispatch(removeEnfant(enfant._id));
+      }
+    } catch (err) {
+      console.log("Erreur lors de la suppression de l'enfant: ", err);
+    }
+  };
+
+  const modifyEnfant = (enfant) => {
+    navigation.navigate("ProfilEnfant", { enfant });
+  };
+
+  const data = [
+    {
+      id: 1,
+      name: "Modifier",
+      icon: <Feather name="edit" size={24} color="black" />,
+      action: modifyEnfant,
+    },
+    {
+      id: 2,
+      name: "Supprimer",
+      icon: <Feather name="trash-2" size={24} color="red" />,
+      action: deleteEnfant,
+    },
+  ];
+
+  const ItemDivider = () => {
     return (
-      <View key={enfant._id}>
+      <View
+        style={{
+          height: 0.5,
+          width: "100%",
+          backgroundColor: "gray",
+        }}
+      />
+    );
+  };
+
+  const enfantsDisplay = user.enfants.map((enfant, index) => {
+    return (
+      <Animated.View
+        key={index}
+        contentContainerStyle={{ flex: 1 }}
+        entering={SlideInLeft.delay(250 * index).duration(800)}
+        exiting={SlideOutRight}
+        style={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
           <Image
             style={styles.childImage}
             source={require("../assets/avatar.png")}
           />
           <Text style={styles.textButton}>{enfant.prenom}</Text>
-          <Feather name="more-vertical" size={24} color="black" />
+          <Menu
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <MenuTrigger
+              customStyles={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Feather name="more-vertical" size={24} color="black" />
+            </MenuTrigger>
+            <MenuOptions style={{ padding: 10 }}>
+              <FlatList
+                data={data}
+                keyExtractor={(item) => item.id}
+                style={{}}
+                ItemSeparatorComponent={ItemDivider}
+                renderItem={({ item }) => (
+                  <MenuOption
+                    onSelect={() => item.action(enfant)}
+                    customStyles={{
+                      optionWrapper: {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      },
+                    }}
+                  >
+                    <Text style={{ fontSize: 18 }}>{item.name}</Text>
+                    <Text>{item.icon}</Text>
+                  </MenuOption>
+                )}
+              />
+            </MenuOptions>
+          </Menu>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     );
   });
 
@@ -84,9 +213,15 @@ export default function ProfilParentScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ width: "100%", height: "100%", flex: 1 }}>
+      <ScrollView
+        style={{
+          width: "100%",
+          height: "100%",
+          flex: 1,
+        }}
+      >
         <View style={styles.parent}>
-          <Text style={styles.title}>Profil Parents</Text>
+          <Text style={styles.title}>Profil Parent</Text>
           <View style={styles.ParentContainer}>
             <View style={styles.photoContainer}>
               <Image
@@ -146,12 +281,13 @@ export default function ProfilParentScreen({ navigation }) {
           <Text style={styles.title}>Enfants</Text>
           <View style={styles.enfantView}>
             <View style={styles.enfantContainer}>{enfantsDisplay}</View>
-
             <View style={styles.registerInput}>
               <TouchableOpacity
                 style={styles.addButton}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate("ProfilEnfant")}
+                onPress={() =>
+                  navigation.navigate("ProfilEnfant", { enfant: null })
+                }
               >
                 <Ionicons
                   name="add-circle"
@@ -181,7 +317,7 @@ const styles = StyleSheet.create({
   parent: {
     flex: 1,
     width: "100%",
-    height: "50%",
+    height: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -189,7 +325,7 @@ const styles = StyleSheet.create({
 
   enfant: {
     flex: 1,
-    height: "50%",
+    height: "100%",
     width: "100%",
   },
 
@@ -197,6 +333,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     flex: 1,
+    backgroundColor: "white",
   },
 
   ParentContainer: {
@@ -247,7 +384,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "white",
     height: "100%",
   },
 
@@ -256,7 +392,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    width: 350,
     fontFamily: "OpenSans",
     borderRadius: 10,
     backgroundColor: "white",
@@ -273,9 +408,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     fontFamily: "OpenSans",
-    backgroundColor: "white",
     padding: 20,
-    marginBottom: 20,
     width: "100%",
   },
 

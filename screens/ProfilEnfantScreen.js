@@ -15,15 +15,24 @@ import { AntDesign } from "@expo/vector-icons";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addEnfant } from "../reducers/user";
+import { useToast } from "react-native-toast-notifications";
+import {
+  addEnfant,
+  updatePrenomEnfant,
+  updateEtablissementEnfant,
+} from "../reducers/user";
 
-export default function ProfilEnfantScreen({ navigation }) {
+export default function ProfilEnfantScreen({ route, navigation }) {
+  const { enfant } = route.params;
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [etablissements, setEtablissements] = useState([]);
-  const [updatePrenom, setUpdatePrenom] = useState("");
-  const [updateEtablissement, setUpdateEtablissement] = useState(null);
+  const [updatePrenom, setUpdatePrenom] = useState(enfant ? enfant.prenom : "");
+  const [updateEtablissement, setUpdateEtablissement] = useState(
+    enfant ? enfant.etablissement : null
+  );
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
@@ -75,7 +84,81 @@ export default function ProfilEnfantScreen({ navigation }) {
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
 
+  const modifyPrenomEnfant = () => {
+    console.log(enfant);
+    let id = toast.show("Enregistrement prénom...", {
+      placement: "bottom",
+      offsetTop: 100,
+    });
+    fetch(
+      `${BACKEND_ADDRESS}/users/updatePrenomEnfant/${user.token}/${enfant._id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prenom: updatePrenom,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(
+            updatePrenomEnfant({
+              _id: enfant._id,
+              prenom: updatePrenom,
+            })
+          );
+          toast.update(id, "Prénom enregistré", {
+            placement: "bottom",
+            offsetTop: 100,
+            type: "success",
+            duration: 1000,
+          });
+        }
+      });
+  };
+
+  const modifyEtablissementEnfant = () => {
+    let id = toast.show("Enregistrement établissement...", {
+      placement: "bottom",
+      offsetTop: 100,
+    });
+    fetch(
+      `${BACKEND_ADDRESS}/users/updateEtablissementEnfant/${user.token}/${enfant._id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          etablissement: updateEtablissement,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(
+            updateEtablissementEnfant({
+              _id: enfant._id,
+              etablissement: updateEtablissement,
+            })
+          );
+          toast.update(id, "Etablissement enregistré", {
+            placement: "bottom",
+            offsetTop: 100,
+            type: "success",
+            duration: 1000,
+          });
+        }
+      });
+  };
+
   const handleValide = async () => {
+    let id = toast.show("Ajout de l'enfant...", {
+      placement: "bottom",
+      offsetTop: 100,
+      duration: 1000,
+    });
     fetch(`${BACKEND_ADDRESS}/users/addEnfant/${user.token}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -87,6 +170,12 @@ export default function ProfilEnfantScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          toast.update(id, "Enfant ajouté", {
+            placement: "bottom",
+            offsetTop: 100,
+            type: "success",
+            duration: 1000,
+          });
           dispatch(addEnfant(data.newEnfant));
           navigation.navigate("ProfilParent");
         }
@@ -100,7 +189,11 @@ export default function ProfilEnfantScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profilEnfant}>
-        <Text style={styles.h6}>Profil Enfant</Text>
+        {enfant ? (
+          <Text style={styles.h6Black}>Modification de {updatePrenom}</Text>
+        ) : (
+          <Text style={styles.h6Black}>Ajout d'un enfant</Text>
+        )}
       </View>
       <View style={styles.photoContainer}>
         <Image style={styles.image} source={require("../assets/avatar.png")} />
@@ -117,6 +210,17 @@ export default function ProfilEnfantScreen({ navigation }) {
           onChangeText={(value) => setUpdatePrenom(value)}
           value={updatePrenom}
         />
+        {enfant && (
+          <TouchableOpacity
+            style={styles.saveButton}
+            activeOpacity={0.8}
+            onPress={() => modifyPrenomEnfant()}
+          >
+            <Text style={styles.textButton}>Enregistrer prénom</Text>
+            <Ionicons name="ios-save-sharp" size={24} color="#144172" />
+          </TouchableOpacity>
+        )}
+
         <AutocompleteDropdown
           direction={Platform.select({ ios: "up", android: "up" })}
           ref={searchRef}
@@ -143,7 +247,9 @@ export default function ProfilEnfantScreen({ navigation }) {
           dataSet={suggestionsList}
           emptyResultText="Aucun résultat"
           textInputProps={{
-            placeholder: "Rechercher un nom d'établissement",
+            placeholder: enfant
+              ? enfant.etablissement.nom
+              : "Ajouter un établissement",
             autoCorrect: false,
             autoCapitalize: "none",
             height: "fit",
@@ -156,7 +262,7 @@ export default function ProfilEnfantScreen({ navigation }) {
             outlineColor: "#144172",
             activeOutlineColor: "#144172",
             width: "80%",
-            marginTop: 15,
+            marginTop: 50,
           }}
           suggestionsListContainerStyle={{
             backgroundColor: "#144172",
@@ -166,6 +272,16 @@ export default function ProfilEnfantScreen({ navigation }) {
             color: "white",
           }}
         />
+        {enfant && (
+          <TouchableOpacity
+            style={styles.saveButton}
+            activeOpacity={0.8}
+            onPress={() => modifyEtablissementEnfant()}
+          >
+            <Text style={styles.textButton}>Enregistrer établissement</Text>
+            <Ionicons name="ios-save-sharp" size={24} color="#144172" />
+          </TouchableOpacity>
+        )}
         <View style={styles.card}>
           <Text style={styles.h6}>
             Remarque : Pour plus de précision, renseignez également le code
@@ -183,16 +299,18 @@ export default function ProfilEnfantScreen({ navigation }) {
           onPress={() => navigation.navigate("ProfilParent")}
         >
           <AntDesign name="arrowleft" size={24} color="black" />
-          <Text style={styles.textButton}>Annuler</Text>
+          <Text style={styles.textButton}>Retour</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.valideButton}
-          activeOpacity={0.8}
-          onPress={() => handleValide()}
-        >
-          <Text style={styles.textButton}>Valider</Text>
-          <AntDesign name="arrowright" size={24} color="black" />
-        </TouchableOpacity>
+        {!enfant && (
+          <TouchableOpacity
+            style={styles.valideButton}
+            activeOpacity={0.8}
+            onPress={() => handleValide()}
+          >
+            <Text style={styles.textButton}>Valider</Text>
+            <AntDesign name="arrowright" size={24} color="black" />
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -211,10 +329,7 @@ const styles = StyleSheet.create({
   profilEnfant: {
     alignItems: "center",
     justifyContent: "center",
-    position: "relative",
-    backgroundColor: "white",
     width: "100%",
-    height: "10%",
   },
 
   photoContainer: {
@@ -224,7 +339,7 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: "white",
     width: "100%",
-    height: "30%",
+    height: "20%",
   },
 
   inputContainer: {
@@ -240,20 +355,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     position: "relative",
-    backgroundColor: "white",
     width: "100%",
-    height: "10%",
+    marginTop: 100,
   },
 
-  h6: {
+  h6Black: {
     fontSize: 20,
     fontFamily: "OpenSans",
-    // fontWeight: "bold",
+    fontWeight: "bold",
+    color: "black",
   },
 
   image: {
-    height: 150,
-    width: 160,
+    height: 100,
+    width: 100,
   },
 
   input: {
@@ -267,7 +382,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    width: "40%",
+    //width: "40%",
     borderRadius: 10,
     backgroundColor: "white",
     shadowColor: "gray",
@@ -278,6 +393,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 30,
     shadowRadius: 2,
   },
+  saveButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    padding: 10,
+    width: "80%",
+    borderRadius: 10,
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+    marginTop: 10,
+  },
   textButton: {
     fontSize: 20,
     fontFamily: "OpenSans",
@@ -285,7 +417,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#144272",
     borderRadius: 12,
-    width: "70%",
+    width: "90%",
     padding: 15,
     marginTop: 10,
   },

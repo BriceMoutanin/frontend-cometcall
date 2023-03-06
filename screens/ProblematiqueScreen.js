@@ -1,24 +1,38 @@
-import { StyleSheet, View, SafeAreaView, Text, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { TextInput } from "react-native-paper";
+import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
 
 import { useFonts } from "expo-font";
 import React, { useState, useEffect } from "react";
 
-export default function ProblematiqueScreen({ navigation, enfant }) {
+export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
   const [search, setSearch] = useState("");
+  const { enfant } = route.params;
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [titresProblematiques, setTitresProblematiques] = useState([]);
+  const [problematiques, setProblematiques] = useState([]);
 
   //Connection avec le BackEnd
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(`${BACKEND_ADDRESS}/problematiques`)
       .then((response) => response.json())
       .then((data) => {
-        setTitresProblematiques(
-          data.problematiques.map((problem) => problem.titre)
+        setIsLoading(false);
+        setProblematiques(
+          data.problematiques.filter(
+            (problem) => problem.typeEtablissement === enfant.etablissement.type
+          )
         );
       })
 
@@ -28,28 +42,71 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
   }, []);
 
   //Composant problematique
-  const problematiqueView = titresProblematiques
-    .filter((titre) =>
+  const problematiqueView =
+    problematiques.filter((problematique) =>
       search === null
         ? null
-        : titre.toLowerCase().includes(search.toLowerCase())
-    )
-    .map((data, i) => {
-      return (
-        <Text
-          style={styles.itemStyle}
-          onPress={() => handleProblematique()}
-          key={i}
-        >
-          {data}
-        </Text>
-      );
-    });
+        : problematique.titre.toLowerCase().includes(search.toLowerCase())
+    ).length !== 0
+      ? problematiques
+          .filter((problematique) =>
+            search === null
+              ? null
+              : problematique.titre.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((problematique, i) => {
+            return (
+              <Animated.View
+                key={i}
+                entering={SlideInLeft.delay(150 * i)}
+                exiting={SlideOutRight}
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={styles.itemStyle}
+                  onPress={() =>
+                    navigation.navigate("Reponse", {
+                      enfant,
+                      problematique,
+                    })
+                  }
+                >
+                  {problematique.titre}
+                </Text>
+              </Animated.View>
+            );
+          })
+      : [
+          isLoading ? (
+            <ActivityIndicator
+              key={-1}
+              style={{ marginTop: 15 }}
+              size="small"
+              color="#0000ff"
+              animating={isLoading}
+            />
+          ) : (
+            <Text key={-1}>Aucun résultat</Text>
+          ),
+        ];
 
-  // Function pour clicker sur une problematique
-  const handleProblematique = (item) => {
-    navigation.navigate("Reponse");
-  };
+  problematiqueView.push(
+    <Text
+      style={styles.itemStyle}
+      onPress={() =>
+        navigation.navigate("Autre", {
+          enfant,
+        })
+      }
+      key={-2}
+    >
+      Autre
+    </Text>
+  );
 
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
@@ -63,7 +120,7 @@ export default function ProblematiqueScreen({ navigation, enfant }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.question}>
         <Text style={styles.text}>
-          Quel est l'objet de votre demande pour childName ?
+          Quel est l'objet de votre demande pour {enfant.prenom} ?
         </Text>
       </View>
 

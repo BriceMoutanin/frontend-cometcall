@@ -10,6 +10,10 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { useSelector } from "react-redux";
+import Animated from "react-native-reanimated";
+import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+
+const AnimatedViewPager = Animated.createAnimatedComponent(View);
 
 export default function DemandeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
@@ -25,33 +29,44 @@ export default function DemandeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.question}>
-        <Text style={styles.title}>
-          Pour qui souhaitez-vous prendre contact?
-        </Text>
+      <View style={styles.card}>
+        <Text style={styles.h5}>Pour qui souhaitez-vous prendre contact ?</Text>
       </View>
-
-      <ScrollView style={styles.scroll}>
-        <View>
-          {user.enfants.map((enfant, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.childButton}
-              activeOpacity={0.8}
-              onPress={() =>
-                navigation.navigate("Problematique", { navigation, enfant })
-              }
-            >
-              <Image
-                style={styles.childImage}
-                source={require("../assets/avatar.png")}
-              />
-              <Text style={styles.textButton}>{enfant.prenom}</Text>
-              <Feather name="more-vertical" size={24} color="black" />
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      <View style={styles.enfantsContainer}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View>
+            {user.enfants.map((enfant, index) => (
+              <AnimatedViewPager
+                key={index}
+                entering={SlideInLeft.delay(250 * index).duration(800)}
+                style={{ width: "100%" }}
+              >
+                <TouchableOpacity
+                  style={styles.childButton}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate("Problematique", {
+                      enfant,
+                    });
+                  }}
+                >
+                  <Image
+                    style={styles.childImage}
+                    source={require("../assets/avatar.png")}
+                  />
+                  <Text style={styles.textButton}>{enfant.prenom}</Text>
+                </TouchableOpacity>
+              </AnimatedViewPager>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -101,7 +116,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "80%",
     borderRadius: 10,
-    margin: 20,
+    marginBottom: 20,
   },
 
   childImage: {
@@ -118,9 +133,35 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  enfantsContainer: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   textButton: {
     fontSize: 20,
     paddingLeft: 40,
     fontFamily: "OpenSans",
+  },
+  card: {
+    backgroundColor: "#144272",
+    borderRadius: 12,
+    width: "90%",
+    padding: 15,
+    paddingBottom: 0,
+    paddingTop: 5,
+    marginBottom: 50,
+    marginTop: 50,
+  },
+  h5: {
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: "100",
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
+    marginBottom: 10,
   },
 });

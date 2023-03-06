@@ -1,3 +1,4 @@
+import { registerRootComponent } from "expo";
 //import react-native
 import "react-native-gesture-handler";
 import {
@@ -8,7 +9,7 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
-
+import { ToastProvider } from "react-native-toast-notifications";
 //import react navigation
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -20,6 +21,7 @@ import {
   DrawerContent,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
+import { MenuProvider } from "react-native-popup-menu";
 
 //import des pages
 import LoginScreen from "./screens/LoginScreen";
@@ -42,12 +44,14 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 // Reducers
 import user from "./reducers/user";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "./reducers/user";
 
 // redux-persist imports
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ChatGPTScreen from "./screens/ChatGPTScreen";
 
 const reducers = combineReducers({ user });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
@@ -64,8 +68,9 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
-  // const userReducer = useSelector((state) => state.user.value);
+  const userReducer = useSelector((state) => state.user.value);
   // console.log(userReducer);
+  const dispatch = useDispatch();
   return (
     <DrawerContentScrollView
       {...props}
@@ -76,31 +81,35 @@ function CustomDrawerContent(props) {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#144272",
           flexDirection: "column",
-          justifyContent: "flex-srtart",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 20,
+            marginBottom: 10,
+            marginTop: 30,
+          }}
+        >
+          {userReducer.prenom} {userReducer.nom}
+        </Text>
         <TouchableOpacity
           style={styles.demandeButton}
-          onPress={() => props.navigation.navigate("Login")}
+          onPress={() => {
+            dispatch(logout());
+            props.navigation.navigate("Login");
+          }}
         >
           <Text>Deconnexion</Text>
         </TouchableOpacity>
       </View>
-      <DrawerItemList {...props} />
-      {/* <DrawerItem
-        itemStyle={styles.demandeButton}
-        label="Nouvelle demande"
-        labelStyle={(activeTintColor = "#144272")}
-        iconContainerStyle={({ focused, activeTintcolor, size }) => (
-          <Entypo color={activeTintcolor} size={size} name={"plus"} />
-        )}
-        onItemPress={() => props.navigation.navigate("Demande")}
-      /> */}
+      <DrawerItemList style={{ flex: 4 }} {...props} />
       <View
         style={{
-          flex: 1,
+          flex: 2,
           backgroundColor: "#144272",
           flexDirection: "column",
           justifyContent: "flex-end",
@@ -108,9 +117,17 @@ function CustomDrawerContent(props) {
       >
         <TouchableOpacity
           style={styles.demandeButton}
-          onPress={() => props.navigation.navigate("DemandeStack")}
+          onPress={() =>
+            props.navigation.navigate("DemandeStack", { screen: "Demande" })
+          }
         >
           <Text>Nouvelle demande</Text>
+          <Entypo
+            style={{ marginLeft: 15 }}
+            color={"#144272"}
+            size={20}
+            name={"plus"}
+          />
         </TouchableOpacity>
       </View>
     </DrawerContentScrollView>
@@ -128,6 +145,7 @@ const StackNavigatorDemande = ({ route }) => {
       <Stack.Screen name="Demande" component={DemandeScreen} />
       <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
       <Stack.Screen name="Reponse" component={ReponseScreen} />
+      <Stack.Screen name="Autre" component={ChatGPTScreen} />
       <Stack.Screen name="Message" component={MessageScreen} />
     </Stack.Navigator>
   );
@@ -170,6 +188,7 @@ const DrawerNavigator = () => {
         drawerLabelStyle: {
           color: "white",
         },
+        drawerActiveTintColor: "white",
       }}
     >
       <Drawer.Screen
@@ -186,6 +205,7 @@ const DrawerNavigator = () => {
         options={{
           tabBarLabel: "Profil",
           unmountOnBlur: true,
+          drawerItemStyle: { height: 0 },
         }}
       />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
@@ -197,18 +217,31 @@ const DrawerNavigator = () => {
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <NavigationContainer>
-          <Stack.Navigator name="Stack" screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <MenuProvider>
+      <ToastProvider>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <NavigationContainer>
+              <Stack.Navigator
+                name="Stack"
+                screenOptions={{ headerShown: false }}
+              >
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen
+                  name="DrawerNavigator"
+                  component={DrawerNavigator}
+                  options={{ gestureEnabled: false }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </PersistGate>
+        </Provider>
+      </ToastProvider>
+    </MenuProvider>
   );
 }
+
+registerRootComponent(App);
 
 const styles = StyleSheet.create({
   container: {

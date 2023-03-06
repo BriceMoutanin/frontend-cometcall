@@ -1,7 +1,12 @@
-import { StyleSheet, View, Image, Button } from "react-native";
+import { StyleSheet, View, Image, Button, Text } from "react-native";
 
-export default function ReponseScreen({ navigation }) {
-  return <View style={styles.container}> Reponse</View>;
+export default function ReponseScreen({ route, navigation }) {
+  const { enfant, problematique } = route.params;
+  return (
+    <View style={styles.container}>
+      <Text>Reponse</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
