@@ -48,16 +48,14 @@ import historique from "./reducers/historique";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "./reducers/user";
 
-
 // redux-persist imports
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatGPTScreen from "./screens/ChatGPTScreen";
 
-const reducers = combineReducers({ user,historique });
+const reducers = combineReducers({ user, historique });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
-
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
@@ -79,24 +77,21 @@ function CustomDrawerContent(props) {
       {...props}
       contentContainerStyle={{
         flex: 1,
-      }}
-    >
+      }}>
       <View
         style={{
           flex: 1,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-        }}
-      >
+        }}>
         <Text
           style={{
             color: "white",
             fontSize: 20,
             marginBottom: 10,
             marginTop: 30,
-          }}
-        >
+          }}>
           {userReducer.prenom} {userReducer.nom}
         </Text>
         <TouchableOpacity
@@ -104,8 +99,7 @@ function CustomDrawerContent(props) {
           onPress={() => {
             dispatch(logout());
             props.navigation.navigate("Login");
-          }}
-        >
+          }}>
           <Text>Deconnexion</Text>
         </TouchableOpacity>
       </View>
@@ -116,14 +110,12 @@ function CustomDrawerContent(props) {
           backgroundColor: "#144272",
           flexDirection: "column",
           justifyContent: "flex-end",
-        }}
-      >
+        }}>
         <TouchableOpacity
           style={styles.demandeButton}
           onPress={() =>
             props.navigation.navigate("DemandeStack", { screen: "Demande" })
-          }
-        >
+          }>
           <Text>Nouvelle demande</Text>
           <Entypo
             style={{ marginLeft: 15 }}
@@ -143,8 +135,7 @@ const StackNavigatorDemande = ({ route }) => {
     <Stack.Navigator
       name="DemandeStack"
       screenOptions={{ headerShown: false }}
-      title={title}
-    >
+      title={title}>
       <Stack.Screen name="Demande" component={DemandeScreen} />
       <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
       <Stack.Screen name="Reponse" component={ReponseScreen} />
@@ -161,8 +152,7 @@ const StackNavigator = ({ route }) => {
     <Stack.Navigator
       name="ProfilStack"
       screenOptions={{ headerShown: false }}
-      title={title}
-    >
+      title={title}>
       <Stack.Screen name="ProfilParent" component={ProfilParentScreen} />
       <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
     </Stack.Navigator>
@@ -192,8 +182,7 @@ const DrawerNavigator = () => {
           color: "white",
         },
         drawerActiveTintColor: "white",
-      }}
-    >
+      }}>
       <Drawer.Screen
         name="Profil"
         component={StackNavigator}
@@ -227,8 +216,7 @@ export default function App() {
             <NavigationContainer>
               <Stack.Navigator
                 name="Stack"
-                screenOptions={{ headerShown: false }}
-              >
+                screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen
                   name="DrawerNavigator"

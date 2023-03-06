@@ -11,6 +11,8 @@ import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
 
 import { useFonts } from "expo-font";
 import React, { useState, useEffect } from "react";
+import { addHistorique } from "../reducers/historique";
+import {useDispatch} from 'react-redux'
 
 export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
@@ -19,8 +21,9 @@ export default function ProblematiqueScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [problematiques, setProblematiques] = useState([]);
-
-  //Connection avec le BackEnd
+ const dispatch= useDispatch()
+  
+//Connection avec le BackEnd
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   useEffect(() => {
@@ -68,11 +71,14 @@ export default function ProblematiqueScreen({ route, navigation }) {
               >
                 <Text
                   style={styles.itemStyle}
-                  onPress={() =>
+                  onPress={() =>{
+                    dispatch (addHistorique({prenom: enfant.prenom,problematique: problematique.titre}))
                     navigation.navigate("Reponse", {
                       enfant,
                       problematique,
                     })
+                  }
+                    
                   }
                 >
                   {problematique.titre}
