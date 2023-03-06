@@ -37,6 +37,8 @@ export default function LoginScreen({ navigation }) {
 
   const [emailErrorIn, setEmailErrorIn] = useState(false);
   const [emailErrorUp, setEmailErrorUp] = useState(false);
+  const [identifiantErrorIn, setidentifiantErrorIn] = useState(false);
+  const [identifiantErrorUp, setidentifiantErrorUp] = useState(false);
 
   const userReducer = useSelector((state) => state.user.value);
 
@@ -189,6 +191,7 @@ export default function LoginScreen({ navigation }) {
                 }
                 selectionColor="#144272"
                 activeUnderlineColor="#144272"
+                outlineColor={emailErrorUp ? "red" : "#144272"}
                 activeOutlineColor="#144272"
                 autoCapitalize="none"
                 onChangeText={(value) => setSignInPassword(value)}
@@ -209,7 +212,7 @@ export default function LoginScreen({ navigation }) {
                 }
                 selectionColor="#144272"
                 activeUnderlineColor="#144272"
-                activeOutlineColor="#144272"
+                outlineColor={emailErrorUp ? "red" : "#144272"}
                 autoCapitalize="none"
                 onChangeText={(value) => setSignInPassword(value)}
                 value={signInPassword}
@@ -286,6 +289,7 @@ export default function LoginScreen({ navigation }) {
           }
           selectionColor="#144272"
           activeUnderlineColor="#144272"
+          outlineColor={emailErrorUp ? "red" : "#144272"}
           activeOutlineColor="#144272"
           autoCapitalize="none"
           onChangeText={(value) => setSignUpPassword(value)}

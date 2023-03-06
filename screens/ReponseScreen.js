@@ -4,7 +4,7 @@ export default function ReponseScreen({ route, navigation }) {
   const { enfant, problematique } = route.params;
   return (
     <View style={styles.container}>
-      <Text>Reponse</Text>
+      <Text>Re</Text>
     </View>
   );
 }
