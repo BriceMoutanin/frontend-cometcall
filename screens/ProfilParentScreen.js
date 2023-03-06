@@ -27,7 +27,7 @@ import Animated from "react-native-reanimated";
 import {
   SlideInLeft,
   FlipInYRight,
-  SlideOutLeft,
+  SlideOutRight,
 } from "react-native-reanimated";
 
 export default function ProfilParentScreen({ navigation }) {
@@ -151,6 +151,7 @@ export default function ProfilParentScreen({ navigation }) {
         key={index}
         contentContainerStyle={{ flex: 1 }}
         entering={SlideInLeft.delay(250 * index).duration(800)}
+        exiting={SlideOutRight}
         style={{
           width: "100%",
           justifyContent: "center",
@@ -218,7 +219,7 @@ export default function ProfilParentScreen({ navigation }) {
     <View style={styles.container}>
       <ScrollView style={{ width: "100%", height: "100%", flex: 1 }}>
         <View style={styles.parent}>
-          <Text style={styles.title}>Profil Parents</Text>
+          <Text style={styles.title}>Profil Parent</Text>
           <View style={styles.ParentContainer}>
             <View style={styles.photoContainer}>
               <Image
@@ -378,7 +379,7 @@ const styles = StyleSheet.create({
   },
 
   enfantContainer: {
-    flex: 1,
+    //flex: 1,
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "white",

@@ -190,7 +190,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.profilEnfant}>
         {enfant ? (
-          <Text style={styles.h6Black}>Modification de {enfant.prenom}</Text>
+          <Text style={styles.h6Black}>Modification de {updatePrenom}</Text>
         ) : (
           <Text style={styles.h6Black}>Ajout d'un enfant</Text>
         )}

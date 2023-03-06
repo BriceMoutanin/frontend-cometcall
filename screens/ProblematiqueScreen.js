@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { TextInput } from "react-native-paper";
+import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
 
 import { useFonts } from "expo-font";
 import React, { useState, useEffect } from "react";
@@ -55,18 +56,28 @@ export default function ProblematiqueScreen({ route, navigation }) {
           )
           .map((problematique, i) => {
             return (
-              <Text
-                style={styles.itemStyle}
-                onPress={() =>
-                  navigation.navigate("Reponse", {
-                    enfant,
-                    problematique,
-                  })
-                }
+              <Animated.View
                 key={i}
+                entering={SlideInLeft.delay(150 * i)}
+                exiting={SlideOutRight}
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                {problematique.titre}
-              </Text>
+                <Text
+                  style={styles.itemStyle}
+                  onPress={() =>
+                    navigation.navigate("Reponse", {
+                      enfant,
+                      problematique,
+                    })
+                  }
+                >
+                  {problematique.titre}
+                </Text>
+              </Animated.View>
             );
           })
       : [
