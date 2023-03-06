@@ -44,8 +44,10 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 // Reducers
 import user from "./reducers/user";
+import historique from "./reducers/historique";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "./reducers/user";
+
 
 // redux-persist imports
 import { persistStore, persistReducer } from "redux-persist";
@@ -53,8 +55,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatGPTScreen from "./screens/ChatGPTScreen";
 
-const reducers = combineReducers({ user });
+const reducers = combineReducers({ user,historique });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
+
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
