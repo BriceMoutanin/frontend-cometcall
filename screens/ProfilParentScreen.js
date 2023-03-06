@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  ImageViewer,
 } from "react-native";
 import {
   Menu,
@@ -29,16 +30,32 @@ import {
   FlipInYRight,
   SlideOutRight,
 } from "react-native-reanimated";
+import * as ImagePicker from "expo-image-picker";
 
 export default function ProfilParentScreen({ navigation }) {
+  const [image, setImage] = useState(null);
   const dispatch = useDispatch();
   const toast = useToast();
   const user = useSelector((state) => state.user.value);
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
   const [updateTel, setupdateTel] = useState(user.tel);
+  //const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    } else {
+      alert("You did not select any image.");
+    }
+  };
 
   const parentUpdate = async () => {
     try {
@@ -211,6 +228,9 @@ export default function ProfilParentScreen({ navigation }) {
     return null;
   }
 
+  const imageSource =
+    image !== null ? { uri: image } : require("../assets/avatar.png");
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -224,10 +244,7 @@ export default function ProfilParentScreen({ navigation }) {
           <Text style={styles.title}>Profil Parent</Text>
           <View style={styles.ParentContainer}>
             <View style={styles.photoContainer}>
-              <Image
-                style={styles.image}
-                source={require("../assets/avatar.png")}
-              />
+              <Image style={styles.image} source={imageSource} />
               <Ionicons name="add-circle" size={24} color="#144172" />
             </View>
             <View style={styles.inputContainer}>
@@ -266,7 +283,7 @@ export default function ProfilParentScreen({ navigation }) {
           <TouchableOpacity
             style={styles.registerButton}
             activeOpacity={0.8}
-            onPress={() => parentUpdate()}
+            onPress={() => pickImageAsync()}
           >
             <Text style={styles.textButton}>Enregistrer</Text>
             <Ionicons

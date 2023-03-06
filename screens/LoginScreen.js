@@ -41,11 +41,11 @@ export default function LoginScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user.value);
 
   // ne pas devoir se reconnecter => reduxPersist
-  useEffect(() => {
+  /*useEffect(() => {
     if (userReducer.token) {
       navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
     }
-  }, []);
+  }, []);*/
 
   const dispatch = useDispatch();
 
