@@ -87,12 +87,12 @@ async function getOrganismes(
 //   const contacts = await getContactByOrganisme(code, "mairie");
 //   const contactEcole = await getContactByEtablissement("0120311Y");
 //   const contactOrganisme = await getOrganismes(
-//     code,
-//     ["mairie", "Lycée", "commissariat_police", "drjscs"],
+//     "12299",
+//     ["mairie", "commissariat_police", "gendarmerie"],
 //     "0120311Y"
 //   );
 //   console.log(contactOrganisme);
 // }
 
 // asyncCall();
-module.exports = { getOrganismes };
+module.exports = { getOrganismes, getCommuneById };
