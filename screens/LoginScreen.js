@@ -89,6 +89,7 @@ export default function LoginScreen({ navigation }) {
                 email: signUpMail,
                 token: data.newUser.token,
                 enfants: data.newUser.enfants,
+                //tel: data.user.tel,
               })
             );
             setSignUpMail("");
@@ -127,6 +128,7 @@ export default function LoginScreen({ navigation }) {
                 email: signInMail,
                 token: data.user.token,
                 enfants: data.user.enfants,
+                //tel: data.user.tel,
               })
             );
             setSignInMail("");

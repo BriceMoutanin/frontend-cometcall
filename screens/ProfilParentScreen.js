@@ -74,8 +74,6 @@ export default function ProfilParentScreen({ navigation }) {
             tel: updateTel,
           })
         );
-
-        navigation.navigate("DrawerNavigator");
       }
     } catch (err) {
       console.log(
@@ -106,8 +104,6 @@ export default function ProfilParentScreen({ navigation }) {
           duration: 1000,
         });
         dispatch(removeEnfant(enfant._id));
-
-        navigation.navigate("DrawerNavigator");
       }
     } catch (err) {
       console.log("Erreur lors de la suppression de l'enfant: ", err);
@@ -217,7 +213,13 @@ export default function ProfilParentScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ width: "100%", height: "100%", flex: 1 }}>
+      <ScrollView
+        style={{
+          width: "100%",
+          height: "100%",
+          flex: 1,
+        }}
+      >
         <View style={styles.parent}>
           <Text style={styles.title}>Profil Parent</Text>
           <View style={styles.ParentContainer}>
@@ -279,7 +281,6 @@ export default function ProfilParentScreen({ navigation }) {
           <Text style={styles.title}>Enfants</Text>
           <View style={styles.enfantView}>
             <View style={styles.enfantContainer}>{enfantsDisplay}</View>
-
             <View style={styles.registerInput}>
               <TouchableOpacity
                 style={styles.addButton}
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
   parent: {
     flex: 1,
     width: "100%",
-    height: "50%",
+    height: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -324,7 +325,7 @@ const styles = StyleSheet.create({
 
   enfant: {
     flex: 1,
-    height: "50%",
+    height: "100%",
     width: "100%",
   },
 
@@ -332,6 +333,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     flex: 1,
+    backgroundColor: "white",
   },
 
   ParentContainer: {
@@ -379,10 +381,9 @@ const styles = StyleSheet.create({
   },
 
   enfantContainer: {
-    //flex: 1,
+    flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "white",
     height: "100%",
   },
 
@@ -391,7 +392,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    width: 350,
     fontFamily: "OpenSans",
     borderRadius: 10,
     backgroundColor: "white",
@@ -408,9 +408,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     fontFamily: "OpenSans",
-    backgroundColor: "white",
     padding: 20,
-    marginBottom: 20,
     width: "100%",
   },
 
