@@ -40,6 +40,7 @@ export const userSlice = createSlice({
       state.value.prenom = action.payload.prenom;
       state.value.nom = action.payload.nom;
       state.value.tel = action.payload.tel;
+      state.value.mdp = action.payload.mdp;
     },
 
     updatePhoto: (state, action) => {

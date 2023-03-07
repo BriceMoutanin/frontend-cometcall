@@ -40,7 +40,8 @@ export default function ProfilParentScreen({ navigation }) {
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
   const [updateTel, setupdateTel] = useState(user.tel);
-  //const [status, requestPermission] = ImagePicker.useCameraPermissions();
+  const [updateMdp, setUpdateMdp] = useState("");
+  const [pwdVisible, setPwdVisible] = useState(false);
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
@@ -167,6 +168,45 @@ export default function ProfilParentScreen({ navigation }) {
     }
   };
 
+  //changer mot de passe
+  const updateMotDePasse = () => {
+    let id = toast.show("Enregistrement Mot de passe...", {
+      placement: "bottom",
+      offsetTop: 100,
+    });
+    fetch(`${BACKEND_ADDRESS}/users/updatePasswordByToken/${user.token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        password: updateMdp,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          console.log("motDePass", data);
+          toast.update(id, "Nouveau mot de passe enregistré", {
+            placement: "bottom",
+            offsetTop: 100,
+            type: "success",
+            duration: 1000,
+          });
+        } else {
+          console.log(
+            "Erreur lors de l'enregistrement du nouveau mot de passe: ",
+            err
+          );
+        }
+      });
+  };
+
+  const handleEnregister = () => {
+    parentUpdate();
+    updateMotDePasse();
+    setUpdateMdp("");
+  };
+
+  //suprimer un enfant
   const deleteEnfant = async (enfant) => {
     try {
       let id = toast.show("Suppression...", {
@@ -405,12 +445,53 @@ export default function ProfilParentScreen({ navigation }) {
                 onChangeText={(value) => setupdateTel(value)}
                 value={updateTel}
               />
+
+              {!pwdVisible ? (
+                <TextInput
+                  style={styles.input}
+                  mode="Mot de passe"
+                  label="Modifier Mot de passe"
+                  outlineColor="#1A7B93"
+                  activeOutlineColor="#1A7B93"
+                  autoCapitalize="none"
+                  secureTextEntry={true}
+                  right={
+                    <TextInput.Icon
+                      icon="eye"
+                      onPress={() => setPwdVisible(!pwdVisible)}
+                    />
+                  }
+                  selectionColor="#144272"
+                  onChangeText={(value) => setUpdateMdp(value)}
+                  value={updateMdp}
+                />
+              ) : (
+                <TextInput
+                  style={styles.input}
+                  mode="outlined"
+                  label="Modifier Mot de passe"
+                  inputMode="text"
+                  secureTextEntry={false}
+                  right={
+                    <TextInput.Icon
+                      icon="eye-off-outline"
+                      onPress={() => setPwdVisible(!pwdVisible)}
+                    />
+                  }
+                  selectionColor="#1A7B93"
+                  activeUnderlineColor="#1A7B93"
+                  outlineColor="#1A7B93"
+                  autoCapitalize="none"
+                  onChangeText={(value) => setUpdateMdp(value)}
+                  value={updateMdp}
+                />
+              )}
             </View>
           </View>
           <TouchableOpacity
             style={styles.registerButton}
             activeOpacity={0.8}
-            onPress={() => parentUpdate()}
+            onPress={() => handleEnregister()}
           >
             <Text style={styles.textButton}>Enregistrer</Text>
             <Ionicons

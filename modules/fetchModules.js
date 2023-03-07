@@ -11,7 +11,7 @@ async function getCommuneById(IdEtablissement) {
   return codeCommune;
 }
 
-// recupere contacts pour tout les etablissements publics
+// A partir de l'organisme on recupere le contact de tout les etablissements publics
 async function getContactByOrganisme(codeCommune, typeOrganisme) {
   let contacts = {
     nom: null,
@@ -36,7 +36,7 @@ async function getContactByOrganisme(codeCommune, typeOrganisme) {
   return contacts;
 }
 
-// recupere contact de l'ecole
+// A partir de l'ecole on recupere le contact de l'ecole
 async function getContactByEtablissement(IdEtablissement) {
   let contacts = {
     nom: null,
@@ -61,7 +61,7 @@ async function getContactByEtablissement(IdEtablissement) {
   return contacts;
 }
 
-// A partir du code commune, du tableau Organime et de l'Id etablissement de l'API , on recupere le tableau d'objet de mon organisme avec tout les contacts
+// A partir du code commune, du tableau Organime et de l'Id etablissement de l'API , on recupere le tableau d'objet de mes organismes avec tout les contacts
 async function getOrganismes(
   codeCommune,
   tableauOrganisme,
