@@ -573,9 +573,11 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    borderRadius: "50%",
-    height: 100,
     width: 100,
+    height: 100,
+    borderRadius: 75,
+    borderRadius: 75,
+    borderRadius: 75,
   },
 
   input: {

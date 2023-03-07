@@ -124,9 +124,11 @@ const styles = StyleSheet.create({
   },
 
   childImage: {
-    borderRadius: "50%",
-    height: 60,
-    width: 60,
+    width: 50,
+    height: 50,
+    borderRadius: 75,
+    borderRadius: 75,
+    borderRadius: 75,
   },
   textButton: {
     fontSize: 20,
