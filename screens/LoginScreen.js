@@ -100,6 +100,7 @@ export default function LoginScreen({ navigation }) {
             setSignUpMail("");
             setSignUpPassword("");
             setLoadingUp(false);
+            setModalVisible(false);
             navigation.navigate("DrawerNavigator");
           } else {
             setIdentifiantErrorUp(true);
@@ -147,7 +148,6 @@ export default function LoginScreen({ navigation }) {
             );
             setSignInMail("");
             setSignInPassword("");
-            setModalVisible(false);
 
             navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
           } else {
@@ -222,9 +222,7 @@ export default function LoginScreen({ navigation }) {
               value={signUpPassword}
             />
 
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
+            <View style={styles.lastButton}>
               <TouchableOpacity
                 style={styles.signUpButtonModal}
                 onPress={() => setModalVisible(false)}
@@ -531,5 +529,9 @@ const styles = StyleSheet.create({
   inputModal: {
     width: "90%",
     margin: 5,
+  },
+  lastButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

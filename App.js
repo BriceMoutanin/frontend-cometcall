@@ -24,7 +24,7 @@ import {
 import { MenuProvider } from "react-native-popup-menu";
 
 //import des pages
-import LoginScreen from "./screens/LoginScreenOrigin";
+import LoginScreen from "./screens/LoginScreen";
 import ProfilParentScreen from "./screens/ProfilParentScreen";
 import ProfilEnfantScreen from "./screens/ProfilEnfantScreen";
 import DemandeScreen from "./screens/DemandeScreen";
