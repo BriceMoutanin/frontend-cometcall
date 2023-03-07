@@ -410,7 +410,7 @@ export default function ProfilParentScreen({ navigation }) {
           <TouchableOpacity
             style={styles.registerButton}
             activeOpacity={0.8}
-            onPress={() => pickImageAsync()}
+            onPress={() => parentUpdate()}
           >
             <Text style={styles.textButton}>Enregistrer</Text>
             <Ionicons
