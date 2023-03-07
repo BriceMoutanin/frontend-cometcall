@@ -45,7 +45,7 @@ export default function ProfilParentScreen({ navigation }) {
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   const pickImageAsync = async () => {
-    let permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+    let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     console.log(permission);
     if (permission.status === "granted") {
       let result = await ImagePicker.launchImageLibraryAsync({
