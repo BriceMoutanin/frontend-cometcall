@@ -254,7 +254,7 @@ export default function LoginScreen({ navigation }) {
             <LogoSvg style={styles.logo}></LogoSvg>
           </View>
           <View style={styles.card}>
-            <Text style={styles.h5}>Screen 2 ! Un contact à trouver ?</Text>
+            <Text style={styles.h5}> Un contact à trouver ?</Text>
             <Text style={styles.h6}>
               Un problème à résoudre avec l’école, le collège ou le lycée de
               votre enfant ? Avec Com-et-Call, trouvez rapidement le bon contact

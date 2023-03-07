@@ -85,7 +85,7 @@ export default function ProfilParentScreen({ navigation }) {
     }
   };
 
-  //changer mot de passe   ne sais pas où le mettre dans le handle !  + vider l'etat apres
+  //changer mot de passe
   const updateMotDePasse = () => {
     let id = toast.show("Enregistrement Mot de passe...", {
       placement: "bottom",
