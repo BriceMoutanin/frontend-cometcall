@@ -175,177 +175,181 @@ export default function LoginScreen({ navigation }) {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.logoContainer}>
-          <LogoSvg style={styles.logo}></LogoSvg>
-        </View>
-        <View style={styles.card}>
-          <Text style={styles.h5}>Un contact à trouver 2 ?</Text>
-          <Text style={styles.h6}>
-            Un problème à résoudre avec l’école, le collège ou le lycée de votre
-            enfant ? Avec Com-et-Call, trouvez rapidement le bon contact !
-          </Text>
-        </View>
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Email"
-          selectionColor="#144272"
-          outlineColor={emailErrorUp || identifiantErrorUp ? "red" : "#144272"}
-          activeOutlineColor="#144272"
-          keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
-          autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
-          autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
-          autoCorrect={false}
-          onChangeText={(value) => setSignUpMail(value)}
-          value={signUpMail}
-        />
-        {emailErrorUp && (
-          <Text style={styles.error}>Adresse mail invalide.</Text>
-        )}
-        {identifiantErrorUp && (
-          <Text style={styles.error}>Adresse mail déjà existante.</Text>
-        )}
-
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Password"
-          inputMode="text"
-          secureTextEntry={!pwdVisible}
-          right={
-            <TextInput.Icon
-              icon={pwdVisible ? "eye-off-outline" : "eye"}
-              onPress={() => setPwdVisible(!pwdVisible)}
-            />
-          }
-          selectionColor="#144272"
-          activeUnderlineColor="#144272"
-          activeOutlineColor="#144272"
-          autoCapitalize="none"
-          onChangeText={(value) => setSignUpPassword(value)}
-          value={signUpPassword}
-        />
-
-        <TouchableOpacity
-          style={styles.cntButton}
-          onPress={() => handleSignUp()}
-        >
-          <Text style={styles.cntText}>S'inscrire</Text>
-        </TouchableOpacity>
-        <ActivityIndicator
-          style={{ marginTop: 15 }}
-          size="small"
-          color="#0000ff"
-          animating={loadingUp}
-        />
-        <View style={styles.footer}>
-          <Text style={styles.h5Black}>Déjà inscrit ?</Text>
-          <TouchableOpacity
-            style={styles.signInButton}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.cntText}>Connexion</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
         <View
           style={styles.centeredViewModal}
           onPress={() => setModalVisible(false)}
         >
-          <View style={styles.modalView}>
+          <View style={styles.logoContainer}>
+            <LogoSvg style={styles.logo}></LogoSvg>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.h5}>Un contact à trouver 2 ?</Text>
+            <Text style={styles.h6}>
+              Un problème à résoudre avec l’école, le collège ou le lycée de
+              votre enfant ? Avec Com-et-Call, trouvez rapidement le bon contact
+              !
+            </Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            label="Email"
+            selectionColor="#144272"
+            outlineColor={
+              emailErrorUp || identifiantErrorUp ? "red" : "#144272"
+            }
+            activeOutlineColor="#144272"
+            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+            autoCorrect={false}
+            onChangeText={(value) => setSignUpMail(value)}
+            value={signUpMail}
+          />
+          {emailErrorUp && (
+            <Text style={styles.error}>Adresse mail invalide.</Text>
+          )}
+          {identifiantErrorUp && (
+            <Text style={styles.error}>Adresse mail déjà existante.</Text>
+          )}
+
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            label="Password"
+            inputMode="text"
+            secureTextEntry={!pwdVisible}
+            right={
+              <TextInput.Icon
+                icon={pwdVisible ? "eye-off-outline" : "eye"}
+                onPress={() => setPwdVisible(!pwdVisible)}
+              />
+            }
+            selectionColor="#144272"
+            activeUnderlineColor="#144272"
+            activeOutlineColor="#144272"
+            autoCapitalize="none"
+            onChangeText={(value) => setSignUpPassword(value)}
+            value={signUpPassword}
+          />
+
+          <TouchableOpacity
+            style={styles.cntButton}
+            onPress={() => handleSignUp()}
+          >
+            <Text style={styles.cntText}>S'inscrire</Text>
+          </TouchableOpacity>
+          <ActivityIndicator
+            style={{ marginTop: 15 }}
+            size="small"
+            color="#0000ff"
+            animating={loadingUp}
+          />
+          <View style={styles.footer}>
+            <Text style={styles.h5Black}>Déjà inscrit ?</Text>
+            <TouchableOpacity
+              style={styles.signInButton}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.cntText}>Connexion</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <View style={styles.modalView}>
+          <TextInput
+            style={styles.inputModal}
+            mode="outlined"
+            label="Email"
+            selectionColor="#144272"
+            outlineColor={
+              emailErrorIn || utilisateurErrorIn ? "red" : "#144272"
+            }
+            activeOutlineColor="#144272"
+            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+            autoCorrect={false}
+            onChangeText={(value) => setSignInMail(value)}
+            value={signInMail}
+          />
+          {emailErrorIn && (
+            <Text style={styles.error}>Adresse mail invalide.</Text>
+          )}
+          {utilisateurErrorIn && (
+            <Text style={styles.error}>Adresse mail introuvable</Text>
+          )}
+          {!pwdVisible ? (
             <TextInput
               style={styles.inputModal}
               mode="outlined"
-              label="Email"
-              selectionColor="#144272"
-              outlineColor={
-                emailErrorIn || utilisateurErrorIn ? "red" : "#144272"
+              label="Password"
+              secureTextEntry={true}
+              right={
+                <TextInput.Icon
+                  icon="eye"
+                  onPress={() => setPwdVisible(!pwdVisible)}
+                />
               }
+              selectionColor="#144272"
+              activeUnderlineColor="#144272"
+              outlineColor={identifiantErrorIn ? "red" : "#144272"}
               activeOutlineColor="#144272"
-              keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
-              autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
-              autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
-              autoCorrect={false}
-              onChangeText={(value) => setSignInMail(value)}
-              value={signInMail}
+              autoCapitalize="none"
+              onChangeText={(value) => setSignInPassword(value)}
+              value={signInPassword}
             />
-            {emailErrorIn && (
-              <Text style={styles.error}>Adresse mail invalide.</Text>
-            )}
-            {utilisateurErrorIn && (
-              <Text style={styles.error}>Adresse mail introuvable</Text>
-            )}
-            {!pwdVisible ? (
-              <TextInput
-                style={styles.inputModal}
-                mode="outlined"
-                label="Password"
-                secureTextEntry={true}
-                right={
-                  <TextInput.Icon
-                    icon="eye"
-                    onPress={() => setPwdVisible(!pwdVisible)}
-                  />
-                }
-                selectionColor="#144272"
-                activeUnderlineColor="#144272"
-                outlineColor={identifiantErrorIn ? "red" : "#144272"}
-                activeOutlineColor="#144272"
-                autoCapitalize="none"
-                onChangeText={(value) => setSignInPassword(value)}
-                value={signInPassword}
-              />
-            ) : (
-              <TextInput
-                style={styles.inputModal}
-                mode="outlined"
-                label="Password"
-                inputMode="text"
-                secureTextEntry={false}
-                right={
-                  <TextInput.Icon
-                    icon="eye-off-outline"
-                    onPress={() => setPwdVisible(!pwdVisible)}
-                  />
-                }
-                selectionColor="#144272"
-                activeUnderlineColor="#144272"
-                outlineColor={identifiantErrorIn ? "red" : "#144272"}
-                autoCapitalize="none"
-                onChangeText={(value) => setSignInPassword(value)}
-                value={signInPassword}
-              />
-            )}
-            {identifiantErrorIn && (
-              <Text style={styles.error}>Mot de passe incorrect.</Text>
-            )}
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+          ) : (
+            <TextInput
+              style={styles.inputModal}
+              mode="outlined"
+              label="Password"
+              inputMode="text"
+              secureTextEntry={false}
+              right={
+                <TextInput.Icon
+                  icon="eye-off-outline"
+                  onPress={() => setPwdVisible(!pwdVisible)}
+                />
+              }
+              selectionColor="#144272"
+              activeUnderlineColor="#144272"
+              outlineColor={identifiantErrorIn ? "red" : "#144272"}
+              autoCapitalize="none"
+              onChangeText={(value) => setSignInPassword(value)}
+              value={signInPassword}
+            />
+          )}
+          {identifiantErrorIn && (
+            <Text style={styles.error}>Mot de passe incorrect.</Text>
+          )}
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <TouchableOpacity
+              style={styles.signInButtonModal}
+              onPress={() => setModalVisible(false)}
             >
-              <TouchableOpacity
-                style={styles.signInButtonModal}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.cntText}>Annuler</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.signInButtonModal}
-                onPress={() => handleSignIn()}
-              >
-                <Text style={styles.cntText}>Connexion</Text>
-              </TouchableOpacity>
-            </View>
-            <ActivityIndicator
-              style={{ marginTop: 15 }}
-              size="small"
-              color="#0000ff"
-              animating={loadingIn}
-            />
+              <Text style={styles.cntText}>Annuler</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.signInButtonModal}
+              onPress={() => handleSignIn()}
+            >
+              <Text style={styles.cntText}>Connexion</Text>
+            </TouchableOpacity>
           </View>
+          <ActivityIndicator
+            style={{ marginTop: 15 }}
+            size="small"
+            color="#0000ff"
+            animating={loadingIn}
+          />
         </View>
       </KeyboardAvoidingView>
     </View>
