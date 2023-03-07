@@ -41,11 +41,11 @@ export default function LoginScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user.value);
 
   // ne pas devoir se reconnecter => reduxPersist
-  /*useEffect(() => {
+  useEffect(() => {
     if (userReducer.token) {
       navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
     }
-  }, []);*/
+  }, []);
 
   const dispatch = useDispatch();
 
@@ -89,6 +89,7 @@ export default function LoginScreen({ navigation }) {
                 email: signUpMail,
                 token: data.newUser.token,
                 enfants: data.newUser.enfants,
+                photoURI: data.newUser.photoURI,
                 //tel: data.user.tel,
               })
             );
@@ -128,6 +129,7 @@ export default function LoginScreen({ navigation }) {
                 email: signInMail,
                 token: data.user.token,
                 enfants: data.user.enfants,
+                photoURI: data.user.photoURI,
                 //tel: data.user.tel,
               })
             );

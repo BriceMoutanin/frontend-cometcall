@@ -7,6 +7,7 @@ const initialState = {
     nom: null,
     prenom: null,
     //tel: null,
+    photoURI: null,
     enfants: [],
   },
 };
@@ -20,6 +21,7 @@ export const userSlice = createSlice({
       state.value.email = action.payload.email;
       state.value.prenom = action.payload.prenom;
       state.value.nom = action.payload.nom;
+      state.value.photoURI = action.payload.photoURI;
       //state.value.tel = action.payload.tel;
       state.value.enfants = action.payload.enfants;
     },
@@ -30,6 +32,7 @@ export const userSlice = createSlice({
       state.value.prenom = null;
       state.value.nom = null;
       state.value.enfants = [];
+      state.value.photoURI = null;
       //state.value.tel = null;
     },
 
@@ -37,6 +40,10 @@ export const userSlice = createSlice({
       state.value.prenom = action.payload.prenom;
       state.value.nom = action.payload.nom;
       state.value.tel = action.payload.tel;
+    },
+
+    updatePhoto: (state, action) => {
+      state.value.photoURI = action.payload;
     },
 
     addEnfant: (state, action) => {
@@ -63,6 +70,15 @@ export const userSlice = createSlice({
         return enfant;
       });
     },
+
+    updatePhotoEnfant: (state, action) => {
+      state.value.enfants = state.value.enfants.map((enfant) => {
+        if (enfant._id == action.payload._id) {
+          enfant.photURI = action.payload.photoURI;
+        }
+        return enfant;
+      });
+    },
   },
 });
 
@@ -74,5 +90,7 @@ export const {
   removeEnfant,
   updatePrenomEnfant,
   updateEtablissementEnfant,
+  updatePhoto,
+  updatePhotoEnfant,
 } = userSlice.actions;
 export default userSlice.reducer;

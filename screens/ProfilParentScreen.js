@@ -31,9 +31,9 @@ import {
   SlideOutRight,
 } from "react-native-reanimated";
 import * as ImagePicker from "expo-image-picker";
+import { updatePhoto } from "../reducers/user";
 
 export default function ProfilParentScreen({ navigation }) {
-  const [image, setImage] = useState(null);
   const dispatch = useDispatch();
   const toast = useToast();
   const user = useSelector((state) => state.user.value);
@@ -45,16 +45,83 @@ export default function ProfilParentScreen({ navigation }) {
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
   const pickImageAsync = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
+    let permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+    console.log(permission);
+    if (permission.status === "granted") {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    } else {
-      alert("You did not select any image.");
+      if (!result.canceled) {
+        fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            photoURI: result.assets[0].uri,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              dispatch(updatePhoto(result.assets[0].uri));
+            } else {
+              alert("Erreur lors de l'enregistrement de la photo");
+            }
+          });
+      } else {
+        alert("You did not select any image.");
+      }
     }
+  };
+
+  const shootImageAsync = async () => {
+    let permission = await ImagePicker.requestCameraPermissionsAsync();
+    console.log(permission);
+    if (permission.status === "granted") {
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            photoURI: result.assets[0].uri,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              dispatch(updatePhoto(result.assets[0].uri));
+            } else {
+              alert("Erreur lors de l'enregistrement de la photo");
+            }
+          });
+      } else {
+        alert("You did not shoot any photo.");
+      }
+    }
+  };
+
+  const deleteImageAsync = async () => {
+    fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        photoURI: null,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(updatePhoto(null));
+        } else {
+          alert("Erreur lors de l'enregistrement de la photo");
+        }
+      });
   };
 
   const parentUpdate = async () => {
@@ -146,6 +213,27 @@ export default function ProfilParentScreen({ navigation }) {
     },
   ];
 
+  const dataPhoto = [
+    {
+      id: 1,
+      name: "Choisir une photo",
+      icon: <Feather name="image" size={24} color="black" />,
+      action: pickImageAsync,
+    },
+    {
+      id: 2,
+      name: "Prendre une photo",
+      icon: <Feather name="camera" size={24} color="red" />,
+      action: shootImageAsync,
+    },
+    {
+      id: 3,
+      name: "Supprimer la photo",
+      icon: <Feather name="trash-2" size={24} color="red" />,
+      action: deleteImageAsync,
+    },
+  ];
+
   const ItemDivider = () => {
     return (
       <View
@@ -229,7 +317,9 @@ export default function ProfilParentScreen({ navigation }) {
   }
 
   const imageSource =
-    image !== null ? { uri: image } : require("../assets/avatar.png");
+    user.photoURI !== null
+      ? { uri: user.photoURI }
+      : require("../assets/avatar.png");
 
   return (
     <View style={styles.container}>
@@ -245,7 +335,44 @@ export default function ProfilParentScreen({ navigation }) {
           <View style={styles.ParentContainer}>
             <View style={styles.photoContainer}>
               <Image style={styles.image} source={imageSource} />
-              <Ionicons name="add-circle" size={24} color="#144172" />
+              <Menu
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <MenuTrigger
+                  customStyles={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons name="add-circle" size={24} color="#144172" />
+                </MenuTrigger>
+                <MenuOptions style={{ padding: 10 }}>
+                  <FlatList
+                    data={dataPhoto}
+                    keyExtractor={(item) => item.id}
+                    style={{}}
+                    ItemSeparatorComponent={ItemDivider}
+                    renderItem={({ item }) => (
+                      <MenuOption
+                        onSelect={() => item.action()}
+                        customStyles={{
+                          optionWrapper: {
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          },
+                        }}
+                      >
+                        <Text style={{ fontSize: 18 }}>{item.name}</Text>
+                        <Text>{item.icon}</Text>
+                      </MenuOption>
+                    )}
+                  />
+                </MenuOptions>
+              </Menu>
             </View>
             <View style={styles.inputContainer}>
               <TextInput
