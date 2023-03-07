@@ -5,9 +5,19 @@ import {
   SafeAreaView,
   Text,
   Button,
-  TouchableOpacity,
   Dimensions,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+  ImageViewer,
 } from "react-native";
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { useFonts } from "expo-font";
@@ -20,7 +30,10 @@ import {
   addEnfant,
   updatePrenomEnfant,
   updateEtablissementEnfant,
+  updatePhotoEnfant,
 } from "../reducers/user";
+import { Feather } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 export default function ProfilEnfantScreen({ route, navigation }) {
   const { enfant } = route.params;
@@ -33,6 +46,9 @@ export default function ProfilEnfantScreen({ route, navigation }) {
   const [updateEtablissement, setUpdateEtablissement] = useState(
     enfant ? enfant.etablissement : null
   );
+  const [updatePhoto, setUpdatePhoto] = useState(
+    enfant ? enfant.photoURI : null
+  );
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
@@ -40,6 +56,141 @@ export default function ProfilEnfantScreen({ route, navigation }) {
   const dropdownController = useRef(null);
 
   const searchRef = useRef(null);
+
+  const pickImageEnfantAsync = async () => {
+    let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    console.log(permission);
+    if (permission.status === "granted") {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        if (enfant) {
+          fetch(
+            `${BACKEND_ADDRESS}/users/updatePhotoEnfant/${user.token}/${enfant._id}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                photoURI: result.assets[0].uri,
+              }),
+            }
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.result) {
+                setUpdatePhoto(result.assets[0].uri);
+                dispatch(
+                  updatePhotoEnfant({
+                    _id: enfant._id,
+                    photoURI: result.assets[0].uri,
+                  })
+                );
+              } else {
+                alert("Erreur lors de l'enregistrement de la photo");
+              }
+            });
+        } else {
+          setUpdatePhoto(result.assets[0].uri);
+        }
+      } else {
+        alert("You did not select any image.");
+      }
+    }
+  };
+
+  const shootImageEnfantAsync = async () => {
+    let permission = await ImagePicker.requestCameraPermissionsAsync();
+    console.log(permission);
+    if (permission.status === "granted") {
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        if (enfant) {
+          fetch(
+            `${BACKEND_ADDRESS}/users/updatePhotoEnfant/${user.token}/${enfant._id}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                photoURI: result.assets[0].uri,
+              }),
+            }
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.result) {
+                setUpdatePhoto(result.assets[0].uri);
+                dispatch(
+                  updatePhotoEnfant({
+                    _id: enfant._id,
+                    photoURI: result.assets[0].uri,
+                  })
+                );
+              } else {
+                alert("Erreur lors de l'enregistrement de la photo");
+              }
+            });
+        } else {
+          setUpdatePhoto(result.assets[0].uri);
+        }
+      } else {
+        alert("You did not shoot any photo.");
+      }
+    }
+  };
+
+  const deleteImageEnfantAsync = async () => {
+    if (enfant) {
+      fetch(
+        `${BACKEND_ADDRESS}/users/updatePhotoEnfant/${user.token}/${enfant._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            photoURI: null,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            setUpdatePhoto(null);
+            dispatch(updatePhotoEnfant({ _id: enfant._id, photoURI: null }));
+          } else {
+            alert("Erreur lors de l'enregistrement de la photo");
+          }
+        });
+    } else {
+      setUpdatePhoto(null);
+    }
+  };
+
+  const dataPhotoEnfant = [
+    {
+      id: 1,
+      name: "Choisir une photo",
+      icon: <Feather name="image" size={24} color="black" />,
+      action: pickImageEnfantAsync,
+    },
+    {
+      id: 2,
+      name: "Prendre une photo",
+      icon: <Feather name="camera" size={24} color="red" />,
+      action: shootImageEnfantAsync,
+    },
+    {
+      id: 3,
+      name: "Supprimer la photo",
+      icon: <Feather name="trash-2" size={24} color="red" />,
+      action: deleteImageEnfantAsync,
+    },
+  ];
 
   const getSuggestions = useCallback(async (q) => {
     const filterToken = q.toLowerCase();
@@ -165,7 +316,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       body: JSON.stringify({
         prenom: updatePrenom,
         etablissement: updateEtablissement,
-        photoURI: null,
+        photoURI: updatePhoto,
       }),
     })
       .then((response) => response.json())
@@ -187,6 +338,23 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     return null;
   }
 
+  const imageSource =
+    updatePhoto !== null
+      ? { uri: updatePhoto }
+      : require("../assets/avatar.png");
+
+  const ItemDivider = () => {
+    return (
+      <View
+        style={{
+          height: 0.5,
+          width: "100%",
+          backgroundColor: "gray",
+        }}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profilEnfant}>
@@ -197,8 +365,45 @@ export default function ProfilEnfantScreen({ route, navigation }) {
         )}
       </View>
       <View style={styles.photoContainer}>
-        <Image style={styles.image} source={require("../assets/avatar.png")} />
-        <Ionicons name="add-circle" size={24} color="#144172" />
+        <Image style={styles.image} source={imageSource} />
+        <Menu
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <MenuTrigger
+            customStyles={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="add-circle" size={24} color="#144172" />
+          </MenuTrigger>
+          <MenuOptions style={{ padding: 10 }}>
+            <FlatList
+              data={dataPhotoEnfant}
+              keyExtractor={(item) => item.id}
+              style={{}}
+              ItemSeparatorComponent={ItemDivider}
+              renderItem={({ item }) => (
+                <MenuOption
+                  onSelect={() => item.action()}
+                  customStyles={{
+                    optionWrapper: {
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    },
+                  }}
+                >
+                  <Text style={{ fontSize: 18 }}>{item.name}</Text>
+                  <Text>{item.icon}</Text>
+                </MenuOption>
+              )}
+            />
+          </MenuOptions>
+        </Menu>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -368,6 +573,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
+    borderRadius: "50%",
     height: 100,
     width: 100,
   },
