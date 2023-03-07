@@ -14,6 +14,7 @@ const historiqueSlice = createSlice({
     },
     removeHistorique: (state, action) => {
       state.historique = state.historique.filter((item) => item._id != action.payload);
+      console.log(action.payload)
     },
     setHistorique: (state, action) => {
       state.historique = action.payload;
