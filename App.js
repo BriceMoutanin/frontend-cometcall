@@ -24,7 +24,7 @@ import {
 import { MenuProvider } from "react-native-popup-menu";
 
 //import des pages
-import LoginScreen2 from "./screens/LoginScreen2";
+import LoginScreen from "./screens/LoginScreen";
 import ProfilParentScreen from "./screens/ProfilParentScreen";
 import ProfilEnfantScreen from "./screens/ProfilEnfantScreen";
 import DemandeScreen from "./screens/DemandeScreen";
@@ -226,7 +226,7 @@ export default function App() {
                 name="Stack"
                 screenOptions={{ headerShown: false }}
               >
-                <Stack.Screen name="Login2" component={LoginScreen2} />
+                <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen
                   name="DrawerNavigator"
                   component={DrawerNavigator}

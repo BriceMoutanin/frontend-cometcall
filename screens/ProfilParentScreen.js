@@ -87,10 +87,6 @@ export default function ProfilParentScreen({ navigation }) {
     }
   };
 
-  // const chageMdp= async () => {
-  //   try {
-
-
   const deleteEnfant = async (enfant) => {
     try {
       let id = toast.show("Suppression...", {

@@ -94,13 +94,12 @@ export default function LoginScreen({ navigation }) {
                 email: signUpMail,
                 token: data.newUser.token,
                 enfants: data.newUser.enfants,
-                //tel: data.user.tel,
+                // tel: data.user.tel,
               })
             );
             setSignUpMail("");
             setSignUpPassword("");
             setLoadingUp(false);
-
             navigation.navigate("DrawerNavigator");
           } else {
             setIdentifiantErrorUp(true);
@@ -143,7 +142,7 @@ export default function LoginScreen({ navigation }) {
                 email: signInMail,
                 token: data.user.token,
                 enfants: data.user.enfants,
-                //tel: data.user.tel,
+                // tel: data.user.tel,
               })
             );
             setSignInMail("");
@@ -181,92 +180,69 @@ export default function LoginScreen({ navigation }) {
         >
           <View style={styles.modalView}>
             <TextInput
-              style={styles.inputModal}
+              style={styles.input}
               mode="outlined"
               label="Email"
               selectionColor="#144272"
               outlineColor={
-                emailErrorIn || utilisateurErrorIn ? "red" : "#144272"
+                emailErrorUp || identifiantErrorUp ? "red" : "#144272"
               }
               activeOutlineColor="#144272"
               keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
               autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
               autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
               autoCorrect={false}
-              onChangeText={(value) => setSignInMail(value)}
-              value={signInMail}
+              onChangeText={(value) => setSignUpMail(value)}
+              value={signUpMail}
             />
-            {emailErrorIn && (
+            {emailErrorUp && (
               <Text style={styles.error}>Adresse mail invalide.</Text>
             )}
-            {utilisateurErrorIn && (
-              <Text style={styles.error}>Adresse mail introuvable</Text>
+            {identifiantErrorUp && (
+              <Text style={styles.error}>Adresse mail déjà existante.</Text>
             )}
-            {!pwdVisible ? (
-              <TextInput
-                style={styles.inputModal}
-                mode="outlined"
-                label="Password"
-                secureTextEntry={true}
-                right={
-                  <TextInput.Icon
-                    icon="eye"
-                    onPress={() => setPwdVisible(!pwdVisible)}
-                  />
-                }
-                selectionColor="#144272"
-                activeUnderlineColor="#144272"
-                outlineColor={identifiantErrorIn ? "red" : "#144272"}
-                activeOutlineColor="#144272"
-                autoCapitalize="none"
-                onChangeText={(value) => setSignInPassword(value)}
-                value={signInPassword}
-              />
-            ) : (
-              <TextInput
-                style={styles.inputModal}
-                mode="outlined"
-                label="Password"
-                inputMode="text"
-                secureTextEntry={false}
-                right={
-                  <TextInput.Icon
-                    icon="eye-off-outline"
-                    onPress={() => setPwdVisible(!pwdVisible)}
-                  />
-                }
-                selectionColor="#144272"
-                activeUnderlineColor="#144272"
-                outlineColor={identifiantErrorIn ? "red" : "#144272"}
-                autoCapitalize="none"
-                onChangeText={(value) => setSignInPassword(value)}
-                value={signInPassword}
-              />
-            )}
-            {identifiantErrorIn && (
-              <Text style={styles.error}>Mot de passe incorrect.</Text>
-            )}
+
+            <TextInput
+              style={styles.input}
+              mode="outlined"
+              label="Password"
+              inputMode="text"
+              secureTextEntry={!pwdVisible}
+              right={
+                <TextInput.Icon
+                  icon={pwdVisible ? "eye-off-outline" : "eye"}
+                  onPress={() => setPwdVisible(!pwdVisible)}
+                />
+              }
+              selectionColor="#144272"
+              activeUnderlineColor="#144272"
+              activeOutlineColor="#144272"
+              autoCapitalize="none"
+              onChangeText={(value) => setSignUpPassword(value)}
+              value={signUpPassword}
+            />
+
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <TouchableOpacity
-                style={styles.signInButtonModal}
+                style={styles.signUpButtonModal}
                 onPress={() => setModalVisible(false)}
               >
                 <Text style={styles.cntText}>Annuler</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.signInButtonModal}
-                onPress={() => handleSignIn()}
+                style={styles.signUpButtonModal}
+                onPress={() => handleSignUp()}
               >
-                <Text style={styles.cntText}>Connexion</Text>
+                <Text style={styles.cntText}>S'inscrire</Text>
               </TouchableOpacity>
             </View>
             <ActivityIndicator
               style={{ marginTop: 15 }}
               size="small"
               color="#0000ff"
-              animating={loadingIn}
+              animating={loadingUp}
             />
           </View>
         </View>
@@ -275,76 +251,111 @@ export default function LoginScreen({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
-        <View style={styles.logoContainer}>
-          <LogoSvg style={styles.logo}></LogoSvg>
+        <View style={styles.firstContainer}>
+          <View style={styles.logoContainer}>
+            <LogoSvg style={styles.logo}></LogoSvg>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.h5}>Screen 2 ! Un contact à trouver ?</Text>
+            <Text style={styles.h6}>
+              Un problème à résoudre avec l’école, le collège ou le lycée de
+              votre enfant ? Avec Com-et-Call, trouvez rapidement le bon contact
+              !
+            </Text>
+          </View>
         </View>
-        <View style={styles.card}>
-          <Text style={styles.h5}>Un contact à trouver ?</Text>
-          <Text style={styles.h6}>
-            Un problème à résoudre avec l’école, le collège ou le lycée de votre
-            enfant ? Avec Com-et-Call, trouvez rapidement le bon contact !
-          </Text>
-        </View>
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Email"
-          selectionColor="#144272"
-          outlineColor={emailErrorUp || identifiantErrorUp ? "red" : "#144272"}
-          activeOutlineColor="#144272"
-          keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
-          autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
-          autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
-          autoCorrect={false}
-          onChangeText={(value) => setSignUpMail(value)}
-          value={signUpMail}
-        />
-        {emailErrorUp && (
-          <Text style={styles.error}>Adresse mail invalide.</Text>
-        )}
-        {identifiantErrorUp && (
-          <Text style={styles.error}>Adresse mail déjà existante.</Text>
-        )}
 
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Password"
-          inputMode="text"
-          secureTextEntry={!pwdVisible}
-          right={
-            <TextInput.Icon
-              icon={pwdVisible ? "eye-off-outline" : "eye"}
-              onPress={() => setPwdVisible(!pwdVisible)}
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            label="Email"
+            selectionColor="#144272"
+            outlineColor={
+              emailErrorIn || utilisateurErrorIn ? "red" : "#144272"
+            }
+            activeOutlineColor="#144272"
+            keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
+            autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
+            autoComplete="email" // https://reactnative.dev/docs/textinput#autocomplete-android
+            autoCorrect={false}
+            onChangeText={(value) => setSignInMail(value)}
+            value={signInMail}
+          />
+          {emailErrorIn && (
+            <Text style={styles.error}>Adresse mail invalide.</Text>
+          )}
+          {utilisateurErrorIn && (
+            <Text style={styles.error}>Adresse mail introuvable</Text>
+          )}
+          {!pwdVisible ? (
+            <TextInput
+              style={styles.input}
+              mode="outlined"
+              label="Password"
+              secureTextEntry={true}
+              right={
+                <TextInput.Icon
+                  icon="eye"
+                  onPress={() => setPwdVisible(!pwdVisible)}
+                />
+              }
+              selectionColor="#144272"
+              activeUnderlineColor="#144272"
+              outlineColor={identifiantErrorIn ? "red" : "#144272"}
+              activeOutlineColor="#144272"
+              autoCapitalize="none"
+              onChangeText={(value) => setSignInPassword(value)}
+              value={signInPassword}
             />
-          }
-          selectionColor="#144272"
-          activeUnderlineColor="#144272"
-          activeOutlineColor="#144272"
-          autoCapitalize="none"
-          onChangeText={(value) => setSignUpPassword(value)}
-          value={signUpPassword}
-        />
-
-        <TouchableOpacity
-          style={styles.cntButton}
-          onPress={() => handleSignUp()}
-        >
-          <Text style={styles.cntText}>S'inscrire</Text>
-        </TouchableOpacity>
-        <ActivityIndicator
-          style={{ marginTop: 15 }}
-          size="small"
-          color="#0000ff"
-          animating={loadingUp}
-        />
+          ) : (
+            <TextInput
+              style={styles.input}
+              mode="outlined"
+              label="Password"
+              inputMode="text"
+              secureTextEntry={false}
+              right={
+                <TextInput.Icon
+                  icon="eye-off-outline"
+                  onPress={() => setPwdVisible(!pwdVisible)}
+                />
+              }
+              selectionColor="#144272"
+              activeUnderlineColor="#144272"
+              outlineColor={identifiantErrorIn ? "red" : "#144272"}
+              autoCapitalize="none"
+              onChangeText={(value) => setSignInPassword(value)}
+              value={signInPassword}
+            />
+          )}
+          {identifiantErrorIn && (
+            <Text style={styles.error}>Mot de passe incorrect.</Text>
+          )}
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <TouchableOpacity
+              style={styles.signInButton}
+              onPress={() => handleSignIn()}
+            >
+              <Text style={styles.cntText}>Se connecter</Text>
+            </TouchableOpacity>
+          </View>
+          <ActivityIndicator
+            style={{ marginTop: 15 }}
+            size="small"
+            color="#0000ff"
+            animating={loadingIn}
+          />
+        </View>
         <View style={styles.footer}>
-          <Text style={styles.h5Black}>Déjà inscrit ?</Text>
+          <Text style={styles.h5Black}>Creer un compte</Text>
           <TouchableOpacity
             style={styles.signInButton}
             onPress={() => setModalVisible(true)}
           >
-            <Text style={styles.cntText}>Connexion</Text>
+            <Text style={styles.cntText}>S'inscrire</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -353,18 +364,50 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    marginTop: 22,
+  },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    paddingTop: 300,
+    height: "100%",
+    width: "100%",
   },
+
+  firstContainer: {
+    paddingTop: 400,
+    width: "100%",
+    height: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  inputContainer: {
+    paddingTop: 10,
+    height: "30%",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "90%",
+    height: "20%",
+  },
+
   card: {
     backgroundColor: "#144272",
     borderRadius: 12,
     width: "80%",
     padding: 15,
+    height: 200,
     marginBottom: 20,
   },
   h5: {
@@ -388,7 +431,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     fontStyle: "normal",
     fontWeight: 100,
-    fontSize: 24,
+    fontSize: 23,
     color: "black",
     textAlign: "center",
     marginLeft: 0,
@@ -446,24 +489,10 @@ const styles = StyleSheet.create({
     height: 150,
     margin: -500,
   },
-  footer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "90%",
-    marginTop: 10,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    // alignItems: "center",
-    marginTop: 22,
-  },
 
   centeredViewModal: {
     flex: 1,
     justifyContent: "center",
-
     backgroundColor: "rgba(66,71,78,0.5)",
   },
 
@@ -473,6 +502,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -483,7 +513,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 
-  signInButtonModal: {
+  signUpButtonModal: {
     width: "50%",
     padding: 10,
     marginTop: 30,
