@@ -262,8 +262,13 @@ export default function ProfilParentScreen({ navigation }) {
         <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
           <Image
             style={styles.childImage}
-            source={require("../assets/avatar.png")}
+            source={
+              enfant.photoURI
+                ? { uri: enfant.photoURI }
+                : require("../assets/avatar.png")
+            }
           />
+
           <Text style={styles.textButton}>{enfant.prenom}</Text>
           <Menu
             style={{
@@ -499,6 +504,7 @@ const styles = StyleSheet.create({
   },
 
   photoContainer: {
+    borderRadius: "50%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -506,6 +512,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
+    borderRadius: "50%",
     height: 90,
     width: 100,
   },
@@ -593,6 +600,7 @@ const styles = StyleSheet.create({
   },
 
   childImage: {
+    borderRadius: "50%",
     height: 40,
     width: 40,
   },

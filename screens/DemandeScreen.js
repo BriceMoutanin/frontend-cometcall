@@ -58,7 +58,11 @@ export default function DemandeScreen({ navigation }) {
                 >
                   <Image
                     style={styles.childImage}
-                    source={require("../assets/avatar.png")}
+                    source={
+                      enfant.photoURI
+                        ? { uri: enfant.photoURI }
+                        : require("../assets/avatar.png")
+                    }
                   />
                   <Text style={styles.textButton}>{enfant.prenom}</Text>
                 </TouchableOpacity>
@@ -120,6 +124,7 @@ const styles = StyleSheet.create({
   },
 
   childImage: {
+    borderRadius: "50%",
     height: 60,
     width: 60,
   },

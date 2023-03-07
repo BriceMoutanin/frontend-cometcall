@@ -74,7 +74,7 @@ export const userSlice = createSlice({
     updatePhotoEnfant: (state, action) => {
       state.value.enfants = state.value.enfants.map((enfant) => {
         if (enfant._id == action.payload._id) {
-          enfant.photURI = action.payload.photoURI;
+          enfant.photoURI = action.payload.photoURI;
         }
         return enfant;
       });
