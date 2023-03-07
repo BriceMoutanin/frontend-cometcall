@@ -350,7 +350,7 @@ export default function LoginScreen({ navigation }) {
           />
         </View>
         <View style={styles.footer}>
-          <Text style={styles.h5Black}>Creer un compte</Text>
+          <Text style={styles.h5Black}>Créer un compte</Text>
           <TouchableOpacity
             style={styles.signInButton}
             onPress={() => setModalVisible(true)}
