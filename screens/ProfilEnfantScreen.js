@@ -165,6 +165,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       body: JSON.stringify({
         prenom: updatePrenom,
         etablissement: updateEtablissement,
+        photoURI: null,
       }),
     })
       .then((response) => response.json())
