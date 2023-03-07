@@ -37,6 +37,8 @@ export default function ProfilParentScreen({ navigation }) {
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
   const [updateTel, setupdateTel] = useState(user.tel);
+  const [updateMdp, setUpdateMdp] = useState(user.mdp);
+  const [pwdVisible, setPwdVisible] = useState(false);
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
@@ -55,6 +57,7 @@ export default function ProfilParentScreen({ navigation }) {
             nom: updateNom,
             prenom: updatePrenom,
             tel: updateTel,
+            mdp: updateMdp,
           }),
         }
       );
@@ -72,6 +75,7 @@ export default function ProfilParentScreen({ navigation }) {
             nom: updateNom,
             prenom: updatePrenom,
             tel: updateTel,
+            mdp: updateMdp,
           })
         );
       }
@@ -82,6 +86,12 @@ export default function ProfilParentScreen({ navigation }) {
       );
     }
   };
+
+  // const chageMdp= async () => {
+  //   try {
+
+  //   }
+  // };
 
   const deleteEnfant = async (enfant) => {
     try {
@@ -261,6 +271,47 @@ export default function ProfilParentScreen({ navigation }) {
                 onChangeText={(value) => setupdateTel(value)}
                 value={updateTel}
               />
+
+              {!pwdVisible ? (
+                <TextInput
+                  style={styles.input}
+                  mode="Mot de passe"
+                  label="Mot de passe"
+                  outlineColor="#1A7B93"
+                  activeOutlineColor="#1A7B93"
+                  autoCapitalize="none"
+                  secureTextEntry={true}
+                  right={
+                    <TextInput.Icon
+                      icon="eye"
+                      onPress={() => setPwdVisible(!pwdVisible)}
+                    />
+                  }
+                  selectionColor="#144272"
+                  onChangeText={(value) => setUpdateMdp(value)}
+                  value={updateMdp}
+                />
+              ) : (
+                <TextInput
+                  style={styles.input}
+                  mode="outlined"
+                  label="Mot de passe"
+                  inputMode="text"
+                  secureTextEntry={false}
+                  right={
+                    <TextInput.Icon
+                      icon="eye-off-outline"
+                      onPress={() => setPwdVisible(!pwdVisible)}
+                    />
+                  }
+                  selectionColor="#144272"
+                  activeUnderlineColor="#144272"
+                  outlineColor="#144272"
+                  autoCapitalize="none"
+                  onChangeText={(value) => setUpdateMdp(value)}
+                  value={updateMdp}
+                />
+              )}
             </View>
           </View>
           <TouchableOpacity
