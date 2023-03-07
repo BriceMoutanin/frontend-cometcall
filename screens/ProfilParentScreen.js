@@ -37,7 +37,7 @@ export default function ProfilParentScreen({ navigation }) {
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
   const [updateTel, setupdateTel] = useState(user.tel);
-  const [updateMdp, setUpdateMdp] = useState(user.mdp);
+  const [updateMdp, setUpdateMdp] = useState("");
   const [pwdVisible, setPwdVisible] = useState(false);
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
@@ -57,7 +57,6 @@ export default function ProfilParentScreen({ navigation }) {
             nom: updateNom,
             prenom: updatePrenom,
             tel: updateTel,
-            mdp: updateMdp,
           }),
         }
       );
@@ -75,7 +74,6 @@ export default function ProfilParentScreen({ navigation }) {
             nom: updateNom,
             prenom: updatePrenom,
             tel: updateTel,
-            mdp: updateMdp,
           })
         );
       }
@@ -87,6 +85,45 @@ export default function ProfilParentScreen({ navigation }) {
     }
   };
 
+  //changer mot de passe   ne sais pas où le mettre dans le handle !  + vider l'etat apres
+  const updateMotDePasse = () => {
+    let id = toast.show("Enregistrement Mot de passe...", {
+      placement: "bottom",
+      offsetTop: 100,
+    });
+    fetch(`${BACKEND_ADDRESS}/users/updatePasswordByToken/${user.token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        password: updateMdp,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          console.log("motDePass", data);
+          toast.update(id, "Nouveau mot de passe enregistré", {
+            placement: "bottom",
+            offsetTop: 100,
+            type: "success",
+            duration: 1000,
+          });
+        } else {
+          console.log(
+            "Erreur lors de l'enregistrement du nouveau mot de passe: ",
+            err
+          );
+        }
+      });
+  };
+
+  const handleEnregister = () => {
+    parentUpdate();
+    updateMotDePasse();
+    setUpdateMdp("");
+  };
+
+  //suprimer un enfant
   const deleteEnfant = async (enfant) => {
     try {
       let id = toast.show("Suppression...", {
@@ -270,7 +307,7 @@ export default function ProfilParentScreen({ navigation }) {
                 <TextInput
                   style={styles.input}
                   mode="Mot de passe"
-                  label="Mot de passe"
+                  label="Modifier Mot de passe"
                   outlineColor="#1A7B93"
                   activeOutlineColor="#1A7B93"
                   autoCapitalize="none"
@@ -289,7 +326,7 @@ export default function ProfilParentScreen({ navigation }) {
                 <TextInput
                   style={styles.input}
                   mode="outlined"
-                  label="Mot de passe"
+                  label="Modifier Mot de passe"
                   inputMode="text"
                   secureTextEntry={false}
                   right={
@@ -298,9 +335,9 @@ export default function ProfilParentScreen({ navigation }) {
                       onPress={() => setPwdVisible(!pwdVisible)}
                     />
                   }
-                  selectionColor="#144272"
-                  activeUnderlineColor="#144272"
-                  outlineColor="#144272"
+                  selectionColor="#1A7B93"
+                  activeUnderlineColor="#1A7B93"
+                  outlineColor="#1A7B93"
                   autoCapitalize="none"
                   onChangeText={(value) => setUpdateMdp(value)}
                   value={updateMdp}
@@ -311,7 +348,7 @@ export default function ProfilParentScreen({ navigation }) {
           <TouchableOpacity
             style={styles.registerButton}
             activeOpacity={0.8}
-            onPress={() => parentUpdate()}
+            onPress={() => handleEnregister()}
           >
             <Text style={styles.textButton}>Enregistrer</Text>
             <Ionicons
