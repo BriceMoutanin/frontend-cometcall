@@ -37,8 +37,10 @@ export default function LoginScreen({ navigation }) {
 
   const [emailErrorIn, setEmailErrorIn] = useState(false);
   const [emailErrorUp, setEmailErrorUp] = useState(false);
-  const [identifiantErrorIn, setidentifiantErrorIn] = useState(false);
-  const [identifiantErrorUp, setidentifiantErrorUp] = useState(false);
+  const [identifiantErrorIn, setIdentifiantErrorIn] = useState(false);
+  const [utilisateurErrorIn, setUtilisateurErrorIn] = useState(false);
+  const [identifiantErrorUp, setIdentifiantErrorUp] = useState(false);
+  // const [identifiantErrorUp, setidentifiantErrorUp] = useState(false);
 
   const userReducer = useSelector((state) => state.user.value);
 
@@ -72,6 +74,7 @@ export default function LoginScreen({ navigation }) {
     if (EMAIL_REGEX.test(signUpMail)) {
       setLoadingUp(true);
       setEmailErrorUp(false);
+      setIdentifiantErrorUp(false);
       fetch(`${BACKEND_ADDRESS}/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,19 +100,28 @@ export default function LoginScreen({ navigation }) {
             setSignUpMail("");
             setSignUpPassword("");
             setLoadingUp(false);
+
             navigation.navigate("DrawerNavigator");
+          } else {
+            setIdentifiantErrorUp(true);
+            setLoadingUp(false);
           }
         });
     } else {
       setEmailErrorUp(true);
+      setLoadingUp(false);
     }
   };
+
   //s'identifier
   const handleSignIn = () => {
     Keyboard.dismiss();
     if (EMAIL_REGEX.test(signInMail)) {
       setLoadingIn(true);
       setEmailErrorIn(false);
+      setIdentifiantErrorIn(false);
+      setUtilisateurErrorIn(false);
+
       fetch(`${BACKEND_ADDRESS}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -120,6 +132,7 @@ export default function LoginScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           setLoadingIn(false);
           if (data.result) {
             dispatch(
@@ -136,7 +149,14 @@ export default function LoginScreen({ navigation }) {
             setSignInMail("");
             setSignInPassword("");
             setModalVisible(false);
+
             navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
+          } else {
+            if (data.code == 1) {
+              setIdentifiantErrorIn(true);
+            } else {
+              setUtilisateurErrorIn(true);
+            }
           }
         });
     } else {
@@ -165,7 +185,9 @@ export default function LoginScreen({ navigation }) {
               mode="outlined"
               label="Email"
               selectionColor="#144272"
-              outlineColor={emailErrorIn ? "red" : "#144272"}
+              outlineColor={
+                emailErrorIn || utilisateurErrorIn ? "red" : "#144272"
+              }
               activeOutlineColor="#144272"
               keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
               autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
@@ -175,7 +197,10 @@ export default function LoginScreen({ navigation }) {
               value={signInMail}
             />
             {emailErrorIn && (
-              <Text style={styles.error}>Adresse mail invalide</Text>
+              <Text style={styles.error}>Adresse mail invalide.</Text>
+            )}
+            {utilisateurErrorIn && (
+              <Text style={styles.error}>Adresse mail introuvable</Text>
             )}
             {!pwdVisible ? (
               <TextInput
@@ -191,7 +216,7 @@ export default function LoginScreen({ navigation }) {
                 }
                 selectionColor="#144272"
                 activeUnderlineColor="#144272"
-                outlineColor={emailErrorUp ? "red" : "#144272"}
+                outlineColor={identifiantErrorIn ? "red" : "#144272"}
                 activeOutlineColor="#144272"
                 autoCapitalize="none"
                 onChangeText={(value) => setSignInPassword(value)}
@@ -212,11 +237,14 @@ export default function LoginScreen({ navigation }) {
                 }
                 selectionColor="#144272"
                 activeUnderlineColor="#144272"
-                outlineColor={emailErrorUp ? "red" : "#144272"}
+                outlineColor={identifiantErrorIn ? "red" : "#144272"}
                 autoCapitalize="none"
                 onChangeText={(value) => setSignInPassword(value)}
                 value={signInPassword}
               />
+            )}
+            {identifiantErrorIn && (
+              <Text style={styles.error}>Mot de passe incorrect.</Text>
             )}
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -243,7 +271,6 @@ export default function LoginScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -263,7 +290,7 @@ export default function LoginScreen({ navigation }) {
           mode="outlined"
           label="Email"
           selectionColor="#144272"
-          outlineColor={emailErrorUp ? "red" : "#144272"}
+          outlineColor={emailErrorUp || identifiantErrorUp ? "red" : "#144272"}
           activeOutlineColor="#144272"
           keyboardType="email-address" // https://reactnative.dev/docs/textinput#keyboardtype
           autoCapitalize="none" // https://reactnative.dev/docs/textinput#autocapitalize
@@ -273,8 +300,12 @@ export default function LoginScreen({ navigation }) {
           value={signUpMail}
         />
         {emailErrorUp && (
-          <Text style={styles.error}>Adresse mail invalide</Text>
+          <Text style={styles.error}>Adresse mail invalide.</Text>
         )}
+        {identifiantErrorUp && (
+          <Text style={styles.error}>Adresse mail déjà existante.</Text>
+        )}
+
         <TextInput
           style={styles.input}
           mode="outlined"
@@ -289,12 +320,12 @@ export default function LoginScreen({ navigation }) {
           }
           selectionColor="#144272"
           activeUnderlineColor="#144272"
-          outlineColor={emailErrorUp ? "red" : "#144272"}
           activeOutlineColor="#144272"
           autoCapitalize="none"
           onChangeText={(value) => setSignUpPassword(value)}
           value={signUpPassword}
         />
+
         <TouchableOpacity
           style={styles.cntButton}
           onPress={() => handleSignUp()}
