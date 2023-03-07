@@ -27,54 +27,86 @@ import { FlatList, ActivityIndicator } from "react-native";
 
 export default function HistoriqueScreen({ navigation }) {
   const dispatch = useDispatch();
-  const historique = useSelector((state) => state.historique.historique);
-  console.log(historique);
+  const historique = useSelector((state) => state.historique.value);
+  console.log("HISTORIQUE", historique);
 
   const user = useSelector((state) => state.user.value);
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
   const [isLoading, setIsLoading] = useState(false);
-  {
-    useEffect(() => {
-      fetch(`${BACKEND_ADDRESS}/users/getHistorique/${user.token}`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.result) {
-            setIsLoading(false);
-            //dispatch(setHistorique(data.historiques));
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }, []);
+  const [problematiques, setProblematiques] = useState([]);
 
-    return (
-      <SafeAreaView style={styles.container}>
-        <ScrollView>
-          {historique.map((maphistorique, i) => {
-            <Text style={styles.H6text}>Vos dernieres recherche!</Text>;
-            return (
-              <View key={i} style={styles.viewstyles}>
-                <Text style={styles.monMessageStyle}>
-                  {maphistorique.prenom}
-                </Text>
-                <Text style={styles.monMessageStyle}>
-                  {maphistorique.problematique}
-                </Text>
-                <MaterialIcons
-                  style={styles.deleteIcon}
-                  name="delete-forever"
-                  size={24}
-                  color="black"
-                  onPress={() => {removeHistorique()}}
-                />
-              </View>
-            );
-          })}
-        </ScrollView>
-      </SafeAreaView>
-    );
+  useEffect(() => {
+    fetch(`${BACKEND_ADDRESS}/users/getHistorique/${user.token}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setIsLoading(false);
+          dispatch(setHistorique(data.historiques));
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    fetch(`${BACKEND_ADDRESS}/problematiques`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setProblematiques(data.problematiques);
+        }
+      });
+  }, []);
+
+  function deleteHistorique(historiqueID) {
+    fetch(
+      `${BACKEND_ADDRESS}/users/removeHistorique/${user.token}/${historiqueID}`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          dispatch(removeHistorique(historiqueID));
+        }
+      });
   }
+
+  const historiqueDisplay = historique.historique.map((maphistorique, i) => {
+    return (
+      <View key={i} style={styles.viewstyles}>
+        <Text style={styles.monMessageStyle}>
+          {maphistorique.enfant.prenom}
+        </Text>
+        <Text style={styles.monMessageStyle}>
+          {problematiques &&
+          problematiques.find(
+            (problematique) => problematique._id == maphistorique.problematique
+          )
+            ? problematiques.find(
+                (problematique) =>
+                  problematique._id == maphistorique.problematique
+              ).titre
+            : null}
+        </Text>
+        <MaterialIcons
+          style={styles.deleteIcon}
+          name="delete-forever"
+          size={24}
+          color="black"
+          onPress={() => deleteHistorique(maphistorique._id)}
+        />
+      </View>
+    );
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <Text style={styles.H6text}>Vos dernieres recherche!</Text>
+        {historiqueDisplay}
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -102,6 +134,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   deleteIcon: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
 });

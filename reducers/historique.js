@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  value:{
   historique: [],
+}
 };
 
 const historiqueSlice = createSlice({
@@ -9,15 +11,15 @@ const historiqueSlice = createSlice({
   initialState,
   reducers: {
     addHistorique: (state, action) => {
-      console.log(state)
-      state.historique.push(action.payload);
+      console.log('ACTION',action.payload)
+      state.value.historique.push(action.payload);
     },
     removeHistorique: (state, action) => {
-      state.historique = state.historique.filter((item) => item._id != action.payload);
+      state.value.historique = state.value.historique.filter((item) => item._id != action.payload);
       console.log(action.payload)
     },
     setHistorique: (state, action) => {
-      state.historique = action.payload;
+      state.value.historique = action.payload;
     },
   },
 });
