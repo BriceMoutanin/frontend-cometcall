@@ -30,13 +30,9 @@ export default function ReponseScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-<<<<<<< HEAD
       <Text>{enfant.prenom}</Text>
       <Text>{problematique.titre}</Text>
       {contactsDisplay}
-=======
-      <Text>Re</Text>
->>>>>>> inversion
     </View>
   );
 }
