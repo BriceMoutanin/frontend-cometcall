@@ -53,6 +53,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatGPTScreen from "./screens/ChatGPTScreen";
+import ReponseHistScreen from "./screens/ReponseHistScreen";
 
 const reducers = combineReducers({ user, historique });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
@@ -152,6 +153,21 @@ const StackNavigatorDemande = ({ route }) => {
   );
 };
 
+//deuxieme stack enfants a partir de Demande
+const StackNavigatorHist = ({ route }) => {
+  const title = getHeaderTitle(route.name);
+  return (
+    <Stack.Navigator
+      name="HistoriqueStack"
+      screenOptions={{ headerShown: false }}
+      title={title}
+    >
+      <Stack.Screen name="Historique" component={HistoriqueScreen} />
+      <Stack.Screen name="Affichage Historique" component={ReponseHistScreen} />
+    </Stack.Navigator>
+  );
+};
+
 //enfant stack des profils
 const StackNavigator = ({ route }) => {
   const title = getHeaderTitle(route.name);
@@ -209,7 +225,15 @@ const DrawerNavigator = () => {
           drawerItemStyle: { height: 0 },
         }}
       />
-      <Drawer.Screen name="Historique" component={HistoriqueScreen} />
+      <Drawer.Screen
+        name="Historiques"
+        component={StackNavigatorHist}
+        options={{
+          tabBarLabel: "Profil",
+          unmountOnBlur: true,
+        }}
+      />
+      {/*<Drawer.Screen name="Historique" component={HistoriqueScreen} />*/}
       <Drawer.Screen name="F.A.Q." component={FAQScreen} />
       {/* <Drawer.Screen name="Demande" component={DemandeScreen} /> */}
     </Drawer.Navigator>

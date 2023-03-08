@@ -72,37 +72,54 @@ export default function HistoriqueScreen({ navigation }) {
   }
 
   const historiqueDisplay = historique.historique.map((maphistorique, i) => {
+    const problematique = problematiques.find(
+      (problematique) => problematique._id == maphistorique.problematique
+    );
     return (
-      <View key={i} style={styles.viewstyles}>
-        <Text style={styles.monMessageStyle}>
-          {maphistorique.enfant.prenom}
-        </Text>
-        <Text style={styles.monMessageStyle}>
-          {problematiques &&
-          problematiques.find(
-            (problematique) => problematique._id == maphistorique.problematique
-          )
-            ? problematiques.find(
-                (problematique) =>
-                  problematique._id == maphistorique.problematique
-              ).titre
-            : null}
-        </Text>
+      <TouchableOpacity
+        key={i}
+        style={styles.viewstyles}
+        onPress={() =>
+          navigation.navigate("Affichage Historique", {
+            enfant: maphistorique.enfant,
+            problematique: problematique,
+            date: maphistorique.date,
+          })
+        }
+      >
+        <View style={styles.infoContainer}>
+          <Text style={styles.monMessageStyle}>
+            {maphistorique.enfant.prenom}
+          </Text>
+          <Text style={styles.monMessageStyle}>
+            {problematique ? problematique.titre : null}
+          </Text>
+          <Text style={styles.monMessageStyle}>
+            {maphistorique.date.toLocaleString("fr-FR", { timeZone: "UTC" })}
+          </Text>
+        </View>
         <MaterialIcons
           style={styles.deleteIcon}
           name="delete-forever"
-          size={24}
-          color="black"
+          size={40}
+          color="white"
           onPress={() => deleteHistorique(maphistorique._id)}
         />
-      </View>
+      </TouchableOpacity>
     );
   });
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Text style={styles.H6text}>Vos dernieres recherche!</Text>
+      <ScrollView
+        style={{ width: "100%" }}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        <Text style={styles.H6text}>Vos dernieres recherches :</Text>
         {historiqueDisplay}
       </ScrollView>
     </SafeAreaView>
@@ -110,28 +127,45 @@ export default function HistoriqueScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    //flex: 1,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    //position: "relative",
+  },
   monMessageStyle: {
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
-    textAlign: "center",
+    textAlign: "left",
+    width: "100%",
   },
   viewstyles: {
     backgroundColor: "rgb(12, 123, 147)",
-    height: 60,
-    width: "auto",
-    borderRadius: 80,
+    width: "90%",
+    borderRadius: 30,
     marginBottom: 10,
     marginTop: 10,
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    padding: 30,
+  },
+  infoContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
   },
   H6text: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
     fontWeight: "100",
-    fontSize: 18,
-    color: "white",
+    fontSize: 24,
+    color: "black",
     textAlign: "center",
     marginBottom: 10,
+    marginTop: 30,
   },
   deleteIcon: {
     alignItems: "flex-end",
