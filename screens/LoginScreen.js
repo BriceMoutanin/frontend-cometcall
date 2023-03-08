@@ -24,10 +24,8 @@ import Logo from "../assets/logoComEtCall";
 import LogoSvg from "../assets/newLogo.svg";
 //import reducer
 import { login } from "../reducers/user";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
 
-WebBrowser.maybeCompleteAuthSession();
+import * as Google from "expo-auth-session/providers/google";
 
 export default function LoginScreen({ navigation }) {
   const [pwdVisible, setPwdVisible] = useState(false);
@@ -57,6 +55,10 @@ export default function LoginScreen({ navigation }) {
     //androidClientId: "GOOGLE_GUID.apps.googleusercontent.com",
     iosClientId:
       "398197106725-noclnfgqaui62rknhvt3f2168rlak0v2.apps.googleusercontent.com",
+    expoClientId:
+      "398197106725-r4dk04mvqvotk6vgg2a1so32d53s59cg.apps.googleusercontent.com",
+    androidClientId:
+      "398197106725-1ioo0nuulmbdit8h35ackcpb4h9i88u3.apps.googleusercontent.com",
   });
 
   // ne pas devoir se reconnecter => reduxPersist
@@ -87,6 +89,18 @@ export default function LoginScreen({ navigation }) {
       // Add your own error handler here
     }
   };
+
+  // const showUserData = () => {
+  //   if (userInfo) {
+  //     return (
+  //       <View style={styles.userInfo}>
+  //         <Image source={{ uri: userInfo.picture }} style={styles.userImage} />
+  //         <Text>Bienvenue !{userInfo.name}</Text>
+  //         <Text>{userInfo.email}</Text>
+  //       </View>
+  //     );
+  //   }
+  // };
 
   //lien avec le Backend
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
@@ -377,6 +391,18 @@ export default function LoginScreen({ navigation }) {
               <Text style={styles.cntText}>Se connecter</Text>
             </TouchableOpacity>
           </View>
+          <TouchableOpacity>
+            {/* {showUserData()} */}
+            <Button
+              title={token ? "Sign in with Google" : "Sign in with Google"}
+              //disabled={!request}
+              onPress={
+                token
+                  ? userInfo
+                  : () => promptAsync({ useProxy: false, showInRecents: true })
+              }
+            />
+          </TouchableOpacity>
           <ActivityIndicator
             style={{ marginTop: 15 }}
             size="small"
@@ -387,20 +413,17 @@ export default function LoginScreen({ navigation }) {
 
         <View style={styles.footer}>
           <View style={styles.containerGoogle}>
-            {userInfo === null ? (
+            {/* {!userInfo ? (
               //Envoyer la demande d'authentification
               //Le crochet useAuthRequest() fournit également promptAsync() qui invite l'utilisateur à s'authentifier en ouvrant un navigateur Web.
-              <Button
-                title="Sign in with Google"
-                disabled={!request}
-                onPress={() => {
-                  promptAsync();
-                }}
-              />
-            ) : (
+             
+            ) : (  
+
               <Text style={styles.text}>{userInfo.name}</Text>
-            )}
+
+            )} */}
           </View>
+
           <Text style={styles.h5Black}>Créer un compte</Text>
           <TouchableOpacity
             style={styles.signInButton}
@@ -606,4 +629,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
+  // profilePic: {
+  //   width: 50,
+  //   height: 50,
+  // },
+
+  // userInfo: {
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
 });
