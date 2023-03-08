@@ -118,7 +118,7 @@ function CustomDrawerContent(props) {
         <TouchableOpacity
           style={styles.demandeButton}
           onPress={() =>
-            props.navigation.navigate("DemandeStack", { screen: "Demande" })
+            props.navigation.navigate("Demande", { screen: "Demande" })
           }
         >
           <Text>Nouvelle demande</Text>
@@ -200,7 +200,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="DemandeStack"
+        name="Demande"
         component={StackNavigatorDemande}
         options={{
           tabBarLabel: "Profil",

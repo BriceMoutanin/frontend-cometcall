@@ -15,15 +15,97 @@ import { useState } from "react";
 import { Skeleton } from "@rneui/themed";
 import Animated from "react-native-reanimated";
 import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+import { getOrganismes, getCommuneById } from "../modules/fetchModules";
+import { useEffect } from "react";
+import { Foundation } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
 
 const AnimatedViewPager = Animated.createAnimatedComponent(View);
 
 export default function ChatGPTScreen({ route, navigation }) {
-  const { enfant } = route.params;
+  const { enfant, problematique } = route.params;
   const [question, setQuestion] = useState("");
   const [reponse, setReponse] = useState("");
   const [showResponse, setShowResponse] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [contacts, setContacts] = useState(null);
+
+  // const [loaded] = useFonts({
+  //   OpenSans: require("../assets/fonts/Open-Sans.ttf"),
+  // });
+
+  // if (!loaded) {
+  //   return null;
+  // }
+
+  useEffect(() => {
+    (async () => {
+      const codeCommune = await getCommuneById(enfant.etablissement.IDAPI);
+
+      const fetchedContacts = await getOrganismes(
+        codeCommune,
+        problematique.organismes,
+        enfant.etablissement.IDAPI
+      );
+      setContacts(fetchedContacts);
+    })();
+  }, []);
+
+  const contactsDisplay = contacts ? (
+    contacts.map((contact, index) => {
+      if (contact.nom) {
+        console.log(contact.adresses);
+        return (
+          <>
+            <View>
+              <Text style={styles.name}>{contact.nom}</Text>
+            </View>
+            <View key={index} style={styles.infosContainer}>
+              {contact.telephone && (
+                <View style={styles.row}>
+                  <Foundation name="telephone" size={24} color="black" />
+                  <Text style={styles.tel}>{contact.telephone}</Text>
+                </View>
+              )}
+              {contact.email && (
+                <View style={styles.row}>
+                  <Entypo name="email" size={24} color="black" />
+                  <Text style={styles.mail}>{contact.email}</Text>
+                </View>
+              )}
+
+              {contact.adresses && (
+                <View style={styles.row}>
+                  <FontAwesome5 name="address-card" size={24} color="black" />
+                  <Text style={styles.adress}>
+                    {contact.adresses[0].lignes +
+                      "\n" +
+                      contact.adresses[0].codePostal +
+                      " " +
+                      contact.adresses[0].commune}
+                  </Text>
+                </View>
+              )}
+
+              {contact.url && (
+                <View style={styles.row}>
+                  <AntDesign name="link" size={24} color="black" />
+                  <Text style={styles.lien}>{contact.url}</Text>
+                </View>
+              )}
+            </View>
+          </>
+        );
+      } else {
+        return null;
+      }
+    })
+  ) : (
+    <Text>Aucun résultat</Text>
+  );
 
   function handleQuestion() {
     setShowResponse(true);
@@ -80,6 +162,7 @@ export default function ChatGPTScreen({ route, navigation }) {
               IASchool génèrera une réponse.
             </Text>
           </AnimatedViewPager>
+
           <AnimatedViewPager
             entering={SlideInLeft.delay(800).duration(1000)}
             style={{
@@ -170,6 +253,15 @@ export default function ChatGPTScreen({ route, navigation }) {
               )}
             </AnimatedViewPager>
           )}
+          <AnimatedViewPager
+            entering={SlideInLeft.delay(250).duration(1000)}
+            style={styles.infos}
+          >
+            <Text style={styles.h5}>
+              Contacts relative à <Text>{enfant.prenom}</Text>
+            </Text>
+            {contactsDisplay}
+          </AnimatedViewPager>
         </ScrollView>
       </View>
     </KeyboardAvoidingView>
@@ -195,6 +287,15 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 40,
     paddingBottom: 20,
+  },
+  infos: {
+    backgroundColor: "pink",
+    borderRadius: 12,
+    width: "80%",
+    padding: 15,
+    marginTop: 40,
+    paddingBottom: 20,
+    alignItems: "center",
   },
   responseCard: {
     backgroundColor: "#144272",
@@ -230,7 +331,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginTop: 20,
     height: 250,
-    width: "70%",
+    width: "80%",
     borderWidth: 3,
     backgroundColor: "white",
     borderColor: "#144272",
@@ -241,7 +342,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   askButton: {
-    width: "50%",
+    width: "80%",
     marginTop: 20,
     padding: 10,
     borderRadius: 8,
@@ -261,5 +362,49 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#144272",
     textAlign: "center",
+  },
+
+  name: {
+    backgroundColor: "yellow",
+    alignItems: "center",
+    fontFamily: "OpenSans",
+  },
+
+  tel: {
+    backgroundColor: "green",
+    alignItems: "center",
+    fontFamily: "OpenSans",
+  },
+
+  mail: {
+    backgroundColor: "orange",
+    alignItems: "center",
+    fontFamily: "OpenSans",
+  },
+
+  adress: {
+    backgroundColor: "red",
+    alignItems: "center",
+    fontFamily: "OpenSans",
+  },
+  lien: {
+    backgroundColor: "brown",
+    alignItems: "center",
+    fontFamily: "OpenSans",
+    color: "#144272",
+  },
+
+  row: {
+    flexDirection: "row",
+  },
+
+  infosContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    borderWidth: 1,
+    borderColor: "#144272",
+    borderRadius: 10,
+    margin: 5,
+    width: " 100%",
   },
 });

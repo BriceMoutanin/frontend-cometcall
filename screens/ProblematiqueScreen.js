@@ -68,12 +68,19 @@ export default function ProblematiqueScreen({ route, navigation }) {
               >
                 <Text
                   style={styles.itemStyle}
-                  onPress={() =>
-                    navigation.navigate("Reponse", {
-                      enfant,
-                      problematique,
-                    })
-                  }
+                  onPress={() => {
+                    if (problematique.titre === "Autre") {
+                      navigation.navigate("Autre", {
+                        enfant,
+                        problematique,
+                      });
+                    } else {
+                      navigation.navigate("Reponse", {
+                        enfant,
+                        problematique,
+                      });
+                    }
+                  }}
                 >
                   {problematique.titre}
                 </Text>
@@ -93,20 +100,6 @@ export default function ProblematiqueScreen({ route, navigation }) {
             <Text key={-1}>Aucun résultat</Text>
           ),
         ];
-
-  problematiqueView.push(
-    <Text
-      style={styles.itemStyle}
-      onPress={() =>
-        navigation.navigate("Autre", {
-          enfant,
-        })
-      }
-      key={-2}
-    >
-      Autre
-    </Text>
-  );
 
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
