@@ -659,7 +659,6 @@ const styles = StyleSheet.create({
   },
 
   photoContainer: {
-    borderRadius: "50%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -669,7 +668,7 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    borderRadius: 75,
+    borderRadius: 50,
   },
 
   inputContainer: {
@@ -760,9 +759,9 @@ const styles = StyleSheet.create({
   },
 
   childImage: {
-    borderRadius: "50%",
-    height: 40,
-    width: 40,
+    borderRadius: 50,
+    height: 50,
+    width: 50,
   },
   modalView: {
     margin: 20,

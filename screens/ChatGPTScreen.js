@@ -57,7 +57,6 @@ export default function ChatGPTScreen({ route, navigation }) {
   const contactsDisplay = contacts ? (
     contacts.map((contact, index) => {
       if (contact.nom) {
-        console.log(contact.adresses);
         return (
           <>
             <View>
