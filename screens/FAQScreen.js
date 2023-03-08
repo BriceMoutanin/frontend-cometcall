@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Button } from "react-native";
+import { StyleSheet, View, Image, Text, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function FAQScreen({ navigation }) {
@@ -14,14 +14,20 @@ export default function FAQScreen({ navigation }) {
     },
   ];
 
-  let component = FAQ.map((value, i) => result);
+  let component = FAQ.map((data, i) => {
+    let questions = data.question;
 
-  return (
-    <SafeAreaView>
-      <Text style={styles.questions}>{component.question}</Text>
-      <Text style={styles.reponse}></Text>
-    </SafeAreaView>
-  );
+    let reponses = data.reponse;
+
+    return (
+      <View key={i} style={styles.photoContainer}>
+        <Text style={styles.questions}>{questions}</Text>
+        <Text style={styles.reponse}>{reponses}</Text>
+      </View>
+    );
+  });
+
+  return <SafeAreaView>{component}</SafeAreaView>;
 }
 
 const styles = StyleSheet.create({
@@ -30,5 +36,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+  },
+  photoContainer: {
+    backgroundColor: "yellow",
+  },
+  questions: {
+    backgroundColor: "green",
+  },
+  reponse: {
+    backgroundColor: "pink",
   },
 });
