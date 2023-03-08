@@ -53,6 +53,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatGPTScreen from "./screens/ChatGPTScreen";
+import ReponseHistScreen from "./screens/ReponseHistScreen";
 
 const reducers = combineReducers({ user, historique });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
@@ -77,21 +78,24 @@ function CustomDrawerContent(props) {
       {...props}
       contentContainerStyle={{
         flex: 1,
-      }}>
+      }}
+    >
       <View
         style={{
           flex: 1,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-        }}>
+        }}
+      >
         <Text
           style={{
             color: "white",
             fontSize: 20,
             marginBottom: 10,
             marginTop: 30,
-          }}>
+          }}
+        >
           {userReducer.prenom} {userReducer.nom}
         </Text>
         <TouchableOpacity
@@ -99,7 +103,8 @@ function CustomDrawerContent(props) {
           onPress={() => {
             dispatch(logout());
             props.navigation.navigate("Login");
-          }}>
+          }}
+        >
           <Text>Deconnexion</Text>
         </TouchableOpacity>
       </View>
@@ -110,12 +115,14 @@ function CustomDrawerContent(props) {
           backgroundColor: "#144272",
           flexDirection: "column",
           justifyContent: "flex-end",
-        }}>
+        }}
+      >
         <TouchableOpacity
           style={styles.demandeButton}
           onPress={() =>
             props.navigation.navigate("DemandeStack", { screen: "Demande" })
-          }>
+          }
+        >
           <Text>Nouvelle demande</Text>
           <Entypo
             style={{ marginLeft: 15 }}
@@ -135,12 +142,28 @@ const StackNavigatorDemande = ({ route }) => {
     <Stack.Navigator
       name="DemandeStack"
       screenOptions={{ headerShown: false }}
-      title={title}>
+      title={title}
+    >
       <Stack.Screen name="Demande" component={DemandeScreen} />
       <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
       <Stack.Screen name="Reponse" component={ReponseScreen} />
       <Stack.Screen name="Autre" component={ChatGPTScreen} />
       <Stack.Screen name="Message" component={MessageScreen} />
+    </Stack.Navigator>
+  );
+};
+
+//deuxieme stack enfants a partir de Demande
+const StackNavigatorHist = ({ route }) => {
+  const title = getHeaderTitle(route.name);
+  return (
+    <Stack.Navigator
+      name="HistoriqueStack"
+      screenOptions={{ headerShown: false }}
+      title={title}
+    >
+      <Stack.Screen name="Historique" component={HistoriqueScreen} />
+      <Stack.Screen name="Affichage Historique" component={ReponseHistScreen} />
     </Stack.Navigator>
   );
 };
@@ -152,7 +175,8 @@ const StackNavigator = ({ route }) => {
     <Stack.Navigator
       name="ProfilStack"
       screenOptions={{ headerShown: false }}
-      title={title}>
+      title={title}
+    >
       <Stack.Screen name="ProfilParent" component={ProfilParentScreen} />
       <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
     </Stack.Navigator>
@@ -182,7 +206,8 @@ const DrawerNavigator = () => {
           color: "white",
         },
         drawerActiveTintColor: "white",
-      }}>
+      }}
+    >
       <Drawer.Screen
         name="Profil"
         component={StackNavigator}
@@ -200,7 +225,15 @@ const DrawerNavigator = () => {
           drawerItemStyle: { height: 0 },
         }}
       />
-      <Drawer.Screen name="Historique" component={HistoriqueScreen} />
+      <Drawer.Screen
+        name="Historiques"
+        component={StackNavigatorHist}
+        options={{
+          tabBarLabel: "Profil",
+          unmountOnBlur: true,
+        }}
+      />
+      {/*<Drawer.Screen name="Historique" component={HistoriqueScreen} />*/}
       <Drawer.Screen name="F.A.Q." component={FAQScreen} />
       {/* <Drawer.Screen name="Demande" component={DemandeScreen} /> */}
     </Drawer.Navigator>
@@ -216,7 +249,8 @@ export default function App() {
             <NavigationContainer>
               <Stack.Navigator
                 name="Stack"
-                screenOptions={{ headerShown: false }}>
+                screenOptions={{ headerShown: false }}
+              >
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen
                   name="DrawerNavigator"
