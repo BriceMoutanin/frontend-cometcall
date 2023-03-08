@@ -11,6 +11,8 @@ import {
   ScrollView,
   FlatList,
   ImageViewer,
+  Modal,
+  Button,
 } from "react-native";
 import {
   Menu,
@@ -40,8 +42,12 @@ export default function ProfilParentScreen({ navigation }) {
   const [updateNom, setupdateNom] = useState(user.nom);
   const [updatePrenom, setupdatePrenom] = useState(user.prenom);
   const [updateTel, setupdateTel] = useState(user.tel);
+  const [currentMdp, setCurrentMdp] = useState("");
   const [updateMdp, setUpdateMdp] = useState("");
   const [pwdVisible, setPwdVisible] = useState(false);
+  const [currentPwdVisible, setCurrentPwdVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [errorPwd, setErrorPwd] = useState(false);
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
@@ -170,40 +176,52 @@ export default function ProfilParentScreen({ navigation }) {
 
   //changer mot de passe
   const updateMotDePasse = () => {
-    let id = toast.show("Enregistrement Mot de passe...", {
-      placement: "bottom",
-      offsetTop: 100,
-    });
-    fetch(`${BACKEND_ADDRESS}/users/updatePasswordByToken/${user.token}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        password: updateMdp,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          console.log("motDePass", data);
-          toast.update(id, "Nouveau mot de passe enregistré", {
-            placement: "bottom",
-            offsetTop: 100,
-            type: "success",
-            duration: 1000,
-          });
-        } else {
-          console.log(
-            "Erreur lors de l'enregistrement du nouveau mot de passe: ",
-            err
-          );
-        }
+    if (
+      updateMdp !== "" &&
+      updateMdp !== null &&
+      currentMdp !== "" &&
+      currentMdp !== null
+    ) {
+      let id = toast.show("Enregistrement Mot de passe...", {
+        placement: "bottom",
+        offsetTop: 100,
       });
+      setErrorPwd(false);
+      console.log("current", currentMdp);
+      console.log("new", updateMdp);
+      fetch(`${BACKEND_ADDRESS}/users/updatePasswordByToken/${user.token}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password: updateMdp,
+          currentPassword: currentMdp,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            toast.update(id, "Nouveau mot de passe enregistré", {
+              placement: "bottom",
+              offsetTop: 100,
+              type: "success",
+              duration: 1000,
+            });
+          } else {
+            setErrorPwd(true);
+            toast.update(id, "Le mot de passe actuel ne correspond pas", {
+              placement: "bottom",
+              offsetTop: 100,
+              type: "error",
+              duration: 1000,
+            });
+            console.log(data.error);
+          }
+        });
+    }
   };
 
   const handleEnregister = () => {
     parentUpdate();
-    updateMotDePasse();
-    setUpdateMdp("");
   };
 
   //suprimer un enfant
@@ -368,6 +386,79 @@ export default function ProfilParentScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View
+          style={styles.centeredViewModal}
+          onPress={() => setModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            {/* INPUTS */}
+            <TextInput
+              style={styles.inputPwd}
+              mode="outlined"
+              label="Mot de passe actuel"
+              inputMode="text"
+              secureTextEntry={!currentPwdVisible}
+              right={
+                <TextInput.Icon
+                  icon={currentPwdVisible ? "eye-off-outline" : "eye"}
+                  onPress={() => setCurrentPwdVisible(!currentPwdVisible)}
+                />
+              }
+              selectionColor="#1A7B93"
+              activeUnderlineColor="#1A7B93"
+              activeOutlineColor="#1A7B93"
+              outlineColor="#1A7B93"
+              autoCapitalize="none"
+              onChangeText={(value) => setCurrentMdp(value)}
+              value={currentMdp}
+            />
+            {errorPwd && <Text>Le mot de passe actuel ne correspond pas</Text>}
+            <TextInput
+              style={styles.inputPwd}
+              mode="outlined"
+              label="Nouveau mot de passe"
+              inputMode="text"
+              secureTextEntry={!pwdVisible}
+              right={
+                <TextInput.Icon
+                  icon={pwdVisible ? "eye-off-outline" : "eye"}
+                  onPress={() => setPwdVisible(!pwdVisible)}
+                />
+              }
+              selectionColor="#1A7B93"
+              activeUnderlineColor="#1A7B93"
+              activeOutlineColor="#1A7B93"
+              outlineColor="#1A7B93"
+              autoCapitalize="none"
+              onChangeText={(value) => setUpdateMdp(value)}
+              value={updateMdp}
+            />
+            <View style={styles.lastButton}>
+              <TouchableOpacity
+                style={styles.signUpButtonModal}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.cntText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.signUpButtonModal}
+                onPress={() => updateMotDePasse()}
+              >
+                <Text style={styles.cntText}>Modifier Mot de passe</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <ScrollView
         style={{
           width: "100%",
@@ -450,47 +541,30 @@ export default function ProfilParentScreen({ navigation }) {
                 onChangeText={(value) => setupdateTel(value)}
                 value={updateTel}
               />
-
-              {!pwdVisible ? (
-                <TextInput
-                  style={styles.input}
-                  mode="Mot de passe"
-                  label="Modifier Mot de passe"
-                  outlineColor="#1A7B93"
-                  activeOutlineColor="#1A7B93"
-                  autoCapitalize="none"
-                  secureTextEntry={true}
-                  right={
-                    <TextInput.Icon
-                      icon="eye"
-                      onPress={() => setPwdVisible(!pwdVisible)}
-                    />
-                  }
-                  selectionColor="#144272"
-                  onChangeText={(value) => setUpdateMdp(value)}
-                  value={updateMdp}
-                />
-              ) : (
-                <TextInput
-                  style={styles.input}
-                  mode="outlined"
-                  label="Modifier Mot de passe"
-                  inputMode="text"
-                  secureTextEntry={false}
-                  right={
-                    <TextInput.Icon
-                      icon="eye-off-outline"
-                      onPress={() => setPwdVisible(!pwdVisible)}
-                    />
-                  }
-                  selectionColor="#1A7B93"
-                  activeUnderlineColor="#1A7B93"
-                  outlineColor="#1A7B93"
-                  autoCapitalize="none"
-                  onChangeText={(value) => setUpdateMdp(value)}
-                  value={updateMdp}
-                />
-              )}
+              {/*<TextInput
+                style={styles.inputPwd}
+                mode="outlined"
+                label="Modifier Mot de passe"
+                inputMode="text"
+                secureTextEntry={!pwdVisible}
+                right={
+                  <TextInput.Icon
+                    icon={pwdVisible ? "eye-off-outline" : "eye"}
+                    onPress={() => setPwdVisible(!pwdVisible)}
+                  />
+                }
+                selectionColor="#1A7B93"
+                activeUnderlineColor="#1A7B93"
+                activeOutlineColor="#1A7B93"
+                outlineColor="#1A7B93"
+                autoCapitalize="none"
+                onChangeText={(value) => setUpdateMdp(value)}
+                value={updateMdp}
+              />*/}
+              <Button
+                title="Modifier mot de passe"
+                onPress={() => setModalVisible(true)}
+              ></Button>
             </View>
           </View>
           <TouchableOpacity
@@ -540,7 +614,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    position: "relative",
+    //position: "relative",
     backgroundColor: "white",
   },
 
@@ -613,7 +687,12 @@ const styles = StyleSheet.create({
     margin: 7,
     fontFamily: "OpenSans",
   },
-
+  inputPwd: {
+    width: 230,
+    margin: 12,
+    margin: 7,
+    fontFamily: "OpenSans",
+  },
   enfantContainer: {
     flex: 1,
     flexDirection: "column",
@@ -686,5 +765,55 @@ const styles = StyleSheet.create({
     borderRadius: "50%",
     height: 40,
     width: 40,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  signUpButtonModal: {
+    width: "50%",
+    padding: 10,
+    marginTop: 30,
+    borderRadius: 8,
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+  },
+
+  inputModal: {
+    width: "90%",
+    margin: 5,
+  },
+  lastButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    marginTop: 22,
+  },
+  centeredViewModal: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(66,71,78,0.5)",
   },
 });
