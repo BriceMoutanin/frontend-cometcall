@@ -32,6 +32,7 @@ import FAQScreen from "./screens/FAQScreen";
 import HistoriqueScreen from "./screens/HistoriqueScreen";
 import ProblematiqueScreen from "./screens/ProblematiqueScreen";
 import ReponseScreen from "./screens/ReponseScreen";
+import ReponseHistScreen from "./screens/ReponseHistScreen";
 import MessageScreen from "./screens/MessageScreen";
 
 //import expo

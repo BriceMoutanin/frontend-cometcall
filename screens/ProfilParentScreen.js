@@ -206,6 +206,7 @@ export default function ProfilParentScreen({ navigation }) {
               type: "success",
               duration: 1000,
             });
+            setModalVisible(false);
           } else {
             setErrorPwd(true);
             toast.update(id, "Le mot de passe actuel ne correspond pas", {

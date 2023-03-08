@@ -63,10 +63,17 @@ export default function ProblematiqueScreen({ route, navigation }) {
           console.log(problematique, enfant, time);
           dispatch(addHistorique(data.historique));
         }
-        navigation.navigate("Reponse", {
-          enfant,
-          problematique,
-        });
+        if (problematique.titre === "Autre") {
+          navigation.navigate("Autre", {
+            enfant,
+            problematique,
+          });
+        } else {
+          navigation.navigate("Reponse", {
+            enfant,
+            problematique,
+          });
+        }
       });
   }
 
@@ -98,17 +105,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
                 <Text
                   style={styles.itemStyle}
                   onPress={() => {
-                    if (problematique.titre === "Autre") {
-                      navigation.navigate("Autre", {
-                        enfant,
-                        problematique,
-                      });
-                    } else {
-                      navigation.navigate("Reponse", {
-                        enfant,
-                        problematique,
-                      });
-                    }
+                    createHistorique(problematique, enfant);
                   }}
                 >
                   {problematique.titre}
