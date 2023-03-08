@@ -24,6 +24,10 @@ import Logo from "../assets/logoComEtCall";
 import LogoSvg from "../assets/newLogo.svg";
 //import reducer
 import { login } from "../reducers/user";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({ navigation }) {
   const [pwdVisible, setPwdVisible] = useState(false);
@@ -34,6 +38,7 @@ export default function LoginScreen({ navigation }) {
   const [signInMail, setSignInMail] = useState("");
   const [loadingUp, setLoadingUp] = useState(false);
   const [loadingIn, setLoadingIn] = useState(false);
+  const dispatch = useDispatch();
 
   const [emailErrorIn, setEmailErrorIn] = useState(false);
   const [emailErrorUp, setEmailErrorUp] = useState(false);
@@ -44,14 +49,44 @@ export default function LoginScreen({ navigation }) {
 
   const userReducer = useSelector((state) => state.user.value);
 
-  // ne pas devoir se reconnecter => reduxPersist
-  useEffect(() => {
-    if (userReducer.token) {
-      navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
-    }
-  }, []);
+  const [token, setToken] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
 
-  const dispatch = useDispatch();
+  //Le hook Google.useAuthRequest() fournit des objets de requête et de réponse. Il permet une configuration asynchrone, ce qui signifie qu'un navigateur Web mobile ne bloquera pas la demande. Il accepte également un objet d'ID client généré dans la console Google Cloud.
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    //androidClientId: "GOOGLE_GUID.apps.googleusercontent.com",
+    iosClientId:
+      "398197106725-noclnfgqaui62rknhvt3f2168rlak0v2.apps.googleusercontent.com",
+  });
+
+  // ne pas devoir se reconnecter => reduxPersist
+  // useEffect(() => {
+  //   if (userReducer.token) {
+  //     navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      setToken(response.authentication.accessToken);
+      getUserInfo();
+    }
+  }, [response, token]);
+  const getUserInfo = async () => {
+    try {
+      const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const user = await response.json();
+      setUserInfo(user);
+    } catch (error) {
+      // Add your own error handler here
+    }
+  };
 
   //lien avec le Backend
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
@@ -349,7 +384,23 @@ export default function LoginScreen({ navigation }) {
             animating={loadingIn}
           />
         </View>
+
         <View style={styles.footer}>
+          <View style={styles.containerGoogle}>
+            {userInfo === null ? (
+              //Envoyer la demande d'authentification
+              //Le crochet useAuthRequest() fournit également promptAsync() qui invite l'utilisateur à s'authentifier en ouvrant un navigateur Web.
+              <Button
+                title="Sign in with Google"
+                disabled={!request}
+                onPress={() => {
+                  promptAsync();
+                }}
+              />
+            ) : (
+              <Text style={styles.text}>{userInfo.name}</Text>
+            )}
+          </View>
           <Text style={styles.h5Black}>Créer un compte</Text>
           <TouchableOpacity
             style={styles.signInButton}
@@ -410,6 +461,7 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 20,
   },
+
   h5: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
@@ -419,6 +471,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
+
   h6: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
@@ -427,6 +480,7 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
+
   h5Black: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
@@ -436,6 +490,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginLeft: 0,
   },
+
   input: {
     width: "70%",
     marginTop: 15,
@@ -454,6 +509,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 30,
     shadowRadius: 2,
   },
+
   signInButton: {
     width: "50%",
     padding: 10,
@@ -466,9 +522,11 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+
     shadowOpacity: 30,
     shadowRadius: 2,
   },
+
   cntText: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
@@ -477,6 +535,7 @@ const styles = StyleSheet.create({
     color: "#144272",
     textAlign: "center",
   },
+
   logoContainer: {
     marginTop: -350,
     marginBottom: 20,
@@ -535,5 +594,16 @@ const styles = StyleSheet.create({
   lastButton: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+
+  containerGoogle: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });

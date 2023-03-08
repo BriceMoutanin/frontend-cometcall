@@ -3,6 +3,7 @@
     "name": "frontend-cometcall",
     "slug": "frontend-cometcall",
     "version": "1.0.0",
+    "scheme": "com.cometcall.frontend",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,11 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cometcall.frontend"
     },
     "android": {
       "adaptiveIcon": {
