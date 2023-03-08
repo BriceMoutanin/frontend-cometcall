@@ -61,13 +61,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
         console.log("DATA", data);
         if (data) {
           console.log(problematique, enfant, time);
-          dispatch(
-            addHistorique({
-              problematique: problematique._id,
-              enfant: enfant,
-              date: time,
-            })
-          );
+          dispatch(addHistorique(data.historique));
         }
         navigation.navigate("Reponse", {
           enfant,
@@ -99,12 +93,14 @@ export default function ProblematiqueScreen({ route, navigation }) {
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
-                }}>
+                }}
+              >
                 <Text
                   style={styles.itemStyle}
                   onPress={() => {
                     createHistorique(problematique, enfant);
-                  }}>
+                  }}
+                >
                   {problematique.titre}
                 </Text>
               </Animated.View>
@@ -132,7 +128,8 @@ export default function ProblematiqueScreen({ route, navigation }) {
           enfant,
         })
       }
-      key={-2}>
+      key={-2}
+    >
       Autre
     </Text>
   );
