@@ -52,7 +52,13 @@ async function getContactByEtablissement(IdEtablissement) {
   if (data.nhits >= 1) {
     contacts = {
       nom: data.records[0].fields.nom_etablissement,
-      adresses: data.records[0].fields.adresse_1,
+      adresses: [
+        {
+          lignes: [data.records[0].fields.adresse_1],
+          codePostal: data.records[0].fields.code_postal,
+          commune: data.records[0].fields.nom_commune,
+        },
+      ],
       telephone: data.records[0].fields.telephone,
       email: data.records[0].fields.mail,
       url: "",
