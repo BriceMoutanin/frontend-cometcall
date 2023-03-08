@@ -11,6 +11,8 @@ import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
 
 import { useFonts } from "expo-font";
 import React, { useState, useEffect } from "react";
+import { addHistorique } from "../reducers/historique";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ProblematiqueScreen({ route, navigation }) {
   //const pour l'input list
@@ -19,6 +21,8 @@ export default function ProblematiqueScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [problematiques, setProblematiques] = useState([]);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
 
   //Connection avec le BackEnd
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
@@ -40,6 +44,37 @@ export default function ProblematiqueScreen({ route, navigation }) {
         console.error(error);
       });
   }, []);
+
+  function createHistorique(problematique, enfant) {
+    const time = new Date();
+    fetch(`${BACKEND_ADDRESS}/users/addHistorique/${user.token}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        problematique: problematique,
+        enfant: enfant,
+        date: time,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("DATA", data);
+        if (data) {
+          console.log(problematique, enfant, time);
+          dispatch(
+            addHistorique({
+              problematique: problematique._id,
+              enfant: enfant,
+              date: time,
+            })
+          );
+        }
+        navigation.navigate("Reponse", {
+          enfant,
+          problematique,
+        });
+      });
+  }
 
   //Composant problematique
   const problematiqueView =
@@ -64,17 +99,12 @@ export default function ProblematiqueScreen({ route, navigation }) {
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <Text
                   style={styles.itemStyle}
-                  onPress={() =>
-                    navigation.navigate("Reponse", {
-                      enfant,
-                      problematique,
-                    })
-                  }
-                >
+                  onPress={() => {
+                    createHistorique(problematique, enfant);
+                  }}>
                   {problematique.titre}
                 </Text>
               </Animated.View>
@@ -102,8 +132,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
           enfant,
         })
       }
-      key={-2}
-    >
+      key={-2}>
       Autre
     </Text>
   );

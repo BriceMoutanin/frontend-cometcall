@@ -18,7 +18,8 @@ const AnimatedViewPager = Animated.createAnimatedComponent(View);
 export default function DemandeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   console.log(user);
-
+  const historique = useSelector((state) => state.historique.value);
+  console.log('HISTORIQUE',historique)
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
