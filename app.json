@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "frontend-cometcall",
-    "slug": "frontend-cometcall",
+    "slug": "com-et-call",
     "version": "1.0.0",
+    "scheme": "com.cometcall.frontend",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,20 +12,28 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cometcall.frontend"
     },
+
     "android": {
+      "package": "com.cometcall.frontend",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/avatar.png",
+        "backgroundColor": "#FFFFFF"
       }
     },
+
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5181e956-c93a-482c-bb57-b0f2639cc185"
+      }
+    },
+    "owner": "violette923121"
   }
 }

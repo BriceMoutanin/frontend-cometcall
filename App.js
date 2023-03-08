@@ -53,7 +53,8 @@ import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatGPTScreen from "./screens/ChatGPTScreen";
-import ReponseHistScreen from "./screens/ReponseHistScreen";
+import * as WebBrowser from "expo-web-browser";
+WebBrowser.maybeCompleteAuthSession();
 
 const reducers = combineReducers({ user, historique });
 const persistConfig = { key: "com-et-call", storage: AsyncStorage };
