@@ -47,6 +47,7 @@ export default function ProfilParentScreen({ navigation }) {
   const [pwdVisible, setPwdVisible] = useState(false);
   const [currentPwdVisible, setCurrentPwdVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [errorPwd, setErrorPwd] = useState(false);
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
@@ -185,6 +186,9 @@ export default function ProfilParentScreen({ navigation }) {
         placement: "bottom",
         offsetTop: 100,
       });
+      setErrorPwd(false);
+      console.log("current", currentMdp);
+      console.log("new", updateMdp);
       fetch(`${BACKEND_ADDRESS}/users/updatePasswordByToken/${user.token}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -196,7 +200,6 @@ export default function ProfilParentScreen({ navigation }) {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            console.log("motDePass", data);
             toast.update(id, "Nouveau mot de passe enregistré", {
               placement: "bottom",
               offsetTop: 100,
@@ -204,10 +207,14 @@ export default function ProfilParentScreen({ navigation }) {
               duration: 1000,
             });
           } else {
-            console.log(
-              "Erreur lors de l'enregistrement du nouveau mot de passe: ",
-              err
-            );
+            setErrorPwd(true);
+            toast.update(id, "Le mot de passe actuel ne correspond pas", {
+              placement: "bottom",
+              offsetTop: 100,
+              type: "error",
+              duration: 1000,
+            });
+            console.log(data.error);
           }
         });
     }
@@ -411,9 +418,10 @@ export default function ProfilParentScreen({ navigation }) {
               activeOutlineColor="#1A7B93"
               outlineColor="#1A7B93"
               autoCapitalize="none"
-              onChangeText={(value) => setUpdateMdp(value)}
-              value={updateMdp}
+              onChangeText={(value) => setCurrentMdp(value)}
+              value={currentMdp}
             />
+            {errorPwd && <Text>Le mot de passe actuel ne correspond pas</Text>}
             <TextInput
               style={styles.inputPwd}
               mode="outlined"
@@ -431,8 +439,8 @@ export default function ProfilParentScreen({ navigation }) {
               activeOutlineColor="#1A7B93"
               outlineColor="#1A7B93"
               autoCapitalize="none"
-              onChangeText={(value) => setCurrentMdp(value)}
-              value={currentMdp}
+              onChangeText={(value) => setUpdateMdp(value)}
+              value={updateMdp}
             />
             <View style={styles.lastButton}>
               <TouchableOpacity
