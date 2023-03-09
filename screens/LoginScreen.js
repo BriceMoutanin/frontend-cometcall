@@ -62,11 +62,11 @@ export default function LoginScreen({ navigation }) {
   });
 
   // ne pas devoir se reconnecter => reduxPersist
-  // useEffect(() => {
-  //   if (userReducer.token) {
-  //     navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (userReducer.token) {
+      navigation.navigate("DrawerNavigator", { screen: "Com-et-Call" });
+    }
+  }, []);
 
   useEffect(() => {
     if (response?.type === "success") {
