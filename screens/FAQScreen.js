@@ -37,7 +37,7 @@ export default function FAQScreen({ navigation }) {
     let reponses = data.reponse;
 
     return (
-      <View key={i} style={styles.FAQcontainer}>
+      <View key={i}>
         <Text style={styles.questions}>{questions}</Text>
         <Text style={styles.reponse}>{reponses}</Text>
       </View>
@@ -46,14 +46,13 @@ export default function FAQScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.intro}>
-        <Text style={styles.titre}>FAQ</Text>
-        <View style={styles.text}>
-          <Text>Vous avez une autre question ? </Text>
-          <Text>Consulter les questions les plus fréquement posées. </Text>
-        </View>
+      <View style={styles.TextIntro}>
+        <Text style={styles.text}>Vous avez une autre question ? </Text>
+        <Text style={styles.text}>
+          Consulter les questions les plus fréquement posées.{" "}
+        </Text>
       </View>
-      <View style={styles.component}>{component}</View>
+      <View style={styles.composant}>{component}</View>
     </SafeAreaView>
   );
 }
@@ -61,52 +60,52 @@ export default function FAQScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     flexDirection: "column",
     width: "100%",
     height: "100%",
-    backgroundColor: "yellow",
-  },
-  component: {
-    backgroundColor: "brown",
-    height: " 90%",
-  },
-  FAQcontainer: {
-    backgroundColor: "orange",
-    height: " 10%",
+    // backgroundColor: "yellow",
   },
 
-  intro: {
-    backgroundColor: "blue",
-    height: " 30%",
-  },
-  titre: {
-    backgroundColor: "rgb(26, 123, 147)",
-    fontFamily: "OpenSans",
-    fontWeight: "100",
-    fontSize: 30,
-    color: "white",
-    height: "30%",
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    backgroundColor: "fuchsia",
-    fontFamily: "OpenSans",
-    fontWeight: "100",
-    fontSize: 20,
-    color: "#144272",
-    flexDirection: "column",
-
-    alignItems: "center",
-    padding: 10,
+  composant: {
+    // backgroundColor: "brown",
+    flexWrap: "wrap",
     height: "100%",
   },
+
+  TextIntro: {
+    // backgroundColor: "green",
+    height: " 10%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginBottom: 20,
+  },
+
+  text: {
+    fontWeight: "500",
+    fontSize: 16,
+    color: "#144272",
+    flexDirection: "column",
+    justifyContent: "center",
+    textAlign: "center",
+    justifyContent: "flex-start",
+  },
+
   questions: {
-    backgroundColor: "green",
+    backgroundColor: "rgb(12, 123, 147)",
+    fontFamily: "OpenSans",
+    fontSize: 15,
+    padding: 5,
+    color: "white",
+    textAlign: "center",
   },
   reponse: {
-    backgroundColor: "pink",
+    fontFamily: "OpenSans",
+    fontSize: 15,
+    padding: 8,
+    color: "black",
+    marginBottom: 10,
+    marginLeft: 10,
   },
 });
