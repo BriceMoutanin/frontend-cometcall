@@ -5,6 +5,8 @@ import {
   Text,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
+  Button,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
@@ -102,16 +104,14 @@ export default function ProblematiqueScreen({ route, navigation }) {
                   alignItems: "center",
                 }}
               >
-                <View style={styles.ItemContainerStyle}>
-                  <Text
-                    style={styles.itemStyle}
-                    onPress={() => {
-                      createHistorique(problematique, enfant);
-                    }}
-                  >
-                    {problematique.titre}
-                  </Text>
-                </View>
+                <TouchableOpacity
+                  style={styles.ItemContainerStyle}
+                  onPress={() => {
+                    createHistorique(problematique, enfant);
+                  }}
+                >
+                  <Text style={styles.itemStyle}>{problematique.titre}</Text>
+                </TouchableOpacity>
               </Animated.View>
             );
           })
@@ -139,6 +139,16 @@ export default function ProblematiqueScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          width: "100%",
+        }}
+      >
+        <Button title="Retour" onPress={() => navigation.goBack()}></Button>
+      </View>
       <View style={styles.question}>
         <Text style={styles.text}>
           Quel est l'objet de votre demande pour {enfant.prenom} ?
@@ -149,12 +159,11 @@ export default function ProblematiqueScreen({ route, navigation }) {
         style={styles.textInputStyle}
         mode="outlined"
         label="Barre de recherche"
-        selectionColor="#1A7B93"
-        outlineColor="#1A7B93"
+        selectionColor="#144272"
+        outlineColor="#144272"
         onChangeText={(value) => setSearch(value)}
         value={search}
         underlineColorAndroid="transparent"
-        placeholder="Barre de recherche"
       />
 
       <ScrollView style={styles.scroll}>
@@ -179,7 +188,7 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     backgroundColor: "white",
-    height: "20%",
+    height: "10%",
   },
 
   probleme: {
@@ -245,7 +254,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#144272",
     borderRadius: 10,
     width: "70%",
-    height: 50,
     margin: 5,
     padding: 10,
   },

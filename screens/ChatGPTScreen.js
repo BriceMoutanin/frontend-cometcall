@@ -30,7 +30,7 @@ import { useEffect } from "react";
 import { Foundation } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 const AnimatedViewPager = Animated.createAnimatedComponent(View);
@@ -128,82 +128,105 @@ export default function ChatGPTScreen({ route, navigation }) {
             entering={SlideInLeft}
             exiting={SlideOutRight}
           >
-            <View>
-              <Text style={styles.name}>{contact.nom}</Text>
-            </View>
-            <View style={styles.infosContainer}>
-              {contact.telephone && (
-                <View style={styles.row}>
-                  <Foundation
-                    style={styles.icon}
-                    name="telephone"
-                    size={20}
-                    color="black"
-                  />
-                  <Text
-                    style={styles.tel}
-                    onPress={() => onPressMobileNumberClick(contact.telephone)}
-                  >
-                    {contact.telephone}
-                  </Text>
-                </View>
-              )}
-              {contact.email && (
-                <View style={styles.row}>
-                  <Entypo
-                    style={styles.icon}
-                    name="email"
-                    size={20}
-                    color="black"
-                  />
-                  <Text
-                    style={styles.mail}
-                    onPress={() => onPressEmailClick(contact.email)}
-                  >
-                    {contact.email}
-                  </Text>
-                </View>
-              )}
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+                width: 300,
+              }}
+            >
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                  backgroundColor: "#144272",
+                  width: "100%",
+                  paddingBottom: 5,
+                  paddingTop: 5,
+                }}
+              >
+                <Text style={styles.name}>{contact.nom}</Text>
+              </View>
 
-              {contact.adresses && (
-                <View style={styles.row}>
-                  <FontAwesome5
-                    style={styles.icon}
-                    name="address-card"
-                    size={20}
-                    color="black"
-                  />
-                  <Text
-                    style={styles.adress}
-                    onPress={() =>
-                      onPressAddressClick(contact.adresses[0].coordinates)
-                    }
-                  >
-                    {contact.adresses[0].lignes +
-                      "\n" +
-                      contact.adresses[0].codePostal +
-                      " " +
-                      contact.adresses[0].commune}
-                  </Text>
-                </View>
-              )}
+              <View style={styles.infosContainer}>
+                {contact.telephone && (
+                  <View style={styles.row}>
+                    <Foundation
+                      style={styles.icon}
+                      name="telephone"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      style={styles.tel}
+                      onPress={() =>
+                        onPressMobileNumberClick(contact.telephone)
+                      }
+                    >
+                      {contact.telephone}
+                    </Text>
+                  </View>
+                )}
+                {contact.email && (
+                  <View style={styles.row}>
+                    <Entypo
+                      style={styles.icon}
+                      name="email"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      style={styles.mail}
+                      onPress={() => onPressEmailClick(contact.email)}
+                    >
+                      {contact.email}
+                    </Text>
+                  </View>
+                )}
 
-              {contact.url && (
-                <View style={styles.row}>
-                  <AntDesign
-                    style={styles.icon}
-                    name="link"
-                    size={20}
-                    color="black"
-                  />
-                  <Text
-                    onPress={() => onPressURLClick(contact.url)}
-                    style={styles.lien}
-                  >
-                    {contact.url}
-                  </Text>
-                </View>
-              )}
+                {contact.adresses && (
+                  <View style={styles.row}>
+                    <FontAwesome5
+                      style={styles.icon}
+                      name="address-card"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      style={styles.adress}
+                      onPress={() =>
+                        onPressAddressClick(contact.adresses[0].coordinates)
+                      }
+                    >
+                      {contact.adresses[0].lignes +
+                        "\n" +
+                        contact.adresses[0].codePostal +
+                        " " +
+                        contact.adresses[0].commune}
+                    </Text>
+                  </View>
+                )}
+
+                {contact.url && (
+                  <View style={styles.row}>
+                    <AntDesign
+                      style={styles.icon}
+                      name="link"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      onPress={() => onPressURLClick(contact.url)}
+                      style={styles.lien}
+                    >
+                      {contact.url}
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
           </Animated.View>
         );
@@ -255,6 +278,16 @@ export default function ChatGPTScreen({ route, navigation }) {
             maxHeight: "10000%",
           }}
         >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              width: "100%",
+            }}
+          >
+            <Button title="Retour" onPress={() => navigation.goBack()}></Button>
+          </View>
           <AnimatedViewPager
             entering={SlideInLeft.delay(250).duration(1000)}
             style={styles.card}
@@ -374,7 +407,13 @@ export default function ChatGPTScreen({ route, navigation }) {
                 setIsHiding(!isHiding);
               }}
             >
-              <Text>Acceder aux contacts relatifs à {enfant.prenom}</Text>
+              <Text>Contacts généraux pour {enfant.prenom}</Text>
+              <MaterialIcons
+                style={{ marginLeft: 10 }}
+                name={isHiding ? "arrow-drop-down" : "arrow-drop-up"}
+                size={24}
+                color={"black"}
+              />
             </TouchableOpacity>
             {!isHiding && contactsDisplay}
           </AnimatedViewPager>
@@ -395,6 +434,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   card: {
     backgroundColor: "#144272",
@@ -480,7 +521,6 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    backgroundColor: "#144272",
     alignItems: "center",
     fontFamily: "OpenSans",
     color: "white",
@@ -495,6 +535,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     fontSize: 12,
     margin: 5,
+    width: "80%",
   },
 
   mail: {
@@ -502,6 +543,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     fontSize: 12,
     margin: 5,
+    width: "80%",
   },
 
   adress: {
@@ -509,6 +551,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     fontSize: 12,
     margin: 5,
+    width: "80%",
   },
   lien: {
     alignItems: "center",
@@ -516,10 +559,12 @@ const styles = StyleSheet.create({
     color: "#144272",
     fontSize: 12,
     margin: 5,
+    width: "80%",
   },
 
   row: {
     flexDirection: "row",
+    alignItems: "center",
     width: "100%",
   },
   icon: {
@@ -531,8 +576,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#144272",
-    borderRadius: 10,
-    margin: 5,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    //margin: 5,
     width: " 100%",
     padding: 10,
     marginBottom: 15,
@@ -544,9 +590,14 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     textAlign: "center",
     width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   ButtonHide: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     color: "black",
     padding: 8,
     fontFamily: "OpenSans",

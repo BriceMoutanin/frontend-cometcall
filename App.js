@@ -148,7 +148,9 @@ function CustomDrawerContent(props) {
         <TouchableOpacity
           style={styles.demandeButton}
           onPress={() =>
-            props.navigation.navigate("Com-et-Call", { screen: "Com-et-Call" })
+            props.navigation.navigate("Com-et-Call", {
+              screen: "Com-et-Call-Demande",
+            })
           }
         >
           <Text>Nouvelle demande</Text>
@@ -206,7 +208,6 @@ const StackNavigator = ({ route }) => {
       title={title}
     >
       <Stack.Screen name="ProfilParent" component={ProfilParentScreen} />
-      <Stack.Screen name="Problematique" options={{ tabBarLabel: 'Problématiques' }} component={ProblematiqueScreen} />
       <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
     </Stack.Navigator>
   );

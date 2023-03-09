@@ -449,7 +449,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
               setUpdateEtablissement(item.etablissement);
             }
           }}
-          suggestionsListMaxHeight={Dimensions.get("window").height * 0.4}
+          suggestionsListMaxHeight={Dimensions.get("window").height * 0.3}
           dataSet={suggestionsList}
           emptyResultText="Aucun résultat"
           textInputProps={{

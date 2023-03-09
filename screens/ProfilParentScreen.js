@@ -318,10 +318,7 @@ export default function ProfilParentScreen({ navigation }) {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity style={styles.childButton} activeOpacity={0.8} onPress={() => { 
-          console.log("go problematique")
-          navigation.navigate("Problematique", { enfant })
-        }}>
+        <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
           <Image
             style={styles.childImage}
             source={
@@ -370,7 +367,6 @@ export default function ProfilParentScreen({ navigation }) {
               />
             </MenuOptions>
           </Menu>
-          
         </TouchableOpacity>
       </Animated.View>
     );
@@ -407,7 +403,7 @@ export default function ProfilParentScreen({ navigation }) {
           <View style={styles.modalView}>
             {/* INPUTS */}
             <TextInput
-              style={styles.inputPwd}
+              style={styles.inputPwdCurrent}
               mode="outlined"
               label="Mot de passe actuel"
               inputMode="text"
@@ -428,7 +424,7 @@ export default function ProfilParentScreen({ navigation }) {
             />
             {errorPwd && <Text>Le mot de passe actuel ne correspond pas</Text>}
             <TextInput
-              style={styles.inputPwd}
+              style={styles.inputPwdNew}
               mode="outlined"
               label="Nouveau mot de passe"
               inputMode="text"
@@ -449,16 +445,16 @@ export default function ProfilParentScreen({ navigation }) {
             />
             <View style={styles.lastButton}>
               <TouchableOpacity
-                style={styles.signUpButtonModal}
+                style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.cntText}>Annuler</Text>
+                <Text style={styles.cancelText}>Annuler</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.signUpButtonModal}
+                style={styles.modifyButton}
                 onPress={() => updateMotDePasse()}
               >
-                <Text style={styles.cntText}>Modifier Mot de passe</Text>
+                <Text style={styles.modifyText}>Modifier Mot de passe</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -689,8 +685,14 @@ const styles = StyleSheet.create({
     margin: 7,
     fontFamily: "OpenSans",
   },
-  inputPwd: {
-    width: 230,
+  inputPwdCurrent: {
+    width: "90%",
+    margin: 12,
+    margin: 7,
+    fontFamily: "OpenSans",
+  },
+  inputPwdNew: {
+    width: "90%",
     margin: 12,
     margin: 7,
     fontFamily: "OpenSans",
@@ -747,6 +749,7 @@ const styles = StyleSheet.create({
   },
 
   textButton: {
+    textAlign: "center",
     fontSize: 20,
     fontFamily: "OpenSans",
     width: "60%",
@@ -800,12 +803,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 30,
     shadowRadius: 2,
   },
-
+  cancelButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40%",
+    padding: 10,
+    marginTop: 30,
+    borderRadius: 8,
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+  },
+  cancelText: {
+    textAlign: "center",
+    fontSize: 15,
+  },
+  modifyButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40%",
+    padding: 10,
+    marginTop: 30,
+    borderRadius: 8,
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+  },
+  modifyText: {
+    textAlign: "center",
+    fontSize: 15,
+  },
   inputModal: {
     width: "90%",
     margin: 5,
   },
   lastButton: {
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
   },

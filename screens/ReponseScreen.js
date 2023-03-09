@@ -159,6 +159,16 @@ export default function ReponseScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.container}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            width: "100%",
+          }}
+        >
+          <Button title="Retour" onPress={() => navigation.goBack()}></Button>
+        </View>
         <Text style={styles.titre}>{problematique.titre}</Text>
         <Text style={styles.description}>
           {problematique.description.replaceAll("votre enfant", enfant.prenom)}
@@ -188,7 +198,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    paddingTop: 30,
     paddingBottom: 30,
   },
   card: {

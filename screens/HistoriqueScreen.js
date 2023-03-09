@@ -78,6 +78,7 @@ export default function HistoriqueScreen({ navigation }) {
     const newDate = new Date(Date.parse(maphistorique.date));
     return (
       <TouchableOpacity
+        key={i}
         style={styles.viewstyles}
         onPress={() =>
           navigation.navigate("Affichage Historique", {

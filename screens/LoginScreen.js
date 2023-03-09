@@ -233,8 +233,9 @@ export default function LoginScreen({ navigation }) {
           onPress={() => setModalVisible(false)}
         >
           <View style={styles.modalView}>
+            <Text style={styles.h5Black}>Créer un compte</Text>
             <TextInput
-              style={styles.input}
+              style={styles.inputModal}
               mode="outlined"
               label="Email"
               selectionColor="#144272"
@@ -257,7 +258,7 @@ export default function LoginScreen({ navigation }) {
             )}
 
             <TextInput
-              style={styles.input}
+              style={styles.inputModal}
               mode="outlined"
               label="Password"
               inputMode="text"
@@ -458,12 +459,14 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#144272",
     borderRadius: 15,
     width: "70%",
     padding: 15,
-    height: 150,
-    marginBottom: 60,
+    height: 200,
+    marginBottom: 130,
   },
 
   h5: {
@@ -493,6 +496,10 @@ const styles = StyleSheet.create({
 
   input: {
     width: "70%",
+    marginTop: 15,
+  },
+  inputModal: {
+    width: "90%",
     marginTop: 15,
   },
   cntButton: {
@@ -576,9 +583,8 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 30,
-    padding: 35,
+    padding: 15,
     alignItems: "center",
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -590,11 +596,10 @@ const styles = StyleSheet.create({
   },
 
   signUpButtonModal: {
+    alignItems: "center",
+    justifyContent: "center",
     width: "40%",
-    padding: 10,
-    marginTop: 20,
-    marginLeft: 15,
-
+    height: 50,
     borderRadius: 20,
     backgroundColor: "white",
     shadowColor: "gray",
@@ -612,7 +617,11 @@ const styles = StyleSheet.create({
   },
   lastButton: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    height: "auto",
+    marginTop: 30,
   },
 
   containerGoogle: {
@@ -622,8 +631,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
+    //fontSize: 20,
+    //fontWeight: "bold",
   },
   // profilePic: {
   //   width: 50,
