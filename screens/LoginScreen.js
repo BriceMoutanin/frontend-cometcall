@@ -403,6 +403,7 @@ export default function LoginScreen({ navigation }) {
               }
             />
           </TouchableOpacity>
+
           <ActivityIndicator
             style={{ marginTop: 15 }}
             size="small"
@@ -412,7 +413,7 @@ export default function LoginScreen({ navigation }) {
         </View>
 
         <View style={styles.footer}>
-          <View style={styles.containerGoogle}>
+          {/* <View style={styles.containerGoogle}>
             {/* {!userInfo ? (
               //Envoyer la demande d'authentification
               //Le crochet useAuthRequest() fournit également promptAsync() qui invite l'utilisateur à s'authentifier en ouvrant un navigateur Web.
@@ -421,12 +422,11 @@ export default function LoginScreen({ navigation }) {
 
               <Text style={styles.text}>{userInfo.name}</Text>
 
-            )} */}
-          </View>
-
+            )} 
+          </View> */}
           <Text style={styles.h5Black}>Créer un compte</Text>
           <TouchableOpacity
-            style={styles.signInButton}
+            style={styles.signUpButton}
             onPress={() => setModalVisible(true)}
           >
             <Text style={styles.cntText}>S'inscrire</Text>
@@ -461,28 +461,28 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    paddingTop: 10,
-    height: "30%",
+    height: "20%",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
   },
 
   footer: {
-    flexDirection: "row",
+    flexDirection: "column",
+    marginTop: 20,
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
     width: "90%",
     height: "20%",
   },
 
   card: {
     backgroundColor: "#144272",
-    borderRadius: 12,
-    width: "80%",
+    borderRadius: 15,
+    width: "70%",
     padding: 15,
-    height: 200,
-    marginBottom: 20,
+    height: 150,
+    marginBottom: 60,
   },
 
   h5: {
@@ -506,12 +506,8 @@ const styles = StyleSheet.create({
 
   h5Black: {
     fontFamily: "OpenSans",
-    fontStyle: "normal",
-    fontWeight: 100,
-    fontSize: 23,
-    color: "black",
-    textAlign: "center",
-    marginLeft: 0,
+    fontSize: 16,
+    marginTop: 10,
   },
 
   input: {
@@ -533,19 +529,36 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
 
-  signInButton: {
-    width: "50%",
+  signUpButton: {
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "75%",
     padding: 10,
-    margin: 20,
-    marginRight: 0,
-    borderRadius: 8,
+    borderRadius: 20,
     backgroundColor: "white",
     shadowColor: "gray",
     shadowOffset: {
       width: 0,
       height: 2,
     },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+  },
 
+  signInButton: {
+    justifyContent: "center",
+    width: "70%",
+    padding: 10,
+    margin: 20,
+    //marginRight: 0,
+    borderRadius: 20,
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 30,
     shadowRadius: 2,
   },
@@ -581,7 +594,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
+    borderRadius: 30,
     padding: 35,
     alignItems: "center",
 
@@ -596,10 +609,12 @@ const styles = StyleSheet.create({
   },
 
   signUpButtonModal: {
-    width: "50%",
+    width: "40%",
     padding: 10,
-    marginTop: 30,
-    borderRadius: 8,
+    marginTop: 20,
+    marginLeft: 15,
+
+    borderRadius: 20,
     backgroundColor: "white",
     shadowColor: "gray",
     shadowOffset: {
