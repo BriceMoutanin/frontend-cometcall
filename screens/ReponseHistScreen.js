@@ -14,6 +14,10 @@ import Animated from "react-native-reanimated";
 import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
 import { Linking } from "react-native";
 import { useCallback } from "react";
+import { Foundation } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
 export default function ReponseHistScreen({ route, navigation }) {
   const { enfant, problematique, date } = route.params;
@@ -76,38 +80,106 @@ export default function ReponseHistScreen({ route, navigation }) {
         return (
           <Animated.View
             entering={SlideInLeft.delay(800).duration(1000)}
-            style={styles.card}
             key={index}
           >
-            <Text style={styles.h5}>
-              {index + 1}
-              {") "}
-              {contact.nom}
-            </Text>
-            {contact.telephone && (
-              <Text
-                style={styles.h6}
-                onPress={() => onPressMobileNumberClick(contact.telephone)}
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+              }}
+            >
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                  backgroundColor: "#144272",
+                  width: "100%",
+                  paddingBottom: 5,
+                  paddingTop: 5,
+                }}
               >
-                {contact.telephone}
-              </Text>
-            )}
-            {contact.email && (
-              <Text
-                style={styles.h6}
-                onPress={() => onPressEmailClick(contact.email)}
-              >
-                {contact.email}
-              </Text>
-            )}
-            {contact.url && (
-              <Text
-                style={styles.h6}
-                onPress={() => onPressURLClick(contact.url)}
-              >
-                {contact.url}
-              </Text>
-            )}
+                <Text style={styles.name}>{contact.nom}</Text>
+              </View>
+              <View style={styles.infosContainer}>
+                {contact.telephone && (
+                  <View style={styles.row}>
+                    <Foundation
+                      style={styles.icon}
+                      name="telephone"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      style={styles.tel}
+                      onPress={() =>
+                        onPressMobileNumberClick(contact.telephone)
+                      }
+                    >
+                      {contact.telephone}
+                    </Text>
+                  </View>
+                )}
+                {contact.email && (
+                  <View style={styles.row}>
+                    <Entypo
+                      style={styles.icon}
+                      name="email"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      style={styles.mail}
+                      onPress={() => onPressEmailClick(contact.email)}
+                    >
+                      {contact.email}
+                    </Text>
+                  </View>
+                )}
+
+                {contact.adresses && (
+                  <View style={styles.row}>
+                    <FontAwesome5
+                      style={styles.icon}
+                      name="address-card"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      style={styles.adress}
+                      onPress={() =>
+                        onPressAddressClick(contact.adresses[0].coordinates)
+                      }
+                    >
+                      {contact.adresses[0].lignes +
+                        "\n" +
+                        contact.adresses[0].codePostal +
+                        " " +
+                        contact.adresses[0].commune}
+                    </Text>
+                  </View>
+                )}
+
+                {contact.url && (
+                  <View style={styles.row}>
+                    <AntDesign
+                      style={styles.icon}
+                      name="link"
+                      size={20}
+                      color="black"
+                    />
+                    <Text
+                      onPress={() => onPressURLClick(contact.url)}
+                      style={styles.lien}
+                    >
+                      {contact.url}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
           </Animated.View>
         );
       } else {
@@ -141,7 +213,7 @@ export default function ReponseHistScreen({ route, navigation }) {
         <Text style={styles.description}>
           {problematique.description.replaceAll("votre enfant", enfant.prenom)}
         </Text>
-        <Text style={styles.description}>
+        <Text style={styles.voici}>
           Voici, dans l'ordre, la liste des organismes à contacter :
         </Text>
         {isLoading ? (
@@ -168,35 +240,48 @@ const styles = StyleSheet.create({
     position: "relative",
     paddingBottom: 30,
   },
-  card: {
-    backgroundColor: "#144272",
+  rien: {
+    backgroundColor: "rgb(12, 123, 147)",
     borderRadius: 12,
-    width: "80%",
+    width: "90%",
+    alignItems: "center",
     padding: 15,
-    marginTop: 40,
+    marginTop: 150,
     paddingBottom: 20,
+    color: "white",
   },
   titre: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
-    fontWeight: "100",
-    fontSize: 30,
-    color: "black",
+    fontWeight: "500",
+    fontSize: 20,
+    color: "#144272",
     textAlign: "center",
     marginBottom: 10,
+  },
+  voici: {
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: "100",
+    fontSize: 14,
+    color: "rgb(12, 123, 147)",
+    width: "100%",
+    marginTop: 10,
+    marginBottom: 20,
+
+    textAlign: "center",
   },
   description: {
     fontFamily: "OpenSans",
     fontStyle: "normal",
     fontWeight: "100",
-    fontSize: 18,
+    fontSize: 15,
     color: "black",
     textAlign: "center",
     marginTop: 10,
     marginBottom: 10,
     paddingRight: 20,
     paddingLeft: 20,
-    textAlign: "center",
   },
   h5: {
     fontFamily: "OpenSans",
@@ -216,5 +301,86 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 10,
     marginBottom: 10,
+  },
+
+  h5: {
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: "100",
+    fontSize: 24,
+    color: "white",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  h6: {
+    fontFamily: "OpenSans",
+    fontStyle: "normal",
+    fontWeight: 400,
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
+  },
+
+  name: {
+    alignItems: "center",
+    fontFamily: "OpenSans",
+    color: "white",
+    fontSize: 15,
+    fontFamily: "OpenSans",
+    textAlign: "center",
+  },
+
+  tel: {
+    alignItems: "center",
+    fontFamily: "OpenSans",
+    fontSize: 12,
+    margin: 5,
+    width: "80%",
+  },
+
+  mail: {
+    alignItems: "center",
+    fontFamily: "OpenSans",
+    fontSize: 12,
+    margin: 5,
+    width: "80%",
+  },
+
+  adress: {
+    alignItems: "center",
+    fontFamily: "OpenSans",
+    fontSize: 12,
+    margin: 5,
+    width: "80%",
+  },
+  lien: {
+    alignItems: "center",
+    fontFamily: "OpenSans",
+    color: "#144272",
+    fontSize: 12,
+    margin: 5,
+    width: "80%",
+  },
+
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  icon: {
+    width: "12%",
+  },
+
+  infosContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#144272",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    //margin: 5,
+    width: " 100%",
+    padding: 10,
+    marginBottom: 15,
   },
 });

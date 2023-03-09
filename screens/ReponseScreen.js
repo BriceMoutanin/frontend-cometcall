@@ -202,13 +202,21 @@ export default function ReponseScreen({ route, navigation }) {
           </Animated.View>
         );
       } else {
-        return null;
+        return (
+          <Animated.View
+            key={index}
+            entering={SlideInLeft.delay(800).duration(1000)}
+            style={styles.rien}
+          >
+            <Text>Aucun résultat</Text>
+          </Animated.View>
+        );
       }
     })
   ) : (
     <Animated.View
       entering={SlideInLeft.delay(800).duration(1000)}
-      style={styles.card}
+      style={styles.rien}
     >
       <Text>Aucun résultat</Text>
     </Animated.View>
@@ -258,13 +266,15 @@ const styles = StyleSheet.create({
     position: "relative",
     paddingBottom: 30,
   },
-  card: {
-    backgroundColor: "#144272",
+  rien: {
+    backgroundColor: "rgb(12, 123, 147)",
     borderRadius: 12,
     width: "90%",
+    alignItems: "center",
     padding: 15,
-    marginTop: 40,
+    marginTop: 150,
     paddingBottom: 20,
+    color: "white",
   },
   titre: {
     fontFamily: "OpenSans",
