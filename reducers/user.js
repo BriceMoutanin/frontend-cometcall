@@ -6,7 +6,7 @@ const initialState = {
     email: null,
     nom: null,
     prenom: null,
-    //tel: null,
+    tel: null,
     photoURI: null,
     enfants: [],
   },
@@ -22,7 +22,7 @@ export const userSlice = createSlice({
       state.value.prenom = action.payload.prenom;
       state.value.nom = action.payload.nom;
       state.value.photoURI = action.payload.photoURI;
-      //state.value.tel = action.payload.tel;
+      state.value.tel = action.payload.tel;
       state.value.enfants = action.payload.enfants;
     },
 
@@ -33,7 +33,7 @@ export const userSlice = createSlice({
       state.value.nom = null;
       state.value.enfants = [];
       state.value.photoURI = null;
-      //state.value.tel = null;
+      state.value.tel = null;
     },
 
     update: (state, action) => {

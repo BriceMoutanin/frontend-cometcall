@@ -62,7 +62,7 @@ export default function DemandeScreen({ navigation }) {
                     source={
                       enfant.photoURI
                         ? { uri: enfant.photoURI }
-                        : require("../assets/avatar.png")
+                        : require("../assets/Avatar.Appli.jpeg")
                     }
                   />
                   <Text style={styles.textButton}>{enfant.prenom}</Text>

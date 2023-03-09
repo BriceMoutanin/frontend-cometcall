@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button,
   SafeAreaView,
+  Image,
 } from "react-native";
 import { ToastProvider } from "react-native-toast-notifications";
 //import react navigation
@@ -22,6 +23,7 @@ import {
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
 import { MenuProvider } from "react-native-popup-menu";
+import { useEffect, useState } from "react";
 
 //import des pages
 import LoginScreen from "./screens/LoginScreen";
@@ -37,6 +39,7 @@ import MessageScreen from "./screens/MessageScreen";
 
 //import expo
 import { Entypo } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 
 //import Redux
@@ -73,6 +76,18 @@ const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const userReducer = useSelector((state) => state.user.value);
+  const [imageSource, setImageSource] = useState(
+    userReducer.photoURI !== null
+      ? { uri: userReducer.photoURI }
+      : require("./assets/Avatar.Appli.jpeg")
+  );
+  useEffect(() => {
+    setImageSource(
+      userReducer.photoURI !== null
+        ? { uri: userReducer.photoURI }
+        : require("./assets/Avatar.Appli.jpeg")
+    );
+  }, [userReducer]);
   // console.log(userReducer);
   const dispatch = useDispatch();
   return (
@@ -84,21 +99,32 @@ function CustomDrawerContent(props) {
     >
       <View
         style={{
-          flex: 1,
+          flex: 2,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
+        <Image style={styles.image} source={imageSource} />
+
         <Text
           style={{
             color: "white",
             fontSize: 20,
-            marginBottom: 10,
-            marginTop: 30,
+            marginBottom: 5,
+            marginTop: 10,
           }}
         >
           {userReducer.prenom} {userReducer.nom}
+        </Text>
+        <Text
+          style={{
+            color: "white",
+            fontSize: 15,
+            marginBottom: 10,
+          }}
+        >
+          {userReducer.email}
         </Text>
         <TouchableOpacity
           style={styles.demandeButton}
@@ -107,10 +133,10 @@ function CustomDrawerContent(props) {
             props.navigation.navigate("Login");
           }}
         >
-          <Text>Deconnexion</Text>
+          <Text style={{ color: "red", fontWeight: "bold" }}>Deconnexion</Text>
         </TouchableOpacity>
       </View>
-      <DrawerItemList style={{ flex: 4 }} {...props} />
+      <DrawerItemList style={{ flex: 3 }} {...props} />
       <View
         style={{
           flex: 2,
@@ -287,6 +313,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
+    marginTop: 20,
     marginBottom: 80,
     alignSelf: "center",
     width: "90%",
@@ -322,5 +349,13 @@ const styles = StyleSheet.create({
   txtItemDrawer: {
     color: "white",
     fontSize: 24,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 50,
+    borderWidth: 1,
+    borderColor: "white",
   },
 });

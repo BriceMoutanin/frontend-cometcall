@@ -11,6 +11,7 @@
   "dependencies": {
     "@marstankev/react-native-skeleton-content": "^1.0.28",
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@react-native-community/art": "^1.2.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "6",
     "@react-navigation/drawer": "^6.6.2",
@@ -33,6 +34,7 @@
     "react-native-autocomplete-dropdown": "^2.1.0",
     "react-native-flip-card": "^3.5.7",
     "react-native-gesture-handler": "^2.9.0",
+    "react-native-indicator": "^1.2.2",
     "react-native-paper": "^5.2.0",
     "react-native-popup-menu": "^0.16.1",
     "react-native-reanimated": "~2.14.4",
@@ -43,6 +45,7 @@
     "react-native-svg-transformer": "^1.0.0",
     "react-native-toast-notifications": "^3.3.1",
     "react-redux": "^8.0.5",
+    "react-spinners": "^0.13.8",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {

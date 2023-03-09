@@ -64,7 +64,11 @@ export default function LoginScreen({ navigation }) {
   // ne pas devoir se reconnecter => reduxPersist
   useEffect(() => {
     if (userReducer.token) {
-      navigation.navigate("DrawerNavigator", { screen: "Com-et-Call" });
+      if (userReducer.enfants.length > 0) {
+        navigation.navigate("DrawerNavigator", { screen: "Com-et-Call" });
+      } else {
+        navigation.navigate("DrawerNavigator", { screen: "Profil" });
+      }
     }
   }, []);
 
@@ -120,10 +124,10 @@ export default function LoginScreen({ navigation }) {
   // s'inscrire
   const handleSignUp = () => {
     Keyboard.dismiss();
+    setEmailErrorUp(false);
+    setIdentifiantErrorUp(false);
     if (EMAIL_REGEX.test(signUpMail)) {
       setLoadingUp(true);
-      setEmailErrorUp(false);
-      setIdentifiantErrorUp(false);
       fetch(`${BACKEND_ADDRESS}/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -144,7 +148,7 @@ export default function LoginScreen({ navigation }) {
                 token: data.newUser.token,
                 enfants: data.newUser.enfants,
                 photoURI: data.newUser.photoURI,
-                //tel: data.user.tel,
+                tel: data.newUser.tel,
               })
             );
             setSignUpMail("");
@@ -166,12 +170,11 @@ export default function LoginScreen({ navigation }) {
   //s'identifier
   const handleSignIn = () => {
     Keyboard.dismiss();
+    setEmailErrorIn(false);
+    setIdentifiantErrorIn(false);
+    setUtilisateurErrorIn(false);
     if (EMAIL_REGEX.test(signInMail)) {
       setLoadingIn(true);
-      setEmailErrorIn(false); // correspond pas au regex
-      setIdentifiantErrorIn(false); // mots de passe invalide
-      setUtilisateurErrorIn(false); // utilisateur n'existe pas
-
       fetch(`${BACKEND_ADDRESS}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -194,7 +197,7 @@ export default function LoginScreen({ navigation }) {
                 token: data.user.token,
                 enfants: data.user.enfants,
                 photoURI: data.user.photoURI,
-                //tel: data.user.tel,
+                tel: data.user.tel,
               })
             );
             setSignInMail("");
@@ -337,47 +340,25 @@ export default function LoginScreen({ navigation }) {
           {utilisateurErrorIn && (
             <Text style={styles.error}>Adresse mail introuvable</Text>
           )}
-          {!pwdVisible ? (
-            <TextInput
-              style={styles.input}
-              mode="outlined"
-              label="Password"
-              secureTextEntry={true}
-              right={
-                <TextInput.Icon
-                  icon="eye"
-                  onPress={() => setPwdVisible(!pwdVisible)}
-                />
-              }
-              selectionColor="#144272"
-              activeUnderlineColor="#144272"
-              outlineColor={identifiantErrorIn ? "red" : "#144272"}
-              activeOutlineColor="#144272"
-              autoCapitalize="none"
-              onChangeText={(value) => setSignInPassword(value)}
-              value={signInPassword}
-            />
-          ) : (
-            <TextInput
-              style={styles.input}
-              mode="outlined"
-              label="Password"
-              inputMode="text"
-              secureTextEntry={false}
-              right={
-                <TextInput.Icon
-                  icon="eye-off-outline"
-                  onPress={() => setPwdVisible(!pwdVisible)}
-                />
-              }
-              selectionColor="#144272"
-              activeUnderlineColor="#144272"
-              outlineColor={identifiantErrorIn ? "red" : "#144272"}
-              autoCapitalize="none"
-              onChangeText={(value) => setSignInPassword(value)}
-              value={signInPassword}
-            />
-          )}
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            label="Password"
+            secureTextEntry={!pwdVisible}
+            right={
+              <TextInput.Icon
+                icon="eye"
+                onPress={() => setPwdVisible(!pwdVisible)}
+              />
+            }
+            selectionColor="#144272"
+            activeUnderlineColor="#144272"
+            outlineColor={identifiantErrorIn ? "red" : "#144272"}
+            activeOutlineColor="#144272"
+            autoCapitalize="none"
+            onChangeText={(value) => setSignInPassword(value)}
+            value={signInPassword}
+          />
           {identifiantErrorIn && (
             <Text style={styles.error}>Mot de passe incorrect.</Text>
           )}

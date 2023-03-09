@@ -327,7 +327,7 @@ export default function ProfilParentScreen({ navigation }) {
             source={
               enfant.photoURI
                 ? { uri: enfant.photoURI }
-                : require("../assets/avatar.png")
+                : require("../assets/Avatar.Appli.jpeg")
             }
           />
 
@@ -387,7 +387,7 @@ export default function ProfilParentScreen({ navigation }) {
   const imageSource =
     user.photoURI !== null
       ? { uri: user.photoURI }
-      : require("../assets/avatar.png");
+      : require("../assets/Avatar.Appli.jpeg");
 
   return (
     <View style={styles.container}>
