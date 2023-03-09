@@ -27,7 +27,12 @@ async function getContactByOrganisme(codeCommune, typeOrganisme) {
   if (data.features.length > 0) {
     contacts = {
       nom: data.features[0].properties.nom,
-      adresses: data.features[0].properties.adresses,
+      adresses: [
+        {
+          ...data.features[0].properties.adresses[0],
+          coordinates: data.features[0].geometry.coordinates,
+        },
+      ],
       telephone: data.features[0].properties.telephone,
       email: data.features[0].properties.email,
       url: data.features[0].properties.url,
@@ -57,6 +62,7 @@ async function getContactByEtablissement(IdEtablissement) {
           lignes: [data.records[0].fields.adresse_1],
           codePostal: data.records[0].fields.code_postal,
           commune: data.records[0].fields.nom_commune,
+          coordinates: data.records[0].fields.position,
         },
       ],
       telephone: data.records[0].fields.telephone,

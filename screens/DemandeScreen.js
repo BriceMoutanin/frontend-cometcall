@@ -19,7 +19,7 @@ export default function DemandeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   console.log(user);
   const historique = useSelector((state) => state.historique.value);
-  console.log('HISTORIQUE',historique)
+  console.log("HISTORIQUE", historique);
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
@@ -62,7 +62,7 @@ export default function DemandeScreen({ navigation }) {
                     source={
                       enfant.photoURI
                         ? { uri: enfant.photoURI }
-                        : require("../assets/avatar.png")
+                        : require("../assets/Avatar.Appli.jpeg")
                     }
                   />
                   <Text style={styles.textButton}>{enfant.prenom}</Text>

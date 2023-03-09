@@ -70,6 +70,25 @@ export default function ReponseScreen({ route, navigation }) {
     }
   };
 
+  const onPressAddressClick = async (coordinates) => {
+    let coordinatesToClick = "";
+    if (coordinates) {
+      if (Platform.OS === "android") {
+        //coordinatesToClick = `geo:${coordinates[0]},${coordinates[1]}`;
+        coordinatesToClick = `geo:0,0?q=${"Repere"}(${coordinates[0]},${
+          coordinates[1]
+        })`;
+      } else {
+        //coordinatesToClick = `http://maps.apple.com/?ll=${coordinates[0]},${coordinates[1]}`;
+        coordinatesToClick = `maps:0,0?q=${"Repere"}@${coordinates[0]},${
+          coordinates[1]
+        }`;
+      }
+      const reponse = await Linking.openURL(coordinatesToClick);
+      console.log(reponse);
+    }
+  };
+
   const contactsDisplay = contacts ? (
     contacts.map((contact, index) => {
       if (contact.nom) {
@@ -106,6 +125,20 @@ export default function ReponseScreen({ route, navigation }) {
                 onPress={() => onPressURLClick(contact.url)}
               >
                 {contact.url}
+              </Text>
+            )}
+            {contact.adresses && (
+              <Text
+                style={styles.h6}
+                onPress={() =>
+                  onPressAddressClick(contact.adresses[0].coordinates)
+                }
+              >
+                {contact.adresses[0].lignes +
+                  "\n" +
+                  contact.adresses[0].codePostal +
+                  " " +
+                  contact.adresses[0].commune}
               </Text>
             )}
           </Animated.View>

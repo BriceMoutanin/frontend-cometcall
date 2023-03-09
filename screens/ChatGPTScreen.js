@@ -9,12 +9,19 @@ import {
   Stack,
   KeyboardAvoidingView,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
+import { Linking } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useState } from "react";
 import { Skeleton } from "@rneui/themed";
 import Animated from "react-native-reanimated";
-import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+import {
+  SlideInLeft,
+  FlipInYRight,
+  FadeIn,
+  FadeOut,
+} from "react-native-reanimated";
 import { getOrganismes, getCommuneById } from "../modules/fetchModules";
 import { useEffect } from "react";
 import { Foundation } from "@expo/vector-icons";
@@ -54,6 +61,60 @@ export default function ChatGPTScreen({ route, navigation }) {
     })();
   }, []);
 
+  const onPressMobileNumberClick = async (number) => {
+    let phoneNumber = "";
+    if (number) {
+      if (Platform.OS === "android") {
+        phoneNumber = `tel:${number.replaceAll(" ", "").replaceAll(".", "")}`;
+      } else {
+        phoneNumber = `telprompt:${number
+          .replaceAll(" ", "")
+          .replaceAll(".", "")}`;
+      }
+      const reponse = await Linking.openURL(phoneNumber);
+      console.log(reponse);
+    }
+  };
+
+  const onPressEmailClick = async (email) => {
+    let emailToClick = "";
+    if (email) {
+      if (Platform.OS === "android") {
+        emailToClick = `mailto:${email.replaceAll(" ", "")}`;
+      } else {
+        emailToClick = `mailto:${email.replaceAll(" ", "")}`;
+      }
+      const reponse = await Linking.openURL(emailToClick);
+      console.log(reponse);
+    }
+  };
+
+  const onPressURLClick = async (URL) => {
+    if (URL) {
+      const reponse = await Linking.openURL(URL);
+      console.log(reponse);
+    }
+  };
+
+  const onPressAddressClick = async (coordinates) => {
+    let coordinatesToClick = "";
+    if (coordinates) {
+      if (Platform.OS === "android") {
+        //coordinatesToClick = `geo:${coordinates[0]},${coordinates[1]}`;
+        coordinatesToClick = `geo:0,0?q=${"Repere"}(${coordinates[0]},${
+          coordinates[1]
+        })`;
+      } else {
+        //coordinatesToClick = `http://maps.apple.com/?ll=${coordinates[0]},${coordinates[1]}`;
+        coordinatesToClick = `maps:0,0?q=${"Repere"}@${coordinates[1]},${
+          coordinates[0]
+        }`;
+      }
+      const reponse = await Linking.openURL(coordinatesToClick);
+      console.log(reponse);
+    }
+  };
+
   const contactsDisplay = contacts ? (
     contacts.map((contact, index) => {
       if (contact.nom) {
@@ -66,20 +127,35 @@ export default function ChatGPTScreen({ route, navigation }) {
               {contact.telephone && (
                 <View style={styles.row}>
                   <Foundation name="telephone" size={24} color="black" />
-                  <Text style={styles.tel}>{contact.telephone}</Text>
+                  <Text
+                    style={styles.tel}
+                    onPress={() => onPressMobileNumberClick(contact.telephone)}
+                  >
+                    {contact.telephone}
+                  </Text>
                 </View>
               )}
               {contact.email && (
                 <View style={styles.row}>
                   <Entypo name="email" size={24} color="black" />
-                  <Text style={styles.mail}>{contact.email}</Text>
+                  <Text
+                    style={styles.mail}
+                    onPress={() => onPressEmailClick(contact.email)}
+                  >
+                    {contact.email}
+                  </Text>
                 </View>
               )}
 
               {contact.adresses && (
                 <View style={styles.row}>
                   <FontAwesome5 name="address-card" size={24} color="black" />
-                  <Text style={styles.adress}>
+                  <Text
+                    style={styles.adress}
+                    onPress={() =>
+                      onPressAddressClick(contact.adresses[0].coordinates)
+                    }
+                  >
                     {contact.adresses[0].lignes +
                       "\n" +
                       contact.adresses[0].codePostal +
@@ -92,7 +168,12 @@ export default function ChatGPTScreen({ route, navigation }) {
               {contact.url && (
                 <View style={styles.row}>
                   <AntDesign name="link" size={24} color="black" />
-                  <Text style={styles.lien}>{contact.url}</Text>
+                  <Text
+                    onPress={() => onPressURLClick(contact.url)}
+                    style={styles.lien}
+                  >
+                    {contact.url}
+                  </Text>
                 </View>
               )}
             </View>
@@ -199,12 +280,14 @@ export default function ChatGPTScreen({ route, navigation }) {
             >
               {isLoading ? (
                 <>
-                  <Skeleton
-                    animation="pulse"
-                    style={{ marginTop: 0, marginBottom: 15 }}
-                    width={"80%"}
-                    height={40}
-                  />
+                  <Animated.View style={{ flexDirection: "row" }}>
+                    <Text style={styles.h5}>Chargement...</Text>
+                    <ActivityIndicator
+                      animating={isLoading}
+                      color="white"
+                      style={{ marginLeft: 10, marginBottom: 10 }}
+                    />
+                  </Animated.View>
                   <Skeleton
                     animation="pulse"
                     style={{ marginTop: 5, marginBottom: 5 }}
