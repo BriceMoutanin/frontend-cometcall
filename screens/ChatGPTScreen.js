@@ -14,7 +14,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useState } from "react";
 import { Skeleton } from "@rneui/themed";
 import Animated from "react-native-reanimated";
-import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+import {
+  SlideInLeft,
+  FlipInYRight,
+  SlideInDown,
+  SlideOutDown,
+  SlideInUp,
+  SlideOutUp,
+  SlideOutRight,
+} from "react-native-reanimated";
 import { getOrganismes, getCommuneById } from "../modules/fetchModules";
 import { useEffect } from "react";
 import { Foundation } from "@expo/vector-icons";
@@ -32,6 +40,7 @@ export default function ChatGPTScreen({ route, navigation }) {
   const [showResponse, setShowResponse] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [contacts, setContacts] = useState(null);
+  const [isHiding, setIsHiding] = useState(true);
 
   // const [loaded] = useFonts({
   //   OpenSans: require("../assets/fonts/Open-Sans.ttf"),
@@ -58,27 +67,46 @@ export default function ChatGPTScreen({ route, navigation }) {
     contacts.map((contact, index) => {
       if (contact.nom) {
         return (
-          <>
+          <Animated.View
+            key={index}
+            entering={SlideInLeft}
+            exiting={SlideOutRight}
+          >
             <View>
               <Text style={styles.name}>{contact.nom}</Text>
             </View>
-            <View key={index} style={styles.infosContainer}>
+            <View style={styles.infosContainer}>
               {contact.telephone && (
                 <View style={styles.row}>
-                  <Foundation name="telephone" size={24} color="black" />
+                  <Foundation
+                    style={styles.icon}
+                    name="telephone"
+                    size={20}
+                    color="black"
+                  />
                   <Text style={styles.tel}>{contact.telephone}</Text>
                 </View>
               )}
               {contact.email && (
                 <View style={styles.row}>
-                  <Entypo name="email" size={24} color="black" />
+                  <Entypo
+                    style={styles.icon}
+                    name="email"
+                    size={20}
+                    color="black"
+                  />
                   <Text style={styles.mail}>{contact.email}</Text>
                 </View>
               )}
 
               {contact.adresses && (
                 <View style={styles.row}>
-                  <FontAwesome5 name="address-card" size={24} color="black" />
+                  <FontAwesome5
+                    style={styles.icon}
+                    name="address-card"
+                    size={20}
+                    color="black"
+                  />
                   <Text style={styles.adress}>
                     {contact.adresses[0].lignes +
                       "\n" +
@@ -91,12 +119,17 @@ export default function ChatGPTScreen({ route, navigation }) {
 
               {contact.url && (
                 <View style={styles.row}>
-                  <AntDesign name="link" size={24} color="black" />
+                  <AntDesign
+                    style={styles.icon}
+                    name="link"
+                    size={20}
+                    color="black"
+                  />
                   <Text style={styles.lien}>{contact.url}</Text>
                 </View>
               )}
             </View>
-          </>
+          </Animated.View>
         );
       } else {
         return null;
@@ -252,14 +285,20 @@ export default function ChatGPTScreen({ route, navigation }) {
               )}
             </AnimatedViewPager>
           )}
+
           <AnimatedViewPager
-            entering={SlideInLeft.delay(250).duration(1000)}
-            style={styles.infos}
+            entering={SlideInLeft.delay(1000).duration(1000)}
+            style={styles.hideContact}
           >
-            <Text style={styles.h5}>
-              Contacts relative à <Text>{enfant.prenom}</Text>
-            </Text>
-            {contactsDisplay}
+            <TouchableOpacity
+              style={styles.ButtonHide}
+              onPress={() => {
+                setIsHiding(!isHiding);
+              }}
+            >
+              <Text>Acceder aux contacts relatifs à {enfant.prenom}</Text>
+            </TouchableOpacity>
+            {!isHiding && contactsDisplay}
           </AnimatedViewPager>
         </ScrollView>
       </View>
@@ -288,9 +327,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   infos: {
-    backgroundColor: "pink",
     borderRadius: 12,
-    width: "80%",
+    width: "90%",
     padding: 15,
     marginTop: 40,
     paddingBottom: 20,
@@ -364,46 +402,90 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    backgroundColor: "yellow",
+    backgroundColor: "#144272",
     alignItems: "center",
     fontFamily: "OpenSans",
+    color: "white",
+    fontSize: 15,
+    fontFamily: "OpenSans",
+    textAlign: "center",
+    width: " 100%",
   },
 
   tel: {
-    backgroundColor: "green",
     alignItems: "center",
     fontFamily: "OpenSans",
+    fontSize: 12,
+    margin: 5,
   },
 
   mail: {
-    backgroundColor: "orange",
     alignItems: "center",
     fontFamily: "OpenSans",
+    fontSize: 12,
+    margin: 5,
   },
 
   adress: {
-    backgroundColor: "red",
     alignItems: "center",
     fontFamily: "OpenSans",
+    fontSize: 12,
+    margin: 5,
   },
   lien: {
-    backgroundColor: "brown",
     alignItems: "center",
     fontFamily: "OpenSans",
     color: "#144272",
+    fontSize: 12,
+    margin: 5,
   },
 
   row: {
     flexDirection: "row",
+    width: "100%",
+  },
+  icon: {
+    width: "12%",
   },
 
   infosContainer: {
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: "#144272",
     borderRadius: 10,
     margin: 5,
     width: " 100%",
+    padding: 10,
+    marginBottom: 15,
   },
+
+  hideContact: {
+    color: "black,",
+    padding: 30,
+    fontFamily: "OpenSans",
+    textAlign: "center",
+    width: "100%",
+  },
+
+  ButtonHide: {
+    color: "black",
+    padding: 8,
+    fontFamily: "OpenSans",
+    width: "100%",
+    borderRadius: 15,
+    width: "80%",
+    backgroundColor: "white",
+    shadowColor: "gray",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 30,
+    shadowRadius: 2,
+    marginBottom: 15,
+  },
+  // viewContact: {
+  //   backgroundColor: "purple",
+  // },
 });
