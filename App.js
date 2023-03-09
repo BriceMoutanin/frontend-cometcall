@@ -122,7 +122,7 @@ function CustomDrawerContent(props) {
         <TouchableOpacity
           style={styles.demandeButton}
           onPress={() =>
-            props.navigation.navigate("Demande", { screen: "Demande" })
+            props.navigation.navigate("Com-et-Call", { screen: "Com-et-Call" })
           }
         >
           <Text>Nouvelle demande</Text>
@@ -146,7 +146,7 @@ const StackNavigatorDemande = ({ route }) => {
       screenOptions={{ headerShown: false }}
       title={title}
     >
-      <Stack.Screen name="Demande" component={DemandeScreen} />
+      <Stack.Screen name="Com-et-Call-Demande" component={DemandeScreen} />
       <Stack.Screen name="Problematique" component={ProblematiqueScreen} />
       <Stack.Screen name="Reponse" component={ReponseScreen} />
       <Stack.Screen name="Autre" component={ChatGPTScreen} />
@@ -219,10 +219,10 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name="Demande"
+        name="Com-et-Call"
         component={StackNavigatorDemande}
         options={{
-          tabBarLabel: "Profil",
+          tabBarLabel: "Nouvelle demande",
           unmountOnBlur: true,
           drawerItemStyle: { height: 0 },
         }}
@@ -231,7 +231,7 @@ const DrawerNavigator = () => {
         name="Historiques"
         component={StackNavigatorHist}
         options={{
-          tabBarLabel: "Profil",
+          tabBarLabel: "Historique",
           unmountOnBlur: true,
         }}
       />
