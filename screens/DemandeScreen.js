@@ -19,7 +19,7 @@ export default function DemandeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   console.log(user);
   const historique = useSelector((state) => state.historique.value);
-  console.log('HISTORIQUE',historique)
+  console.log("HISTORIQUE", historique);
   const [loaded] = useFonts({
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
@@ -115,11 +115,11 @@ const styles = StyleSheet.create({
 
   childButton: {
     flexDirection: "row",
+    width: "80%",
     alignItems: "center",
     justifyContent: "space-around",
     backgroundColor: "#F0F0F0",
     padding: 10,
-    width: "80%",
     borderRadius: 10,
     marginBottom: 20,
   },
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     borderRadius: 75,
   },
+
   textButton: {
     fontSize: 20,
     paddingLeft: 40,
@@ -152,6 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 40,
     fontFamily: "OpenSans",
+    width: "80%",
   },
   card: {
     backgroundColor: "#144272",
