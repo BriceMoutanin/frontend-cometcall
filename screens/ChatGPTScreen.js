@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     width: "100%",
     borderRadius: 15,
-    width: "100%",
+    width: "80%",
     backgroundColor: "white",
     shadowColor: "gray",
     shadowOffset: {
