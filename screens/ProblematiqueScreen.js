@@ -102,14 +102,16 @@ export default function ProblematiqueScreen({ route, navigation }) {
                   alignItems: "center",
                 }}
               >
-                <Text
-                  style={styles.itemStyle}
-                  onPress={() => {
-                    createHistorique(problematique, enfant);
-                  }}
-                >
-                  {problematique.titre}
-                </Text>
+                <View style={styles.ItemContainerStyle}>
+                  <Text
+                    style={styles.itemStyle}
+                    onPress={() => {
+                      createHistorique(problematique, enfant);
+                    }}
+                  >
+                    {problematique.titre}
+                  </Text>
+                </View>
               </Animated.View>
             );
           })
@@ -236,12 +238,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "white",
-    backgroundColor: "#144272",
-    width: " 70%",
-    margin: 3,
-    padding: 10,
     textAlign: "center",
   },
+
+  ItemContainerStyle: {
+    backgroundColor: "#144272",
+    borderRadius: 10,
+    width: "70%",
+    height: 50,
+    margin: 5,
+    padding: 10,
+  },
+
   textInputStyle: {
     height: 50,
     paddingLeft: 10,
