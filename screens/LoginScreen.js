@@ -168,9 +168,9 @@ export default function LoginScreen({ navigation }) {
     Keyboard.dismiss();
     if (EMAIL_REGEX.test(signInMail)) {
       setLoadingIn(true);
-      setEmailErrorIn(false);
-      setIdentifiantErrorIn(false);
-      setUtilisateurErrorIn(false);
+      setEmailErrorIn(false); // correspond pas au regex
+      setIdentifiantErrorIn(false); // mots de passe invalide
+      setUtilisateurErrorIn(false); // utilisateur n'existe pas
 
       fetch(`${BACKEND_ADDRESS}/users/signin`, {
         method: "POST",
@@ -203,14 +203,14 @@ export default function LoginScreen({ navigation }) {
             navigation.navigate("DrawerNavigator", { screen: "DemandeStack" });
           } else {
             if (data.code == 1) {
-              setIdentifiantErrorIn(true);
+              setIdentifiantErrorIn(true); /*mot de passe*/
             } else {
-              setUtilisateurErrorIn(true);
+              setUtilisateurErrorIn(true); /*mail introuvable*/
             }
           }
         });
     } else {
-      setEmailErrorIn(true);
+      setEmailErrorIn(true); /*regex*/
     }
   };
 

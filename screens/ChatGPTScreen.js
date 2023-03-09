@@ -24,6 +24,9 @@ import { AntDesign } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 const AnimatedViewPager = Animated.createAnimatedComponent(View);
+const AnimatedComponent = Animated.createAnimatedComponent(
+  Animated.SectionList
+);
 
 export default function ChatGPTScreen({ route, navigation }) {
   const { enfant, problematique } = route.params;
@@ -58,11 +61,11 @@ export default function ChatGPTScreen({ route, navigation }) {
     contacts.map((contact, index) => {
       if (contact.nom) {
         return (
-          <>
+          <View key={index}>
             <View>
               <Text style={styles.name}>{contact.nom}</Text>
             </View>
-            <View key={index} style={styles.infosContainer}>
+            <View style={styles.infosContainer}>
               {contact.telephone && (
                 <View style={styles.row}>
                   <Foundation name="telephone" size={24} color="black" />
@@ -96,7 +99,7 @@ export default function ChatGPTScreen({ route, navigation }) {
                 </View>
               )}
             </View>
-          </>
+          </View>
         );
       } else {
         return null;
@@ -131,6 +134,35 @@ export default function ChatGPTScreen({ route, navigation }) {
         setReponse(data.choices[0].text);
         setIsLoading(false);
       });
+  }
+
+  function handleContact() {
+    return (
+      <AnimatedComponent>
+        <SectionList
+          sections={contactsDisplay}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <Text style={styles.title}>{item}</Text>
+            </View>
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.header}>{title}</Text>
+          )}
+        />
+      </AnimatedComponent>
+
+      // <AnimatedViewPager
+      //   entering={SlideIn.delay(250).duration(1000)}
+      //   style={styles.infos}
+      // >
+      //   <Text style={styles.h5}>
+      //     Contacts relative à <Text>{enfant.prenom}</Text>
+      //   </Text>
+      //   {contactsDisplay}
+      // </AnimatedViewPager>
+    );
   }
 
   return (
@@ -252,14 +284,18 @@ export default function ChatGPTScreen({ route, navigation }) {
               )}
             </AnimatedViewPager>
           )}
+
           <AnimatedViewPager
-            entering={SlideInLeft.delay(250).duration(1000)}
-            style={styles.infos}
+            entering={SlideInLeft.delay(1000).duration(1000)}
+            style={styles.hideContact}
           >
-            <Text style={styles.h5}>
-              Contacts relative à <Text>{enfant.prenom}</Text>
-            </Text>
-            {contactsDisplay}
+            <TouchableOpacity
+              onPress={() => {
+                handleContact();
+              }}
+            >
+              <Text>Acceder aux contacts relatifs à {enfant.prenom}</Text>
+            </TouchableOpacity>
           </AnimatedViewPager>
         </ScrollView>
       </View>
@@ -405,5 +441,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     width: " 100%",
+  },
+
+  hideContact: {
+    color: "black,",
+    padding: 30,
   },
 });
