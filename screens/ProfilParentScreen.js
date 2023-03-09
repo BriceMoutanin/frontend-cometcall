@@ -745,6 +745,7 @@ const styles = StyleSheet.create({
   textButton: {
     fontSize: 20,
     fontFamily: "OpenSans",
+    width: "60%",
   },
 
   childButton: {
