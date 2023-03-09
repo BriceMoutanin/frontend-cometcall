@@ -318,7 +318,10 @@ export default function ProfilParentScreen({ navigation }) {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity style={styles.childButton} activeOpacity={0.8}>
+        <TouchableOpacity style={styles.childButton} activeOpacity={0.8} onPress={() => { 
+          console.log("go problematique")
+          navigation.navigate("Problematique", { enfant })
+        }}>
           <Image
             style={styles.childImage}
             source={
@@ -367,6 +370,7 @@ export default function ProfilParentScreen({ navigation }) {
               />
             </MenuOptions>
           </Menu>
+          
         </TouchableOpacity>
       </Animated.View>
     );

@@ -180,6 +180,7 @@ const StackNavigator = ({ route }) => {
       title={title}
     >
       <Stack.Screen name="ProfilParent" component={ProfilParentScreen} />
+      <Stack.Screen name="Problematique" options={{ tabBarLabel: 'Problématiques' }} component={ProblematiqueScreen} />
       <Stack.Screen name="ProfilEnfant" component={ProfilEnfantScreen} />
     </Stack.Navigator>
   );
