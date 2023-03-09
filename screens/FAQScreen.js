@@ -12,14 +12,22 @@ export default function FAQScreen({ navigation }) {
   // }
 
   let FAQ = [
-    { question: "Comment on fait des cookies?", reponse: "Avec du chocolat" },
     {
-      question: "Quelles sont les meilleures madeleines?",
-      reponse: "Les Bijoux evidement!",
+      question: "Que faire si votre enfant est victime de harcèlement ?",
+      reponse:
+        "Si votre enfant est victime de harcèlement appelez le 3020 et pour des Cyberviolences le 3018 plus d'infos sur : https://www.education.gouv.fr/non-au-harcelement/je-suis-victime-de-harcelement-323011#primaire ou https://www.education.gouv.fr/non-au-harcelement/je-suis-victime-de-harcelement-323011#collegelycee",
     },
     {
-      question: "Fera-t-il beau demain? ",
-      reponse: "Vous n'êtes pas dans la bonne appli!!",
+      question:
+        "Que faire si des travaux devant l'établissement et l'empêche d'y accéder en toute sécurité ?",
+      reponse:
+        "Contacter la mairie de votre ville et le commissariat de police pour qu'ils viennent sécuriser les lieux.",
+    },
+    {
+      question:
+        "Cela fait plusieurs jours qu'un professeur de votre enfant est absent et qu'il n'est pas remplacer? ",
+      reponse:
+        "Contacter l'inpecteur de l'éducation nationale (INE) de l'académie dont dépend l'établissement de votre enfant.",
     },
   ];
 
@@ -39,10 +47,10 @@ export default function FAQScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.intro}>
-        <Text style={styles.titre}>Questions frequement posées</Text>
+        <Text style={styles.titre}>FAQ</Text>
         <View style={styles.text}>
           <Text>Vous avez une autre question ? </Text>
-          <Text>Consulter nos questions les plus frequement posées. </Text>
+          <Text>Consulter les questions les plus fréquement posées. </Text>
         </View>
       </View>
       <View style={styles.component}>{component}</View>
