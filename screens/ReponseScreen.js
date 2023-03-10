@@ -208,7 +208,7 @@ export default function ReponseScreen({ route, navigation }) {
             entering={SlideInLeft.delay(800).duration(1000)}
             style={styles.rien}
           >
-            <Text>Aucun résultat</Text>
+            <Text style={{ color: "white", fontSize: 18 }}>Aucun résultat</Text>
           </Animated.View>
         );
       }

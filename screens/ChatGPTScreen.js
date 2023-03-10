@@ -601,9 +601,8 @@ const styles = StyleSheet.create({
     color: "black",
     padding: 8,
     fontFamily: "OpenSans",
-    width: "100%",
+    width: "95%",
     borderRadius: 15,
-    width: "80%",
     backgroundColor: "white",
     shadowColor: "gray",
     shadowOffset: {

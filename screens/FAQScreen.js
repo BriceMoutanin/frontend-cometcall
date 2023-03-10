@@ -38,14 +38,16 @@ export default function FAQScreen({ navigation }) {
 
     return (
       <View key={i}>
-        <Text style={styles.questions}>{questions}</Text>
+        <View style={styles.questions}>
+          <Text style={styles.questionsText}>{questions}</Text>
+        </View>
         <Text style={styles.reponse}>{reponses}</Text>
       </View>
     );
   });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.TextIntro}>
         <Text style={styles.text}>Vous avez une autre question ? </Text>
         <Text style={styles.text}>
@@ -53,7 +55,7 @@ export default function FAQScreen({ navigation }) {
         </Text>
       </View>
       <View style={styles.composant}>{component}</View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -63,7 +65,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     height: "100%",
-    // backgroundColor: "yellow",
+    paddingLeft: 10,
+    paddingRight: 10,
+
+    paddingTop: 60,
   },
 
   composant: {
@@ -73,18 +78,17 @@ const styles = StyleSheet.create({
   },
 
   TextIntro: {
-    // backgroundColor: "green",
-    height: " 10%",
+    // height: " 10%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     justifyContent: "flex-start",
-    marginBottom: 20,
+    marginBottom: 40,
   },
 
   text: {
     fontWeight: "500",
-    fontSize: 16,
+    fontSize: 15,
     color: "#144272",
     flexDirection: "column",
     justifyContent: "center",
@@ -94,12 +98,17 @@ const styles = StyleSheet.create({
 
   questions: {
     backgroundColor: "rgb(12, 123, 147)",
+    padding: 5,
+    borderRadius: 15,
+  },
+
+  questionsText: {
     fontFamily: "OpenSans",
     fontSize: 15,
-    padding: 5,
     color: "white",
     textAlign: "center",
   },
+
   reponse: {
     fontFamily: "OpenSans",
     fontSize: 15,
