@@ -161,6 +161,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
         label="Barre de recherche"
         selectionColor="#144272"
         outlineColor="#144272"
+        activeOutlineColor="#144272"
         onChangeText={(value) => setSearch(value)}
         value={search}
         underlineColorAndroid="transparent"
