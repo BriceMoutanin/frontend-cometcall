@@ -341,7 +341,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
   const imageSource =
     updatePhoto !== null
       ? { uri: updatePhoto }
-      : require("../assets/avatar.png");
+      : require("../assets/Avatar.Appli.jpeg");
 
   const ItemDivider = () => {
     return (
