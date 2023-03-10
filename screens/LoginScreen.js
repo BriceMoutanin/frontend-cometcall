@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     fontStyle: "normal",
     fontWeight: "100",
-    fontSize: 24,
+    fontSize: 23,
     color: "white",
     textAlign: "center",
     marginBottom: 10,

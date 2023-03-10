@@ -21,7 +21,7 @@
     "android": {
       "package": "com.cometcall.frontend",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/avatar.png",
+        "foregroundImage": "./assets/Avatar.Appli.jpeg",
         "backgroundColor": "#FFFFFF"
       }
     },
