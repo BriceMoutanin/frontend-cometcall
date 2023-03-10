@@ -84,13 +84,17 @@ export default function ProblematiqueScreen({ route, navigation }) {
     problematiques.filter((problematique) =>
       search === null
         ? null
-        : problematique.titre.toLowerCase().includes(search.toLowerCase())
+        : problematique.titre.toLowerCase().includes(search.toLowerCase()) ||
+          problematique.titre.toLowerCase().includes("autre")
     ).length !== 0
       ? problematiques
           .filter((problematique) =>
             search === null
               ? null
-              : problematique.titre.toLowerCase().includes(search.toLowerCase())
+              : problematique.titre
+                  .toLowerCase()
+                  .includes(search.toLowerCase()) ||
+                problematique.titre.toLowerCase().includes("autre")
           )
           .map((problematique, i) => {
             return (
@@ -255,6 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#144272",
     borderRadius: 10,
     width: "70%",
+    height: 45,
     margin: 5,
     padding: 10,
   },
