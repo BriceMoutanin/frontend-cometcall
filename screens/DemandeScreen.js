@@ -1,3 +1,4 @@
+//react native
 import {
   StyleSheet,
   View,
@@ -7,11 +8,15 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
-import { useSelector } from "react-redux";
 import Animated from "react-native-reanimated";
 import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+
+//icons
+import { Feather } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
+
+//react-redux
+import { useSelector } from "react-redux";
 
 const AnimatedViewPager = Animated.createAnimatedComponent(View);
 

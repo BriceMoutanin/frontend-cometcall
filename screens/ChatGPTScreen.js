@@ -1,3 +1,4 @@
+// react Native
 import {
   StyleSheet,
   View,
@@ -13,8 +14,6 @@ import {
 } from "react-native";
 import { Linking } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useState } from "react";
-import { Skeleton } from "@rneui/themed";
 import Animated from "react-native-reanimated";
 import {
   SlideInLeft,
@@ -25,8 +24,17 @@ import {
   SlideOutUp,
   SlideOutRight,
 } from "react-native-reanimated";
-import { getOrganismes, getCommuneById } from "../modules/fetchModules";
+
+// React
+import { useState } from "react";
 import { useEffect } from "react";
+
+import { Skeleton } from "@rneui/themed";
+
+// import de com-et-call
+import { getOrganismes, getCommuneById } from "../modules/fetchModules";
+
+// Icons
 import { Foundation } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -52,6 +60,7 @@ export default function ChatGPTScreen({ route, navigation }) {
   //   return null;
   // }
 
+  //utilisation des fonctions de fetchModule  pour recuperer 1. le code commune, puis 2 tout les orgaismes et leur contacte a partir du code commune, de l'etablissement de l'enfant et de la problematique
   useEffect(() => {
     (async () => {
       const codeCommune = await getCommuneById(enfant.etablissement.IDAPI);
@@ -65,6 +74,7 @@ export default function ChatGPTScreen({ route, navigation }) {
     })();
   }, []);
 
+  // Au click sur le numero de telephone appel depuis le telephone
   const onPressMobileNumberClick = async (number) => {
     let phoneNumber = "";
     if (number) {
@@ -80,6 +90,7 @@ export default function ChatGPTScreen({ route, navigation }) {
     }
   };
 
+  //au click sur l'email => ouvrir depuuis son telephone
   const onPressEmailClick = async (email) => {
     let emailToClick = "";
     if (email) {
@@ -93,6 +104,7 @@ export default function ChatGPTScreen({ route, navigation }) {
     }
   };
 
+  // au click sur url => ouvrir le lien
   const onPressURLClick = async (URL) => {
     if (URL) {
       const reponse = await Linking.openURL(URL);
@@ -100,6 +112,7 @@ export default function ChatGPTScreen({ route, navigation }) {
     }
   };
 
+  // au click sur adresse => ouvrir map et sa geolocalisation
   const onPressAddressClick = async (coordinates) => {
     let coordinatesToClick = "";
     if (coordinates) {
@@ -119,6 +132,7 @@ export default function ChatGPTScreen({ route, navigation }) {
     }
   };
 
+  // afficher tout les contactes relatifs à l'enfant sous condition de resultat
   const contactsDisplay = contacts ? (
     contacts.map((contact, index) => {
       if (contact.nom) {
@@ -238,6 +252,7 @@ export default function ChatGPTScreen({ route, navigation }) {
     <Text>Aucun résultat</Text>
   );
 
+  //  parametrage de chatGPT et de sa reponse .
   function handleQuestion() {
     setShowResponse(true);
     setIsLoading(true);

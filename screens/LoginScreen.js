@@ -1,6 +1,5 @@
 //import react
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 //import react vative
 import {
   StyleSheet,
@@ -24,7 +23,8 @@ import Logo from "../assets/logoComEtCall";
 import LogoSvg from "../assets/newLogo.svg";
 //import reducer
 import { login } from "../reducers/user";
-
+import { useDispatch, useSelector } from "react-redux";
+// Google
 import * as Google from "expo-auth-session/providers/google";
 
 export default function LoginScreen({ navigation }) {

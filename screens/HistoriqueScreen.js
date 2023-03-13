@@ -1,3 +1,4 @@
+// react native
 import {
   StyleSheet,
   View,
@@ -9,21 +10,27 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
+import { TextInput } from "react-native-paper";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import { useToast } from "react-native-toast-notifications";
+import { FlatList, ActivityIndicator } from "react-native";
+
+// React
+import { useState, useRef, useCallback, useEffect } from "react";
+
+//Icones + font
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput } from "react-native-paper";
 import { useFonts } from "expo-font";
 import { AntDesign } from "@expo/vector-icons";
-import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
-import { useState, useRef, useCallback, useEffect } from "react";
+
+//Redux
 import { useSelector, useDispatch } from "react-redux";
-import { useToast } from "react-native-toast-notifications";
 import {
   addHistorique,
   removeHistorique,
   setHistorique,
 } from "../reducers/historique";
-import { FlatList, ActivityIndicator } from "react-native";
 
 export default function HistoriqueScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -32,9 +39,11 @@ export default function HistoriqueScreen({ navigation }) {
 
   const user = useSelector((state) => state.user.value);
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
+
   const [isLoading, setIsLoading] = useState(false);
   const [problematiques, setProblematiques] = useState([]);
 
+  // fetch l'historique de la DBB  + problematique
   useEffect(() => {
     fetch(`${BACKEND_ADDRESS}/users/getHistorique/${user.token}`)
       .then((response) => response.json())
@@ -56,6 +65,7 @@ export default function HistoriqueScreen({ navigation }) {
       });
   }, []);
 
+  // au click sur poubelle suprine une historique
   function deleteHistorique(historiqueID) {
     fetch(
       `${BACKEND_ADDRESS}/users/removeHistorique/${user.token}/${historiqueID}`,
@@ -71,6 +81,7 @@ export default function HistoriqueScreen({ navigation }) {
       });
   }
 
+  // affichage de tout les HISTORIQUES
   const historiqueDisplay = historique.historique.map((maphistorique, i) => {
     const problematique = problematiques.find(
       (problematique) => problematique._id == maphistorique.problematique

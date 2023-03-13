@@ -11,6 +11,10 @@ import {
   FlatList,
   ImageViewer,
 } from "react-native";
+import { TextInput } from "react-native-paper";
+import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import { useToast } from "react-native-toast-notifications";
+
 import {
   Menu,
   MenuProvider,
@@ -18,21 +22,22 @@ import {
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
+//icons+ font
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput } from "react-native-paper";
 import { useFonts } from "expo-font";
 import { AntDesign } from "@expo/vector-icons";
-import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import { Feather } from "@expo/vector-icons";
+//react
 import { useState, useRef, useCallback } from "react";
+//reducer
 import { useSelector, useDispatch } from "react-redux";
-import { useToast } from "react-native-toast-notifications";
 import {
   addEnfant,
   updatePrenomEnfant,
   updateEtablissementEnfant,
   updatePhotoEnfant,
 } from "../reducers/user";
-import { Feather } from "@expo/vector-icons";
+// expo
 import * as ImagePicker from "expo-image-picker";
 
 export default function ProfilEnfantScreen({ route, navigation }) {
@@ -57,6 +62,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
 
   const searchRef = useRef(null);
 
+  //choisir une image du télèphone avec demande de permission
   const pickImageEnfantAsync = async () => {
     let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     console.log(permission);
@@ -65,7 +71,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
         allowsEditing: true,
         quality: 1,
       });
-
+      // s'il y a bien une image alors on l'enregistre en BDD dans enfant
       if (!result.canceled) {
         if (enfant) {
           fetch(
@@ -100,7 +106,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       }
     }
   };
-
+  // prendre une photo avec son telephone, en demander la permission d'acceder a la camera du telephone
   const shootImageEnfantAsync = async () => {
     let permission = await ImagePicker.requestCameraPermissionsAsync();
     console.log(permission);
@@ -109,7 +115,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
         allowsEditing: true,
         quality: 1,
       });
-
+      //s'il y a bien une photo on l'enregistre dans la BDD enfant
       if (!result.canceled) {
         if (enfant) {
           fetch(
@@ -144,7 +150,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       }
     }
   };
-
+  // suprimer  ou modifie une photo de l'appli et de la BDD
   const deleteImageEnfantAsync = async () => {
     if (enfant) {
       fetch(
@@ -171,6 +177,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     }
   };
 
+  // popup de la photo enfant
   const dataPhotoEnfant = [
     {
       id: 1,
@@ -192,6 +199,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     },
   ];
 
+  //recherche de l'etablissement de l'enfant + enregistrement
   const getSuggestions = useCallback(async (q) => {
     const filterToken = q.toLowerCase();
     console.log("getSuggestions", q);
@@ -235,6 +243,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     OpenSans: require("../assets/fonts/Open-Sans.ttf"),
   });
 
+  // modifier le prenom de l'enfant dans bdd par l'id
   const modifyPrenomEnfant = () => {
     console.log(enfant);
     let id = toast.show("Enregistrement prénom...", {
@@ -270,6 +279,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       });
   };
 
+  //modifier l'ecole de l'enfant par l'id de l'enfant
   const modifyEtablissementEnfant = () => {
     let id = toast.show("Enregistrement établissement...", {
       placement: "bottom",
@@ -304,6 +314,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       });
   };
 
+  // au click sur validé ajoute et enregistre le prenom la photo et l'etablissement
   const handleValide = async () => {
     let id = toast.show("Ajout de l'enfant...", {
       placement: "bottom",
@@ -338,11 +349,13 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     return null;
   }
 
+  // constante qui contient soit la photo de l'enfant soit l'avatar
   const imageSource =
     updatePhoto !== null
       ? { uri: updatePhoto }
       : require("../assets/Avatar.Appli.jpeg");
 
+  //style de la separation des ecole dans la liste deroulante
   const ItemDivider = () => {
     return (
       <View

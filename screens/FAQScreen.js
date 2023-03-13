@@ -31,11 +31,10 @@ export default function FAQScreen({ navigation }) {
     },
   ];
 
+  // affichage des questions
   let component = FAQ.map((data, i) => {
     let questions = data.question;
-
     let reponses = data.reponse;
-
     return (
       <View key={i}>
         <View style={styles.questions}>
@@ -51,7 +50,7 @@ export default function FAQScreen({ navigation }) {
       <View style={styles.TextIntro}>
         <Text style={styles.text}>Vous avez une autre question ? </Text>
         <Text style={styles.text}>
-          Consulter les questions les plus fréquement posées.{" "}
+          Consulter les questions les plus fréquement posées.
         </Text>
       </View>
       <View style={styles.composant}>{component}</View>

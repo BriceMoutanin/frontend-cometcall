@@ -1,3 +1,4 @@
+// react native
 import {
   StyleSheet,
   View,
@@ -10,14 +11,15 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
-
+//Font
 import { useFonts } from "expo-font";
+//react
 import React, { useState, useEffect } from "react";
+// reducer
 import { addHistorique } from "../reducers/historique";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ProblematiqueScreen({ route, navigation }) {
-  //const pour l'input list
   const [search, setSearch] = useState("");
   const { enfant } = route.params;
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +31,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
   //Connection avec le BackEnd
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
+  //fetch toute les problematique en fonction du type etablissement de l'enfant
   useEffect(() => {
     setIsLoading(true);
     fetch(`${BACKEND_ADDRESS}/problematiques`)
@@ -47,6 +50,7 @@ export default function ProblematiqueScreen({ route, navigation }) {
       });
   }, []);
 
+  // au click sur la problematique on enregistre dans l'historique en bdd = la problematique , l'enfant et la date, si le titre de la problematique est autre on va sur la page chatGPTScreen sinon sur la page reponse
   function createHistorique(problematique, enfant) {
     const time = new Date();
     fetch(`${BACKEND_ADDRESS}/users/addHistorique/${user.token}`, {

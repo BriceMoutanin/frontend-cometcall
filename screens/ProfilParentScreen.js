@@ -1,6 +1,10 @@
+// react
 import { useState } from "react";
+//redux
 import { useDispatch, useSelector } from "react-redux";
 import { update, removeEnfant } from "../reducers/user";
+import { updatePhoto } from "../reducers/user";
+//reactNative
 import {
   StyleSheet,
   View,
@@ -22,9 +26,6 @@ import {
   MenuTrigger,
 } from "react-native-popup-menu";
 import { TextInput } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
 import { useToast } from "react-native-toast-notifications";
 import Animated from "react-native-reanimated";
 import {
@@ -32,8 +33,12 @@ import {
   FlipInYRight,
   SlideOutRight,
 } from "react-native-reanimated";
+//icons +font
+import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { useFonts } from "expo-font";
+
 import * as ImagePicker from "expo-image-picker";
-import { updatePhoto } from "../reducers/user";
 
 export default function ProfilParentScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -51,6 +56,7 @@ export default function ProfilParentScreen({ navigation }) {
 
   const BACKEND_ADDRESS = "https://backend-cometcall.vercel.app";
 
+  //choisir une image du télèphone avec demande de permission
   const pickImageAsync = async () => {
     let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     console.log(permission);
@@ -59,7 +65,7 @@ export default function ProfilParentScreen({ navigation }) {
         allowsEditing: true,
         quality: 1,
       });
-
+      // s'il y a bien une image alors on l'enregistre en BDD du user
       if (!result.canceled) {
         fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
           method: "PUT",
@@ -81,7 +87,7 @@ export default function ProfilParentScreen({ navigation }) {
       }
     }
   };
-
+  // prendre une photo avec son telephone, en demander la permission d'acceder a la camera du telephone
   const shootImageAsync = async () => {
     let permission = await ImagePicker.requestCameraPermissionsAsync();
     console.log(permission);
@@ -90,7 +96,7 @@ export default function ProfilParentScreen({ navigation }) {
         allowsEditing: true,
         quality: 1,
       });
-
+      //s'il y a bien une photo on l'enregistre dans la BDD du user
       if (!result.canceled) {
         fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
           method: "PUT",
@@ -112,7 +118,7 @@ export default function ProfilParentScreen({ navigation }) {
       }
     }
   };
-
+  // suprimer  ou modifie une photo de l'appli et de la BDD
   const deleteImageAsync = async () => {
     fetch(`${BACKEND_ADDRESS}/users/updateParentByToken/${user.token}`, {
       method: "PUT",
@@ -131,6 +137,7 @@ export default function ProfilParentScreen({ navigation }) {
       });
   };
 
+  // modofie les infos du parent par son token
   const parentUpdate = async () => {
     try {
       let id = toast.show("Enregistrement...", {
@@ -149,7 +156,7 @@ export default function ProfilParentScreen({ navigation }) {
           }),
         }
       );
-
+      // si c'est bon l'enregistre aussi dans le reducer
       const data = await response.json();
       if (data.result) {
         toast.update(id, "Informations enregistrées", {
@@ -257,6 +264,7 @@ export default function ProfilParentScreen({ navigation }) {
     navigation.navigate("ProfilEnfant", { enfant });
   };
 
+  // popup sur enfant
   const data = [
     {
       id: 1,
@@ -272,6 +280,7 @@ export default function ProfilParentScreen({ navigation }) {
     },
   ];
 
+  //popup sur photo
   const dataPhoto = [
     {
       id: 1,
@@ -292,7 +301,7 @@ export default function ProfilParentScreen({ navigation }) {
       action: deleteImageAsync,
     },
   ];
-
+  // style de separateur de popup
   const ItemDivider = () => {
     return (
       <View
@@ -304,7 +313,7 @@ export default function ProfilParentScreen({ navigation }) {
       />
     );
   };
-
+  // affichage des enfants
   const enfantsDisplay = user.enfants.map((enfant, index) => {
     return (
       <Animated.View
@@ -379,7 +388,7 @@ export default function ProfilParentScreen({ navigation }) {
   if (!loaded) {
     return null;
   }
-
+  // constante qui contient soit la photo de l'enfant soit l'avatar
   const imageSource =
     user.photoURI !== null
       ? { uri: user.photoURI }

@@ -24,6 +24,7 @@ export default function ReponseHistScreen({ route, navigation }) {
   const [contacts, setContacts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  //utilisation des fonctions de fetchModule  pour recuperer 1. le code commune, puis 2 tout les orgaismes et leur contacte a partir du code commune, de l'etablissement de l'enfant et de la problematique
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -39,6 +40,7 @@ export default function ReponseHistScreen({ route, navigation }) {
     })();
   }, []);
 
+  // Au click sur le numero de telephone appel depuis le telephone
   const onPressMobileNumberClick = async (number) => {
     let phoneNumber = "";
     if (number) {
@@ -53,7 +55,7 @@ export default function ReponseHistScreen({ route, navigation }) {
       console.log(reponse);
     }
   };
-
+  //au click sur l'email => ouvrir depuuis son telephone
   const onPressEmailClick = async (email) => {
     let emailToClick = "";
     if (email) {
@@ -66,14 +68,14 @@ export default function ReponseHistScreen({ route, navigation }) {
       console.log(reponse);
     }
   };
-
+  // au click sur url => ouvrir le lien
   const onPressURLClick = async (URL) => {
     if (URL) {
       const reponse = await Linking.openURL(URL);
       console.log(reponse);
     }
   };
-
+  // afficher tout les contactes relatifs à l'enfant sous condition de resultat
   const contactsDisplay = contacts ? (
     contacts.map((contact, index) => {
       if (contact.nom) {
