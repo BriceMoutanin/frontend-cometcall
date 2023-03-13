@@ -34,6 +34,19 @@
         "projectId": "5181e956-c93a-482c-bb57-b0f2639cc185"
       }
     },
+    "expo": {
+      "name": "Com-et-Call",
+      "slug": "Com-et-Call",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/logoComEtCall.svg",
+      "splash": {
+        "image": "./assets/logoComEtCall.svg",
+        "resizeMode": "contain",
+        "backgroundColor": "#144272"
+      }
+    },
+
     "owner": "violette923121"
   }
 }
