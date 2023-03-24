@@ -93,7 +93,7 @@ async function getOrganismes(
   }
   return contacts;
 }
-//test
+//test pour voir si on obtient bien les contacts
 // async function asyncCall() {
 //   const code = await getCommuneById("0120311Y");
 //   const contacts = await getContactByOrganisme(code, "mairie");

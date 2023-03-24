@@ -9,10 +9,9 @@ import {
   ScrollView,
 } from "react-native";
 import Animated from "react-native-reanimated";
-import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
+import { SlideInLeft } from "react-native-reanimated";
 
 //icons
-import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 //react-redux

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import {
   StyleSheet,
   View,
-  Image,
   Button,
   Text,
   ActivityIndicator,
@@ -13,7 +12,6 @@ import { useState } from "react";
 import Animated from "react-native-reanimated";
 import { SlideInLeft, FlipInYRight } from "react-native-reanimated";
 import { Linking } from "react-native";
-import { useCallback } from "react";
 import { Foundation } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -54,7 +52,7 @@ export default function ReponseScreen({ route, navigation }) {
       console.log(reponse);
     }
   };
-  //au click sur l'email => ouvrir depuuis son telephone
+  //au click sur l'email => ouvrir depuis son telephone
   const onPressEmailClick = async (email) => {
     let emailToClick = "";
     if (email) {

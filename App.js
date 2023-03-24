@@ -1,15 +1,7 @@
 import { registerRootComponent } from "expo";
 //import react-native
 import "react-native-gesture-handler";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-  SafeAreaView,
-  Image,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { ToastProvider } from "react-native-toast-notifications";
 //import react navigation
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -17,9 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { getHeaderTitle } from "@react-navigation/elements";
 import {
   createDrawerNavigator,
-  DrawerItem,
   DrawerItemList,
-  DrawerContent,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
 import { MenuProvider } from "react-native-popup-menu";
@@ -39,8 +29,6 @@ import MessageScreen from "./screens/MessageScreen";
 
 //import expo
 import { Entypo } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
 
 //import Redux
 import { Provider } from "react-redux";

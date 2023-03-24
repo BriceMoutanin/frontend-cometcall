@@ -4,12 +4,9 @@ import {
   Image,
   SafeAreaView,
   Text,
-  Button,
   Dimensions,
   TouchableOpacity,
-  ScrollView,
   FlatList,
-  ImageViewer,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
@@ -17,7 +14,6 @@ import { useToast } from "react-native-toast-notifications";
 
 import {
   Menu,
-  MenuProvider,
   MenuOptions,
   MenuOption,
   MenuTrigger,
@@ -46,7 +42,6 @@ export default function ProfilEnfantScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [etablissements, setEtablissements] = useState([]);
   const [updatePrenom, setUpdatePrenom] = useState(enfant ? enfant.prenom : "");
   const [updateEtablissement, setUpdateEtablissement] = useState(
     enfant ? enfant.etablissement : null

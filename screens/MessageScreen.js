@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Button } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function MessageScreen({ navigation }) {
   return <View style={styles.container}>Message</View>;

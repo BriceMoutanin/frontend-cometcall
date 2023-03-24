@@ -4,22 +4,18 @@ import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  Image,
   Button,
   Text,
   TouchableOpacity,
   KeyboardAvoidingView,
   Modal,
-  Pressable,
   ActivityIndicator,
   Keyboard,
 } from "react-native";
 import { TextInput } from "react-native-paper";
-import { SvgXml } from "react-native-svg";
 //import expo police
 import { useFonts } from "expo-font";
 //import logo
-import Logo from "../assets/logoComEtCall";
 import LogoSvg from "../assets/newLogo.svg";
 //import reducer
 import { login } from "../reducers/user";

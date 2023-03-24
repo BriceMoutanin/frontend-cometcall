@@ -2,35 +2,21 @@
 import {
   StyleSheet,
   View,
-  Image,
   SafeAreaView,
   Text,
-  Button,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
 } from "react-native";
-import { TextInput } from "react-native-paper";
-import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
-import { useToast } from "react-native-toast-notifications";
-import { FlatList, ActivityIndicator } from "react-native";
 
 // React
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 //Icones + font
 import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
-import { AntDesign } from "@expo/vector-icons";
 
 //Redux
 import { useSelector, useDispatch } from "react-redux";
-import {
-  addHistorique,
-  removeHistorique,
-  setHistorique,
-} from "../reducers/historique";
+import { removeHistorique, setHistorique } from "../reducers/historique";
 
 export default function HistoriqueScreen({ navigation }) {
   const dispatch = useDispatch();

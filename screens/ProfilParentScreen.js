@@ -9,18 +9,15 @@ import {
   StyleSheet,
   View,
   Image,
-  SafeAreaView,
   Text,
   TouchableOpacity,
   ScrollView,
   FlatList,
-  ImageViewer,
   Modal,
   Button,
 } from "react-native";
 import {
   Menu,
-  MenuProvider,
   MenuOptions,
   MenuOption,
   MenuTrigger,

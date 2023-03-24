@@ -2,13 +2,12 @@
 import {
   StyleSheet,
   View,
-  Image,
   Button,
   Text,
   TextInput,
   TouchableOpacity,
-  Stack,
   KeyboardAvoidingView,
+  Stack,
   Keyboard,
   ActivityIndicator,
 } from "react-native";
@@ -18,10 +17,6 @@ import Animated from "react-native-reanimated";
 import {
   SlideInLeft,
   FlipInYRight,
-  SlideInDown,
-  SlideOutDown,
-  SlideInUp,
-  SlideOutUp,
   SlideOutRight,
 } from "react-native-reanimated";
 
@@ -39,7 +34,6 @@ import { Foundation } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
 
 const AnimatedViewPager = Animated.createAnimatedComponent(View);
 
