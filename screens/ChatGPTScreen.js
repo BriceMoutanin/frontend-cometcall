@@ -405,8 +405,12 @@ export default function ChatGPTScreen({ route, navigation }) {
                 <>
                   <Text style={styles.h5}>Réponse de IASchool</Text>
                   <Text style={styles.h6}>
+                    {" "}
+                    {""}
                     {reponse.slice(2, reponse.length - 1)}
-                  </Text>
+                  </Text>{" "}
+                  /*reponse envoyer par chatt GPT toujour 2 retour a la ligne =
+                  comme padding , slice 2 enlever les deux retour a la ligne */
                 </>
               )}
             </AnimatedViewPager>

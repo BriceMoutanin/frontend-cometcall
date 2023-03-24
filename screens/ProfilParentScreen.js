@@ -37,7 +37,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-
+// accés aux image du téléphone
 import * as ImagePicker from "expo-image-picker";
 
 export default function ProfilParentScreen({ navigation }) {

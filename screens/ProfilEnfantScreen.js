@@ -150,7 +150,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
       }
     }
   };
-  // suprimer  ou modifie une photo de l'appli et de la BDD
+  // change le chemain  une photo de l'appli et de la BDD = stoke chemin vers une image
   const deleteImageEnfantAsync = async () => {
     if (enfant) {
       fetch(
@@ -199,7 +199,7 @@ export default function ProfilEnfantScreen({ route, navigation }) {
     },
   ];
 
-  //recherche de l'etablissement de l'enfant + enregistrement
+  //tableau qui contient tout les données de ma liste deroulante echerche de l'etablissement de l'enfant + enregistrement
   const getSuggestions = useCallback(async (q) => {
     const filterToken = q.toLowerCase();
     console.log("getSuggestions", q);

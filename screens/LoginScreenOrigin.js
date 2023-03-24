@@ -359,6 +359,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "relative",
     paddingTop: 300,
+    backgroundColor: "white",
   },
   card: {
     backgroundColor: "#144272",
@@ -440,6 +441,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 100,
     alignItems: "center",
+    backgroundColor: "white",
   },
   logo: {
     width: 150,
@@ -458,6 +460,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // alignItems: "center",
     marginTop: 22,
+    backgroundColor: "red",
   },
 
   centeredViewModal: {

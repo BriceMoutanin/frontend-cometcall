@@ -43,7 +43,7 @@ export default function HistoriqueScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [problematiques, setProblematiques] = useState([]);
 
-  // fetch l'historique de la DBB  + problematique
+  // fetch l'historique de la DBB  + problematique parce que dans historique on a que l'id des problematique , on fetch problematique pour .... on aurait pus le faire avec un populaire, clef etrangere grace a la fonction populaire remplir le champs clef etrangére vers la
   useEffect(() => {
     fetch(`${BACKEND_ADDRESS}/users/getHistorique/${user.token}`)
       .then((response) => response.json())
